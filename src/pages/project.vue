@@ -274,7 +274,7 @@ definitions:
             method: 'delete',
             data: {
               id: ''
-            },
+            }
           }).then((response) => {
             this.$router.push({ path: 'dashboard_projects' })
           }).catch(() => {
