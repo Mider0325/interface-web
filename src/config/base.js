@@ -7,9 +7,8 @@
  * To change this template use File | Settings | File Templates.
  */
 let BaseConfig = {  // 开发模式配置
-  hostTrack: 'http://192.168.199.24:8080/log-web/mlog',
   mockhost: 'http://rap.taobao.org/mockjsdata/12245/',
-  host: 'http://114.215.120.151:9080/gointerface/',
+  host: 'http://114.215.120.151:8000/gointerface/',
   qiniu: 'eUBuuV5OWrIA-Xr-BDJZvRwgMLYTq-RAAOYSE5y6',
   debug: true,
   develop: true

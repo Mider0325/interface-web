@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "cross-env CODE_ENV=dev cooking watch -p",
     "dist": "cross-env CODE_ENV=dev cooking build -p",
-    "deploy_dev": "cross-env CODE_ENV=dev cooking build --no-color && make sync-release",
+    "deploy_dev": "cross-env CODE_ENV=dev cooking build --no-color && make sync-dev",
     "deploy_beta": "cross-env CODE_ENV=beta cooking build --no-color",
     "deploy_prod": "cross-env CODE_ENV=production cooking build --no-color"
   },

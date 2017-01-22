@@ -9,9 +9,10 @@ dist:
 deploy:
 	@npm run deploy
 
-deploy-dev:
+sync-dev:
 	rsync -az -v -r --delete-after --force \
 	  --filter="- node_modules" \
 	  -e "ssh -p 22" \
 	  ./dist/ \
-	  deploy@114.215.120.151:~/server/static
+	  root@114.215.120.151:/home/deploy/web
+deploy-dev:sync-dev
