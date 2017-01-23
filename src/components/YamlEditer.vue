@@ -48,6 +48,7 @@
   var langTools = ace.require('ace/ext/language_tools')
   var debounce = require('lodash/debounce')
   var Range = ace.require('ace/range').Range
+  import {pipe} from 'src/extend/Util'
 
   export default {
     mixins: [ BaseComponent ],
@@ -109,18 +110,6 @@
     methods: {
       /* ================对内容处理============== */
       /**
-       * 对编辑器内容进行管道操作 注意异常捕获处理
-       * @returns {*}
-       */
-      pipe () {
-        var args = [].slice.call(arguments, 0)
-        var val = args[ 0 ]
-        for (let arg of args) {
-          if (args.indexOf(arg) != 0 && typeof arg === 'function') val = arg(val)
-        }
-        return val
-      },
-      /**
        * 清理不需要的mock数据
        * @param input
        * @returns {*}
@@ -169,7 +158,7 @@
         var content = this.$options.editor.getValue()
         var hasError = false
         try {
-          this.pipe(content, this.beforeChange, jsYaml.safeLoad)
+          pipe(content, this.beforeChange, jsYaml.safeLoad)
           this.cleanAnnotation()
         } catch (e) {
           console.error(e)

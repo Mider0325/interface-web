@@ -26,7 +26,7 @@
                 <div class="login-body">
                   <el-form ref="loginForm" :model="loginForm" :rules="registerrule" label-width="80px">
                     <el-form-item label="账 号" prop="account">
-                      <el-input placeholder="邮箱" name="name" v-model="loginForm.account">
+                      <el-input placeholder="邮箱" type="text" id="username" name="username" v-model="loginForm.account">
                       </el-input>
                     </el-form-item>
                     <el-form-item label="密 码" prop="password">
