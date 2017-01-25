@@ -63,7 +63,6 @@
         -webkit-box-flex 1
         width 100%
     .preview
-      margin-left 20px;
       height 100%
       flex 1
 

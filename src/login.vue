@@ -120,7 +120,6 @@
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
   import Server from './extend/Server'
-  import Config from './config'
   var SHA256 = require('crypto-js/sha256')
 
   export default {
@@ -161,17 +160,19 @@
             { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
           ]
         },
-        kaptchaImg: Config.host + 'kaptcha.jpg?r=' + Math.random(),
+        kaptchaImg: '',
         loginForm: {
           account: '',
           password: '',
           kaptcha: '',
+          deskey: '',
           remember: true
         },
         registerForm: {
           email: '',
           kaptcha: '',
           name: '',
+          deskey: '',
           password: '',
           password2: ''
         },
@@ -200,10 +201,22 @@
           }
         })
       })
+      this.changeKaptcha()
     },
     methods: {
       changeKaptcha: function () {
-        this.kaptchaImg = Config.host + 'kaptcha.jpg?r=' + Math.random()
+        Server({
+          url: 'kaptcha/init',
+          method: 'get'
+        }).then((response) => {
+          var data = response.data.data
+          this.kaptchaImg = 'data:image/jpg;base64,' + data.img
+          this.registerForm.deskey = data.key
+          this.loginForm.deskey = data.key
+        }).catch((e) => {
+          this.loading = false
+          console.log('err', e)
+        })
       },
       parseURL: function (url) {
         var a = document.createElement('a')
@@ -252,6 +265,7 @@
               data: {
                 account: this.loginForm.account,
                 kaptcha: this.loginForm.kaptcha,
+                deskey: this.loginForm.deskey,
                 password: SHA256(this.loginForm.password) + ''
               },
               needLoading: true,
@@ -282,6 +296,7 @@
                 email: this.registerForm.email,
                 kaptcha: this.registerForm.kaptcha,
                 name: this.registerForm.name,
+                deskey: this.registerForm.deskey,
                 password: SHA256(this.registerForm.password) + ''
               },
               method: 'post'

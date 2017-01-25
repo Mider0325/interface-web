@@ -1,4 +1,4 @@
-@import '//at.alicdn.com/t/font_tg6z31f8ui9kke29.css';
+@import '//at.alicdn.com/t/font_pcgqcjfk2k9sh5mi.css';
 
 .ifont {
     font-family: "iconfont" !important;
@@ -4082,7 +4082,6 @@ tbody.collapse.in {
 }
 
 .navbar-fixed-top, .navbar-fixed-bottom {
-    position: fixed;
     right: 0;
     left: 0;
     z-index: 1030
@@ -10963,7 +10962,6 @@ html.turbolinks-progress-bar::before {
 }
 
 .page-with-sidebar {
-    padding-top: 50px;
     transition: padding 0.15s
 }
 
