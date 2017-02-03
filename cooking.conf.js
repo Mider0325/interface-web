@@ -78,5 +78,4 @@ if (process.env.NODE_ENV === 'production') {
 } else {
   cooking.add('alias.vue', 'vue/dist/vue.common.js')
 }
-
 module.exports = cooking.resolve()

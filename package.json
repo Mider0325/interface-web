@@ -8,7 +8,7 @@
   "scripts": {
     "dev": "cross-env CODE_ENV=dev cooking watch -p",
     "dist": "cross-env CODE_ENV=dev cooking build -p",
-    "deploy_dev": "cross-env CODE_ENV=dev cooking build --no-color && make sync-release",
+    "deploy_dev": "cross-env CODE_ENV=dev cooking build --no-color && make sync-dev",
     "deploy_beta": "cross-env CODE_ENV=beta cooking build --no-color",
     "deploy_prod": "cross-env CODE_ENV=production cooking build --no-color"
   },
@@ -23,7 +23,7 @@
     "deep-assign": "^2.0.0",
     "element-theme": "^0.2.0",
     "element-theme-default": "^1.1.2",
-    "element-ui": "^1.1.2",
+    "element-ui": "^1.1.6",
     "ema-proxy": "^1.0.1",
     "eslint-plugin-html": "^1.6.0",
     "js-yaml": "^3.7.0",

@@ -12,11 +12,11 @@
           </el-tooltip>
         </h5>
         <div class="contral">
-          <!--<el-button-group>
+          <el-button-group>
             <el-button size="mini" type="primary" icon="edit"></el-button>
             <el-button size="mini" type="primary" icon="share"></el-button>
             <el-button size="mini" type="primary" icon="delete"></el-button>
-          </el-button-group>-->
+          </el-button-group>
         </div>
       </div>
       <div>
@@ -59,6 +59,7 @@
     },
     data: function () {
       return {
+
         tips: {
           body: body,
           path: path,

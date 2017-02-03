@@ -74,7 +74,7 @@
         // 初始化导航信息
         // 设置用户信息
         this.$store.dispatch('initUserInfo', this.user)
-        if (this.user.email_Status === 1) {
+        if (this.user.emailStatus === 1) {
           this.isEmailActive = false
           return
         }
@@ -88,7 +88,7 @@
       reactive: function () {
         Server({
           url: 'users/sendActiveEmail',
-          method: 'post'
+          method: 'get'
         }).then((response) => {
           this.$message('发送成功，亲到邮箱中去激活')
         }).catch(() => {

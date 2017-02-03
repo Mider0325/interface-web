@@ -64,15 +64,15 @@
             <div class="col-lg-9">
               <el-form ref="passwordForm" :model="passform" :rules="rules" label-width="100px">
                 <el-form-item label="老密码" prop="password">
-                  <el-input placeholder="老密码" v-model="passform.password">
+                  <el-input type="password" placeholder="老密码" v-model="passform.password">
                   </el-input>
                 </el-form-item>
                 <el-form-item label="新密码" prop="targetPassword">
-                  <el-input placeholder="新密码" v-model="passform.targetPassword">
+                  <el-input type="password" placeholder="新密码" v-model="passform.targetPassword">
                   </el-input>
                 </el-form-item>
                 <el-form-item label="确认密码" prop="targetPassword2">
-                  <el-input placeholder="确认密码" v-model="passform.targetPassword2">
+                  <el-input type="password" placeholder="确认密码" v-model="passform.targetPassword2">
                   </el-input>
                 </el-form-item>
                 <el-form-item>
@@ -214,6 +214,7 @@
               method: 'put'
             }).then((response) => {
               this.$message('修改成功')
+              this.$refs.passwordForm.resetFields()
             }).catch((e) => {
               this.$message('修改失败')
             })
