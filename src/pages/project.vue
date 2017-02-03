@@ -226,7 +226,6 @@ definitions:
       var me = this
       new Clipboard('.btn', {
         text: function () {
-          me.$message('复制成功')
           return me.project.description
         }
       })
