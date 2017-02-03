@@ -26,11 +26,11 @@
                 <div class="login-body">
                   <el-form ref="loginForm" :model="loginForm" :rules="registerrule" label-width="80px">
                     <el-form-item label="账 号" prop="account">
-                      <el-input placeholder="邮箱" name="name" v-model="loginForm.account">
+                      <el-input placeholder="邮箱" type="text" auto-complete="on" id="username" name="username" v-model="loginForm.account">
                       </el-input>
                     </el-form-item>
                     <el-form-item label="密 码" prop="password">
-                      <el-input placeholder="密 码" type="password" v-model="loginForm.password">
+                      <el-input placeholder="密 码" type="password" auto-complete="on" v-model="loginForm.password">
                       </el-input>
                     </el-form-item>
                     <el-form-item label="验证码" prop="kaptcha">
@@ -120,7 +120,6 @@
 <script type="text/ecmascript-6">
   import {mapState} from 'vuex'
   import Server from './extend/Server'
-  import Config from './config'
   var SHA256 = require('crypto-js/sha256')
 
   export default {
@@ -161,17 +160,19 @@
             { type: 'email', message: '请输入正确的邮箱地址', trigger: 'blur,change' }
           ]
         },
-        kaptchaImg: Config.host + 'kaptcha.jpg?r=' + Math.random(),
+        kaptchaImg: '',
         loginForm: {
           account: '',
           password: '',
           kaptcha: '',
+          deskey: '',
           remember: true
         },
         registerForm: {
           email: '',
           kaptcha: '',
           name: '',
+          deskey: '',
           password: '',
           password2: ''
         },
@@ -200,10 +201,22 @@
           }
         })
       })
+      this.changeKaptcha()
     },
     methods: {
       changeKaptcha: function () {
-        this.kaptchaImg = Config.host + 'kaptcha.jpg?r=' + Math.random()
+        Server({
+          url: 'kaptcha/init',
+          method: 'get'
+        }).then((response) => {
+          var data = response.data.data
+          this.kaptchaImg = 'data:image/jpg;base64,' + data.img
+          this.registerForm.deskey = data.key
+          this.loginForm.deskey = data.key
+        }).catch((e) => {
+          this.loading = false
+          console.log('err', e)
+        })
       },
       parseURL: function (url) {
         var a = document.createElement('a')
@@ -252,6 +265,7 @@
               data: {
                 account: this.loginForm.account,
                 kaptcha: this.loginForm.kaptcha,
+                deskey: this.loginForm.deskey,
                 password: SHA256(this.loginForm.password) + ''
               },
               needLoading: true,
@@ -268,6 +282,7 @@
             return false
           }
         })
+        return false
       },
       /**
        * 注册内容提交
@@ -282,6 +297,7 @@
                 email: this.registerForm.email,
                 kaptcha: this.registerForm.kaptcha,
                 name: this.registerForm.name,
+                deskey: this.registerForm.deskey,
                 password: SHA256(this.registerForm.password) + ''
               },
               method: 'post'

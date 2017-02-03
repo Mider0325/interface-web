@@ -41,17 +41,16 @@
                 <div class="dropdown-menu-nav dropdown-menu-align-right">
                   <ul>
                     <li>
-                      <router-link class="profile-link" aria-label="Profile" data-user="wangkm" to="user">Profile
+                      <router-link class="profile-link" aria-label="Profile" data-user="wangkm" to="user">用户信息
                       </router-link>
                     </li>
                     <li>
-                      <router-link aria-label="Profile Settings" to="profile">Profile Settings</router-link>
+                      <router-link aria-label="Profile Settings" to="profile">用户设置</router-link>
                     </li>
                     <li class="divider"></li>
                     <li>
                       <a @click="logout" class="sign-out-link" aria-label="Sign out" rel="nofollow"
-                         data-method="delete">Sign
-                        out</a>
+                         data-method="delete">退出登录</a>
                     </li>
                   </ul>
                 </div>
