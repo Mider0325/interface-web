@@ -79,6 +79,7 @@
 
 <script type="text/ecmascript-6">
   import BasePage from 'src/extend/BasePage'
+  import Server from 'src/extend/Server'
   export default{
     mixins: [ BasePage ],
     components: {},
@@ -118,7 +119,20 @@
     },
     methods: {
       onSubmit: function () {
+        Server({
+          url: 'project/project',
+          mock: true,
+          method: 'post'
+        }).then((response) => {
+          this.form = {
+            image: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+            name: '',
+            groupId: '',
+            description: ''
+          }
+        }).catch(() => {
 
+        })
       }
     }
   }

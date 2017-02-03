@@ -55,6 +55,34 @@
             </router-link>
           </ul>
           <ul v-if="activeName==='star'" class="projects-list content-list">
+            <router-link :to="{path:'project',query:{id:item.id}}" tag="li"
+                         v-for="item in starProjects" class="project-row">
+              <div class="title">
+                <div class="project">
+                  <div class="dash-project-avatar">
+                    <div class="avatar project-avatar s40 identicon">
+                      <img class="avatar project-avatar s40" :src="item.logo">
+                    </div>
+                  </div>
+                  <span class="project-full-name">
+                    <router-link tag="span" :to="{path:'user',query:{id:item.creatorId}}" class="namespace-name">
+                    {{item.creatorName}}
+                    /
+                    </router-link>
+                    <router-link tag="span" :to="{path:'groups_index',query:{id:item.groupId}}" class="namespace-name">
+                    {{item.groupName}}
+                    /
+                    </router-link>
+                    <router-link tag="span" :to="{path:'project',query:{id:item.id}}" class="project-name filter-title">
+                    {{item.projectName}}
+                    </router-link>
+                    </span>
+                </div>
+              </div>
+              <div class="description">
+                <p>{{item.description}}</p>
+              </div>
+            </router-link>
           </ul>
         </div>
       </div>
@@ -111,7 +139,7 @@
       },
       loadStarProject: function () {
         Server({
-          url: 'project/myproject',
+          url: 'project/getmyfavorateproject',
           method: 'get',
           mock: true,
           data: {
