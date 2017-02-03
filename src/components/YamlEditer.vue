@@ -90,6 +90,13 @@
         mockOutput: '' // mocked schema obj
       }
     },
+    watch: {
+      contents: function (newVal, oldVal) {
+        if (newVal != this.$options.editor.getValue()) {
+          this.$options.editor.setValue(newVal) // editor初始化
+        }
+      }
+    },
     editor: null,
     computed: {},
     mounted () {

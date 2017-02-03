@@ -1,4 +1,4 @@
-@import '//at.alicdn.com/t/font_pcgqcjfk2k9sh5mi.css';
+@import '//at.alicdn.com/t/font_w19j5k3zwor5p14i.css';
 
 .ifont {
     font-family: "iconfont" !important;
@@ -7993,21 +7993,16 @@ table td.permission-x {
 }
 
 .dropdown-menu, .dropdown-menu-nav {
-    display: none;
-    position: absolute;
     top: 100%;
     left: 0;
     z-index: 9;
-    width: 240px;
     margin-top: 2px;
     margin-bottom: 0;
     font-size: 15px;
     font-weight: normal;
     padding: 8px 0;
     background-color: #fff;
-    border: 1px solid rgba(0, 0, 0, 0.1);
     border-radius: 3px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1)
 }
 
 .dropdown-menu.is-loading .dropdown-content, .dropdown-menu-nav.is-loading .dropdown-content {
@@ -8053,7 +8048,8 @@ table td.permission-x {
     text-overflow: ellipsis;
     border-radius: 2px;
     white-space: nowrap;
-    overflow: hidden
+    overflow: hidden;
+    cursor: pointer;
 }
 
 .dropdown-menu a:hover, .dropdown-menu a:focus, .dropdown-menu a.is-focused, .dropdown-menu-nav a:hover, .dropdown-menu-nav a:focus, .dropdown-menu-nav a.is-focused {

@@ -5,7 +5,7 @@
         <header>
           <a class="focus-editor" tooltip-trigger="mouseenter"> </a>
           <div class="http-method">
-            <div :class="[apiInfo.type]" class="method">{{apiInfo.type}}</div>
+            <div :class="[apiInfo.method]" class="method">{{apiInfo.method}}</div>
             {{apiInfo.path}}
           </div>
         </header>

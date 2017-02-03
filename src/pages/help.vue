@@ -6,7 +6,7 @@
     </div>
 
 
-    <div class="container-fluid container-limited ">
+    <div class="container-fluid container-limited">
       <div class="content">
         <div>
           <h1>

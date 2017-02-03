@@ -26,11 +26,11 @@
                 <div class="login-body">
                   <el-form ref="loginForm" :model="loginForm" :rules="registerrule" label-width="80px">
                     <el-form-item label="账 号" prop="account">
-                      <el-input placeholder="邮箱" type="text" id="username" name="username" v-model="loginForm.account">
+                      <el-input placeholder="邮箱" type="text" auto-complete="on" id="username" name="username" v-model="loginForm.account">
                       </el-input>
                     </el-form-item>
                     <el-form-item label="密 码" prop="password">
-                      <el-input placeholder="密 码" type="password" v-model="loginForm.password">
+                      <el-input placeholder="密 码" type="password" auto-complete="on" v-model="loginForm.password">
                       </el-input>
                     </el-form-item>
                     <el-form-item label="验证码" prop="kaptcha">
@@ -282,6 +282,7 @@
             return false
           }
         })
+        return false
       },
       /**
        * 注册内容提交
