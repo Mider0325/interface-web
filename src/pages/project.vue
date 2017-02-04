@@ -2,7 +2,18 @@
   <div>
     <div class="layout-nav">
       <div class="container-fluid">
+        <div class="nav-control scrolling-tabs-container">
+          <el-tabs class="nav-links" v-model="activeName" @tab-click="tabHandleClick">
+            <el-tab-pane label="文档" name="doc"></el-tab-pane>
+            <el-tab-pane label="成员" name="member"></el-tab-pane>
+            <el-tab-pane label="接口" name="apis"></el-tab-pane>
+            <el-tab-pane label="设置" name="setting"></el-tab-pane>
+          </el-tabs>
+        </div>
         <div class="controls">
+          <router-link tag="span" :to="{path:'api_new',query:{pid:this.$route.query.id}}" v-if="activeName=='apis'">
+            <el-button type="primary" icon="search">添加接口</el-button>
+          </router-link>
           <el-dropdown>
             <el-button type="primary">
               <i class="el-icon-setting"></i>
@@ -12,14 +23,6 @@
               <el-dropdown-item>删除</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-        </div>
-        <div class="nav-control scrolling-tabs-container">
-          <el-tabs class="nav-links" v-model="activeName" @tab-click="tabHandleClick">
-            <el-tab-pane label="文档" name="doc"></el-tab-pane>
-            <el-tab-pane label="成员" name="member"></el-tab-pane>
-            <el-tab-pane label="接口" name="apis"></el-tab-pane>
-            <el-tab-pane label="设置" name="setting"></el-tab-pane>
-          </el-tabs>
         </div>
       </div>
     </div>
@@ -101,19 +104,86 @@
           <div v-if="activeName==='member'">
             <member></member>
           </div>
-          <div v-if="activeName==='apis'">
+          <div class="apis" v-if="activeName==='apis'">
             <!--接口列表信息-->
+            <el-table
+                :data="drafList"
+                border
+                style="width: 100%">
+              <el-table-column
+                  label="更新时间"
+                  sortable
+                  width="180">
+                <template scope="scope">
+                  <span style="margin-left: 10px">{{ scope.row.time|datetime }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                  prop="name"
+                  label="名称"
+                  width="180">
+              </el-table-column>
+              <el-table-column
+                  prop="method"
+                  label="类型"
+                  width="180">
+              </el-table-column>
+              <el-table-column
+                  prop="path"
+                  sortable
+                  label="路径"
+              >
+              </el-table-column>
+              <el-table-column
+                  label="状态"
+              >
+                <template scope="scope">
+                  <span v-if="scope.row.status==1">
+                    待发布
+                  </span>
+                  <span v-if="scope.row.status==2">
+                    审核中
+                  </span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                  prop="tag"
+                  label="标签"
+                  width="100"
+                  :filters="tableFilters"
+                  :filter-method="filterTag">
+                <template scope="scope">
 
+                  <el-tag v-for="tag in scope.row.tags"
+                          :type='primary'
+                          close-transition>{{tag.name}}
+                  </el-tag>
+                </template>
+              </el-table-column>
+              <el-table-column label="操作">
+                <template scope="scope">
+                  <el-button
+                      size="small"
+                      @click="handleEdit(scope.$index, scope.row)">编辑
+                  </el-button>
+                  <el-button
+                      size="small"
+                      type="danger"
+                      @click="handleDelete(scope.$index, scope.row)">删除
+                  </el-button>
+                </template>
+              </el-table-column>
+            </el-table>
             <!--接口列表信息/-->
           </div>
           <div v-if="activeName==='setting'">
             <div class="project-edit-container">
-              <div class="row prepend-top-default">
-                <c-new type="edit"></c-new>
+              <div class="prepend-top-default">
+                <c-new type="edit" :id="1"></c-new>
               </div>
-              <div class="row prepend-top-default"></div>
+              <div class="prepend-top-default"></div>
               <hr>
-              <div class="row prepend-top-default append-bottom-default">
+              <div class="prepend-top-default append-bottom-default">
                 <div class="col-lg-3">
                   <h4 class="prepend-top-0 danger-title">
                     删除项目
@@ -138,10 +208,16 @@
   .url
     width 400px
 
+  .nav-control
+    float left
+
   .project-tag
     margin 20px auto
     padding 10px
     border 1px dashed #ddd
+
+  .apis
+    margin 10px 0
 
   .content-wrapper
     .apiItem
@@ -184,39 +260,9 @@
     name: 'project',
     data: function () {
       return {
-        content: `path: /name
-type: get
-description: 获取用fdsafdsa户姓名
-parameters:
-  body:
-    good:
-      - name: good
-        age: 123
-    id!number!true!好多描述信息哈哈哈:
-    name!string!good:
-    pet:
-      id!number!true!haoduo:
-      name!string!good:
-  path:
-    name:
-  query:
-responses:
-  200:
-    pageSize: int
-    list:
-      - name: int|描述
-        url: string|描述
-        pets:
-          - $ref: $Pet
-        age: int
-  500:
-    code: int
-    error: string
-definitions:
-  Pet:
-    product_id: string|Unique identifier
-    description: string|Description of product.
-`,
+        tableFilters: [],
+        drafList: [],
+        content: ``,
         apiList: [],
         project: data,
         activeName: 'doc'
@@ -229,7 +275,14 @@ definitions:
           return me.project.description
         }
       })
-      this.loadApis()
+      var tab = window.location.hash.replace('#', '') || 'doc'
+      this.tabHandleClick({ name: tab })
+    },
+    watch: {
+      '$route' (to, from) {
+        var tab = window.location.hash.replace('#', '')
+        this.tabHandleClick({ name: tab })
+      }
     },
     methods: {
       getApiInfo: function (data) {
@@ -244,9 +297,12 @@ definitions:
       },
       loadApis: function () {
         Server({
-          url: 'api/list/1',
-          mock: true,
-          method: 'get'
+          url: 'api/list',
+          method: 'get',
+          params: {
+            projectId: this.$route.query.id,
+            tagIds: ''
+          }
         }).then((response) => {
           var data = response.data
           // 设置分页信息
@@ -257,22 +313,35 @@ definitions:
       },
       tabHandleClick (tab) {
         this.activeName = tab.name
+        switch (tab.name) {
+          case 'doc':
+            this.loadApis()
+            break
+          case 'member':
+
+            break
+          case 'apis':
+            this.loadDrafApis()
+            break
+          case 'setting':
+            break
+        }
+        window.location.hash = '#' + tab.name
       },
       handleChange: function () {
-
       },
       /**
        * 删除当项目
        */
       delectProject: function () {
-        this.$confirm('确认删除', '提示', {
+        this.$confirm('确认删除,删除后所有数据将清除', '提示', {
           type: 'warning'
         }).then(() => {
           Server({
             url: 'project/project',
             method: 'delete',
             data: {
-              id: ''
+              id: this.$route.query.id
             }
           }).then((response) => {
             this.$router.push({ path: 'dashboard_projects' })
@@ -281,6 +350,70 @@ definitions:
         }).catch(() => {
           this.$message('已取消')
         })
+      },
+
+      /* 草稿相关表格过滤 */
+      loadDrafApis: function () {
+        Server({
+          url: 'api/draftList',
+          method: 'get',
+          params: {
+            projectId: this.$route.query.id,
+            tagIds: ''
+          }
+        }).then((response) => {
+          var data = response.data.data
+          // 设置分页信息
+          this.drafList = data
+          this.setTableFilter(data)
+        }).catch(() => {
+
+        })
+        this.loadTags()
+      },
+      loadTags: function () {
+        Server({
+          url: 'api/getTags',
+          method: 'get',
+          params: {
+            projectId: this.$route.query.id
+          }
+        }).then((response) => {
+          var data = response.data.data
+          data.forEach(function (value) {
+            value.text = value.name
+            value.value = value.id
+          })
+          this.tableFilters = data
+        }).catch(() => {
+
+        })
+      },
+      /**
+       * 编辑
+       */
+      handleEdit: function (index, row) {
+        this.$router.push({
+          path: 'api_new',
+          query: {
+            id: row.id
+          }
+        })
+      },
+      /**
+       * 删除
+       */
+      handleDelete: function (index, row) {
+
+      },
+      filterTag (value, row) {
+        var flag = false
+        row.tags.forEach(function (val) {
+          if (val.id == value) {
+            flag = true
+          }
+        })
+        return flag
       }
     }
   }

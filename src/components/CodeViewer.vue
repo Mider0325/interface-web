@@ -54,6 +54,11 @@
       this.changeContent()
       this.$options.editor.resize()
     },
+    beforDestroy: function () {
+      if (this.$options.editor) {
+        this.$options.editor.container.remove()
+      }
+    },
     methods: {
       changeContent: function () {
         var str = ''
