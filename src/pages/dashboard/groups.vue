@@ -40,7 +40,7 @@
                  :src="item.logo"
                  alt="">
             <div class="title">
-              <router-link class="group-name" :to="{path:'/groups_members',query:item.name}">
+              <router-link class="group-name" :to="{path:'/groups_members',query:{id:item.id}}">
                 {{item.name}}
               </router-link>
               我是 <span>{{item.role | groupRole}}</span>
@@ -90,9 +90,10 @@
         Server({
           url: 'project/group',
           method: 'get',
-          mock: true,
           params: {
-            type: type
+            count: 100,
+            type: type,
+            start: 0
           }
         }).then((response) => {
           if (type === 0) {
