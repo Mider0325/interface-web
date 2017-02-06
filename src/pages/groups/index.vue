@@ -16,7 +16,7 @@
           </el-tabs>
         </div>
         <div v-if="activeName=='member'" class="group-members-page prepend-top-default">
-          <members :info="info"></members>
+          <members :id="info.id"></members>
         </div>
         <div v-if="activeName=='project'" class="projects-list-holder">
           <ul class="projects-list content-list">
@@ -32,10 +32,6 @@
                   <span class="project-full-name">
                     <router-link tag="span" :to="{path:'user',query:{id:item.creatorId}}" class="namespace-name">
                     {{item.creatorName}}
-                    /
-                    </router-link>
-                    <router-link tag="span" :to="{path:'groups_index',query:{id:item.groupId}}" class="namespace-name">
-                    {{info.name}}
                     /
                     </router-link>
                     <router-link tag="span" :to="{path:'project',query:{id:item.id}}" class="project-name filter-title">
@@ -56,7 +52,7 @@
                 基本设置
               </div>
               <div class="panel-body">
-                <c-new :info="info"></c-new>
+                <c-new :id="info.id"></c-new>
               </div>
             </div>
             <div class="panel panel-danger">
@@ -121,7 +117,7 @@
         }).catch(() => {
         })
       },
-      getDetail() {
+      getDetail () {
         Server({
           url: 'project/groupinfo',
           method: 'get',

@@ -87,6 +87,7 @@
           <div class="editor">
             <yaml-editer :contents="apiInfo.content" :on-change="editorChange"></yaml-editer>
           </div>
+
           <div class="preview">
             <doc-viewer :apiInfo="apiInfoJson"></doc-viewer>
           </div>

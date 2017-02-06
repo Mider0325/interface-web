@@ -61,12 +61,13 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
-            <a class="btn btn-remove" data-remote="true" rel="nofollow" @click="remove(item)">{{(item.userId === userInfo.userId)?'离开':'移除'}}</a>
+            <a class="btn btn-remove" data-remote="true" rel="nofollow" @click="remove(item)">{{(item.userId ===
+              userInfo.userId)?'离开':'移除'}}</a>
           </div>
           <span class="list-item-name">
             <img class="avatar s40" alt="" :src="item.photo">
             <strong>
-              <a href="/u/chentw">{{item.name}}</a>
+              <router-link :to="{path:'user',query:{id:item.userId}}">{{item.name}}</router-link>
             </strong>
             <span class="label label-success" v-if="item.userId === userInfo.userId">当前用户</span>
             <div class="cgray">{{item.email}}</div>
@@ -90,24 +91,25 @@
   Vue.component('my-item-zh', {
     functional: true,
     render: function (h, ctx) {
-      return h('li', ctx.data, [h(UserItem, {
+      return h('li', ctx.data, [ h(UserItem, {
         props: {
           item: ctx.props.item
         }
-      })])
+      }) ])
     },
     props: {
-      item: {type: Object, required: true}
+      item: { type: Object, required: true }
     }
   })
   export default{
-    mixins: [BasePage],
-    components: {UserItem},
+    mixins: [ BasePage ],
+    components: { UserItem },
     name: 'groups_members',
-    props: { info: {} },
+    props: { id: '' },
     data () {
       return {
         // 一个典型列表数据格式
+        info: {},
         form: {
           name: '',
           groupId: '',
@@ -134,7 +136,7 @@
         Server({
           url: 'users/search',
           method: 'get',
-          params: {key: queryString}
+          params: { key: queryString }
         }).then((response) => {
           var results = this.pretreatmentList(response.data.data)
           cb(results)
@@ -166,8 +168,15 @@
           }
         }).then((response) => {
           this.users = response.data.data
-        }).catch(() => {
-
+        })
+        Server({
+          url: 'project/groupinfo',
+          method: 'get',
+          params: {
+            id: this.info.id || this.req.groupId
+          }
+        }).then((response) => {
+          this.info = response.data.data
         })
       },
       onSubmit () {
@@ -188,8 +197,8 @@
         this.req.userId = item.id
       },
       handleCommand (command) {
-        var role = command.split(',')[0]
-        var userId = command.split(',')[1]
+        var role = command.split(',')[ 0 ]
+        var userId = command.split(',')[ 1 ]
         Server({
           url: 'project/groupuser',
           method: 'put',

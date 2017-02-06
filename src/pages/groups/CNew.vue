@@ -33,7 +33,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
       </el-form-item>
 
     </el-form>
@@ -60,9 +59,10 @@
     mixins: [ BasePage ],
     components: { Upload },
     name: 'groups_cnew',
-    props: { info: {} },
+    props: { id: '' },
     data () {
       return {
+        info: {},
         form: {
           logo: '',
           name: '',
@@ -71,10 +71,19 @@
       }
     },
     mounted: function () {
-      if (this.info.id) {
-        this.form.logo = this.info.logo
-        this.form.name = this.info.name
-        this.form.description = this.info.description
+      if (this.id) {
+        Server({
+          url: 'project/groupinfo',
+          method: 'get',
+          params: {
+            id: this.id
+          }
+        }).then((response) => {
+          this.info = response.data.data
+          this.form.logo = this.info.logo
+          this.form.name = this.info.name
+          this.form.description = this.info.description
+        })
       }
     },
     methods: {
@@ -95,7 +104,9 @@
             data: req
           }).then((response) => {
             this.$message('修改成功')
-            this.$router.push({path: '/groups_members', query: {id: this.info.id}})
+            if (!this.id) {
+              this.$router.push({ path: 'groups_members', query: { id: this.info.id } })
+            }
           }).catch(() => {
 
           })

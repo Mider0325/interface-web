@@ -179,7 +179,7 @@
           <div v-if="activeName==='setting'">
             <div class="project-edit-container">
               <div class="prepend-top-default">
-                <c-new type="edit" :id="1"></c-new>
+                <c-new :id="$route.query.id-0"></c-new>
               </div>
               <div class="prepend-top-default"></div>
               <hr>
@@ -275,8 +275,10 @@
           return me.project.description
         }
       })
-      var tab = window.location.hash.replace('#', '') || 'doc'
-      this.tabHandleClick({ name: tab })
+      if (!window.location.hash) {
+        this.activeName = 'doc'
+        this.loadApis()
+      }
     },
     watch: {
       '$route' (to, from) {
