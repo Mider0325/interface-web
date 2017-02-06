@@ -1,22 +1,13 @@
 <template>
   <div>
-    <h3 class="page-title">
-      新建分组
-    </h3>
     <hr>
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="图标">
         <div class="headIcon">
-          <img :src="form.image">
+          <img :src="form.logo">
         </div>
-        <el-upload
-            action="//jsonplaceholder.typicode.com/posts/"
-            :multiple=false
-            :show-upload-list=false
-            :on-preview="handlePreview"
-            :on-remove="handleRemove">
-          <el-button type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
-          <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
+        <upload :on-success="uploadEnd"></upload>
+        <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
         </el-upload>
       </el-form-item>
 
@@ -42,7 +33,6 @@
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">立即创建</el-button>
-        <el-button>取消</el-button>
       </el-form-item>
 
     </el-form>
@@ -63,38 +53,75 @@
 
 <script type="text/ecmascript-6">
   import BasePage from 'src/extend/BasePage'
+  import Server from 'src/extend/Server'
+  import Upload from 'src/components/Upload'
   export default{
     mixins: [ BasePage ],
-    components: {},
+    components: { Upload },
     name: 'groups_cnew',
+    props: { id: '' },
     data () {
       return {
-        // 一个典型列表数据格式
-        options: [ {
-          value: '1',
-          label: 'H5deplov'
-        }, {
-          value: '2',
-          label: 'Util'
-        }, {
-          value: '2',
-          label: '添加新组'
-        } ],
-        value: '',
-        // 一个典型列表数据格式
+        info: {},
         form: {
-          image: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+          logo: '',
           name: '',
-          groupId: '',
           description: ''
         }
       }
     },
     mounted: function () {
+      if (this.id) {
+        Server({
+          url: 'project/groupinfo',
+          method: 'get',
+          params: {
+            id: this.id
+          }
+        }).then((response) => {
+          this.info = response.data.data
+          this.form.logo = this.info.logo
+          this.form.name = this.info.name
+          this.form.description = this.info.description
+        })
+      }
     },
     methods: {
+      uploadEnd: function (url) {
+        this.form.logo = url
+      },
       onSubmit: function () {
+        if (this.info.id) {
+          var req = {
+            logo: this.form.logo,
+            name: this.form.name,
+            description: this.form.description,
+            id: this.info.id
+          }
+          Server({
+            url: 'project/group',
+            method: 'put',
+            data: req
+          }).then((response) => {
+            this.$message('修改成功')
+            if (!this.id) {
+              this.$router.push({ path: 'groups_members', query: { id: this.info.id } })
+            }
+          }).catch(() => {
 
+          })
+        } else {
+          Server({
+            url: 'project/group',
+            method: 'post',
+            data: this.form
+          }).then((response) => {
+            this.$message('添加成功')
+            this.$router.push({ path: 'dashboard_groups' })
+          }).catch(() => {
+
+          })
+        }
       }
     }
   }

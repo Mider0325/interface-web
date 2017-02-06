@@ -31,17 +31,6 @@
     name: 'projects_new',
     data () {
       return {
-        // 一个典型列表数据格式
-        options: [ {
-          value: '1',
-          label: 'H5deplov'
-        }, {
-          value: '2',
-          label: 'Util'
-        }, {
-          value: '2',
-          label: '添加新组'
-        } ],
         value: '',
         form: {
           image: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',

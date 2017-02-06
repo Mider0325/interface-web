@@ -23,7 +23,7 @@
                 v-for="(tag,key) in dynamicTags"
                 :closable="true"
                 :close-transition="false"
-                @close="handleClose(key)"
+                @close="handleClose(key,tag)"
             >
               {{tag.name}}
             </el-tag>
@@ -46,7 +46,7 @@
         </div>
         <div class="controls">
 
-          <el-button type="warning" size="small">
+          <el-button @click="publish" type="warning" size="small">
             <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
               发布 <i class="ifont icon-menu"></i>
             </el-tooltip>
@@ -58,6 +58,9 @@
               trigger="click">
             <div class="dropdown-menu-nav">
               <ul>
+                <li @click="copyNew">
+                  <a aria-label="Profile Settings">拷贝并新建</a>
+                </li>
                 <li @click="editMock">
                   <a aria-label="Profile Settings">MOCK数据</a>
                 </li>
@@ -76,10 +79,15 @@
     </div>
     <div class="content-wrapper page-with-layout-nav" :style="{height: (appInfo.size.height-50-58) + 'px'}">
       <div style="width: 100%">
+        <el-alert v-if="appInfo.status==2"
+                  title="注意该接口处于审核中状态。修改不会被保存。"
+                  type="warning">
+        </el-alert>
         <div class="content">
           <div class="editor">
             <yaml-editer :contents="apiInfo.content" :on-change="editorChange"></yaml-editer>
           </div>
+
           <div class="preview">
             <doc-viewer :apiInfo="apiInfoJson"></doc-viewer>
           </div>
@@ -167,10 +175,7 @@
     name: 'api_new',
     data () {
       return {
-        dynamicTags: [ {
-          id: 1,
-          name: '标签1'
-        } ],
+        dynamicTags: [],
         inputVisible: false,
         inputBtnVisible: true,
         inputValue: '',
@@ -178,6 +183,7 @@
         apiInfo: {
           id: '',
           content: `path: /demo
+name: 接口demo
 method: get
 description: 获取用fdsafdsa户姓名
 parameters:
@@ -192,8 +198,11 @@ responses:
   200:
     a: 1`,
           description: '描述',
+          name: '接口demo',
           method: 'get',
-          path: 'demo'
+          path: 'demo',
+          projectId: '',
+          tags: []
         }
       }
     },
@@ -220,7 +229,8 @@ responses:
             method: 'get'
           }).then((response) => {
             var data = response.data.data
-            this.apiInfo.content = data.content
+            this.apiInfo = data
+            this.dynamicTags = data.tags || []
           }).catch((e) => {
 
           })
@@ -231,7 +241,9 @@ responses:
               content: this.apiInfo.content,
               description: this.apiInfo.description,
               method: this.apiInfo.method,
-              path: this.apiInfo.path
+              name: this.apiInfo.name,
+              path: this.apiInfo.path,
+              projectId: this.apiInfo.projectId || this.$route.query.pid
             },
             method: 'post'
           }).then((response) => {
@@ -248,7 +260,8 @@ responses:
             apiId: this.apiInfo.id,
             content: this.apiInfo.content,
             remark: this.apiInfo.description,
-            method: 1, // Todo
+            name: this.apiInfo.name,
+            method: this.apiInfo.method,
             path: this.apiInfo.path
           },
           method: 'put'
@@ -259,26 +272,57 @@ responses:
         })
       },
       /* =============tag=========== */
-      handleClose (tag) {
-        this.dynamicTags.splice(this.dynamicTags.indexOf(tag), 1)
-        if (this.dynamicTags.length > 2) {
-          this.inputBtnVisible = false
-        } else {
-          this.inputBtnVisible = true
-        }
+      /**
+       * 删除标签
+       */
+      handleClose (key, tag) {
+        debugger
+        Server({
+          url: 'api/deleteApiTag',
+          data: {
+            apiId: this.apiInfo.id,
+            tagId: tag.id
+          },
+          method: 'delete'
+        }).then((response) => {
+          this.dynamicTags.splice(this.dynamicTags.indexOf(key), 1)
+          if (this.dynamicTags.length > 2) {
+            this.inputBtnVisible = false
+          } else {
+            this.inputBtnVisible = true
+          }
+        }).catch((e) => {
+          this.$message('删除失败')
+        })
       },
+      /**
+       * 添加标签
+       */
       handleInputConfirm () {
         let inputValue = this.inputValue
-        if (inputValue) {
-          this.dynamicTags.push({ id: Math.random(), name: inputValue })
+        if (!inputValue) {
+          return
         }
-        this.inputVisible = false
-        this.inputValue = ''
-        if (this.dynamicTags.length > 2) {
-          this.inputBtnVisible = false
-        } else {
-          this.inputBtnVisible = true
-        }
+        Server({
+          url: 'api/addApiTag',
+          data: {
+            apiId: this.apiInfo.id,
+            tagName: inputValue
+          },
+          method: 'post'
+        }).then((response) => {
+          var data = response.data.data
+          this.dynamicTags.push({ id: data.tagId, name: inputValue })
+          this.inputVisible = false
+          this.inputValue = ''
+          if (this.dynamicTags.length > 2) {
+            this.inputBtnVisible = false
+          } else {
+            this.inputBtnVisible = true
+          }
+        }).catch((e) => {
+          this.$message('标签添加失败')
+        })
       },
       /* =============事件=========== */
 
@@ -290,6 +334,7 @@ responses:
         this.apiInfoJson = jsYaml.safeLoad(this.apiInfo.content) || {}
         this.apiInfo.path = this.apiInfoJson.path
         this.apiInfo.method = this.apiInfoJson.method
+        this.apiInfo.name = this.apiInfoJson.name
       },
       /**
        * 删除api
@@ -313,6 +358,39 @@ responses:
         }).catch(() => {
           this.$message('已取消')
         })
+      },
+      /**
+       * 发布项目
+       */
+      publish: function () {
+        this.$prompt('输入备注', '发布', {
+          inputPattern: /.{0,30}/,
+          inputErrorMessage: '备注0到30个字'
+        }).then(({ value }) => {
+          Server({
+            url: 'api/requestRelease',
+            method: 'post',
+            data: {
+              apiId: this.apiInfo.id,
+              description: value
+            }
+          }).then((response) => {
+            this.$message('发布成功')
+          }).catch(() => {
+            this.$message('发布失败')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+      },
+      /**
+       * 拷贝并创建
+       */
+      copyNew: function () {
+        this.addApi()
       },
       /**
        * 编辑api Mock文档

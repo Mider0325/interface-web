@@ -7,19 +7,20 @@
     <div class="row prepend-top-default">
       <div class="col-lg-3 profile-settings-sidebar">
         <h4 class="prepend-top-0">
-          <div v-if="type=='new'">
-            新建项目
-          </div>
-          <div v-if="type=='edit'">
+          <div v-if="id">
             更新项目
+          </div>
+          <div v-else>
+            新建项目
           </div>
         </h4>
         <p>
-        <div v-if="type=='new'">
-          创建的项目必须在指定的一个组里面，可以自己新建分组
-        </div>
-        <div v-if="type=='edit'">
+
+        <div v-if="id">
           修改自己的项目内容
+        </div>
+        <div v-else>
+          创建的项目必须在指定的一个组里面，可以自己新建分组
         </div>
         </p>
       </div>
@@ -28,24 +29,18 @@
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="图标">
             <div class="headIcon">
-              <img :src="form.image">
+              <img :src="form.logo">
             </div>
-            <el-upload
-                action="//jsonplaceholder.typicode.com/posts/"
-                :multiple=false
-                :show-upload-list=false
-                :on-preview="handlePreview"
-                :on-remove="handleRemove">
-              <el-button type="primary">上传<i class="el-icon-upload el-icon--right"></i></el-button>
-              <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
-            </el-upload>
+            <upload :on-success="uploadEnd"></upload>
           </el-form-item>
           <el-form-item label="所属组">
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="form.groupId" filterable placeholder="请选择">
               <el-option
                   v-for="item in options"
-                  :label="item.label"
-                  :value="item.value">
+                  :label="item.name"
+                  :value="item.id">
+                <span style="float: left">{{ item.name }}</span>
+                <img :src="item.logo" class="group-img"></img>
               </el-option>
             </el-select>
           </el-form-item>
@@ -57,7 +52,7 @@
             <el-input type="textarea" v-model="form.description"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="onSubmit">提交</el-button>
+            <el-button type="primary" :loading="loading" @click="onSubmit">提交</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -66,6 +61,15 @@
 </template>
 
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+  .group-img
+    width 30px
+    height 30px
+    border-radius 50%
+    overflow hidden
+    float right
+    position relative
+    bottom 5px
+
   .headIcon
     width 150px
     height 150px
@@ -79,14 +83,15 @@
 
 <script type="text/ecmascript-6">
   import BasePage from 'src/extend/BasePage'
+  import Upload from 'src/components/Upload'
+  import Server from 'src/extend/Server'
   export default{
     mixins: [ BasePage ],
-    components: {},
+    components: { Upload },
     name: 'projects_cnew',
     props: {
-      type: {
-        type: String,
-        default: 'new'
+      id: { // 项目id
+        type: Number
       },
       info: {
         type: Object
@@ -95,30 +100,99 @@
     data () {
       return {
         // 一个典型列表数据格式
-        options: [ {
-          value: '1',
-          label: 'H5deplov'
-        }, {
-          value: '2',
-          label: 'Util'
-        }, {
-          value: '2',
-          label: '添加新组'
-        } ],
+        loading: false,
+        options: [],
         value: '',
         form: {
-          image: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100',
+          logo: '',
           name: '',
-          groupId: '',
+          groupId: 1003,
           description: ''
         }
       }
     },
     mounted: function () {
+      if (this.id) {
+        this.getProjectInfo()
+      }
+      this.getGrops()
     },
     methods: {
-      onSubmit: function () {
+      uploadEnd: function (url) {
+        this.form.logo = url
+      },
+      getProjectInfo: function () {
+        Server({
+          url: 'project/project',
+          method: 'get',
+          params: { id: this.id }
+        }).then((response) => {
+          var data = response.data.data
+          this.form = {
+            logo: data.logo,
+            name: data.name,
+            groupId: data.groupId,
+            description: data.description
+          }
+        })
+      },
+      getGrops: function () {
+        Server({
+          url: 'project/group',
+          method: 'get',
+          params: {
+            type: 0,
+            start: 0,
+            count: 100
+          }
+        }).then((response) => {
+          var data = response.data.data
+          this.options = data
+        }).catch(() => {
 
+        })
+      },
+      onSubmit: function () {
+        this.loading = true
+        if (this.id) {
+          Server({
+            url: 'project/project',
+            method: 'put',
+            data: { ...this.form, id: this.id }
+          }).then((response) => {
+            this.loading = false
+            this.$notify({
+              title: '成功',
+              message: '修改成功',
+              type: 'success'
+            })
+          }).catch(() => {
+            this.loading = false
+            this.$notify({
+              itle: '警告',
+              message: '修改失败',
+              type: 'warning'
+            })
+          })
+        } else {
+          Server({
+            url: 'project/project',
+            method: 'post',
+            data: this.form
+          }).then((response) => {
+            this.loading = false
+            this.$notify({
+              title: '成功',
+              message: '创建成功',
+              type: 'success'
+            })
+            this.$router.push({
+              path: 'dashboard_projects'
+            })
+          }).catch(() => {
+            this.loading = false
+          })
+        }
       }
     }
   }

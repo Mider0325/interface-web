@@ -1,7 +1,6 @@
 /**
  * Created by Administrator on 2016/3/15.
  */
-
 var findMenuByKey = function (data, key, path) {
   if (data && data.length) {
     for (var i = 0; i < data.length; i++) {
@@ -80,4 +79,3 @@ export const changeNavTwoIndex = ({ commit }, data) => {
 export const changeAppSize = ({ commit }, data) => {
   commit('changeAppSize', data)
 }
-

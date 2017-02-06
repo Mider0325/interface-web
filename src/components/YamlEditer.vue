@@ -114,6 +114,11 @@
       this.$options.editor.getSession().on('change', debounce(e => this.editorChange(e), 300))  // 监听editor内容变化 去抖
       this.editorChange()
     },
+    beforDestroy: function () {
+      if (this.$options.editor) {
+        this.$options.editor.container.remove()
+      }
+    },
     methods: {
       /* ================对内容处理============== */
       /**

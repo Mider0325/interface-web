@@ -6,6 +6,7 @@ import VueRouter from 'vue-router'
 import './assets/style/theme/index.css'
 import EmaProxy from 'ema-proxy'
 import store from './store'
+require('./assets/js/base')
 require('./extend/filter')
 require('./assets/style/base.css')
 
