@@ -27,6 +27,8 @@
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .parametersContent
+    .el-tooltip
+      display inline-block
     .paramsItem
       position relative
       margin-top 20px

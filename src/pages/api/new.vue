@@ -46,12 +46,18 @@
         </div>
         <div class="controls">
 
-          <el-button @click="publish" type="warning" size="small">
+          <el-button v-if="apiInfo.status==1" @click="applyPublish" type="warning" size="small">
             <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
-              发布 <i class="ifont icon-menu"></i>
+              申请发布 <i class="ifont icon-menu"></i>
             </el-tooltip>
           </el-button>
-          <el-button type="primary" size="small" @click="upDateApi">保存</el-button>
+          <el-dropdown v-if="apiInfo.status==1" split-button size="small" type="primary" @command="handleCommand"
+                       @click="upDateApi">
+            保存
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="publish">保存并发布</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
           <el-popover
               ref="setting"
               width="200"
@@ -79,7 +85,7 @@
     </div>
     <div class="content-wrapper page-with-layout-nav" :style="{height: (appInfo.size.height-50-58) + 'px'}">
       <div style="width: 100%">
-        <el-alert v-if="appInfo.status==2"
+        <el-alert v-if="apiInfo.status==2"
                   title="注意该接口处于审核中状态。修改不会被保存。"
                   type="warning">
         </el-alert>
@@ -97,11 +103,14 @@
   </div>
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" type="text/css">
   .page
     overflow hidden
     display box
     -webkit-box-orient: vertical;
+    .el-dropdown
+      .el-button-group
+        display inline-block
     .leftcontrols
       display inline-block
       float: left;
@@ -183,7 +192,7 @@
         apiInfo: {
           id: '',
           content: `path: /demo
-name: 接口demo
+name: 接口demo${Math.random()}
 method: get
 description: 获取用fdsafdsa户姓名
 parameters:
@@ -201,6 +210,7 @@ responses:
           name: '接口demo',
           method: 'get',
           path: 'demo',
+          status: 1,
           projectId: '',
           tags: []
         }
@@ -249,6 +259,7 @@ responses:
           }).then((response) => {
             var data = response.data.data
             this.apiInfo.id = data.id
+            this.apiInfo.status = 1
           }).catch((e) => {
           })
         }
@@ -262,6 +273,7 @@ responses:
             remark: this.apiInfo.description,
             name: this.apiInfo.name,
             method: this.apiInfo.method,
+            publishStatus: '1',
             path: this.apiInfo.path
           },
           method: 'put'
@@ -276,7 +288,6 @@ responses:
        * 删除标签
        */
       handleClose (key, tag) {
-        debugger
         Server({
           url: 'api/deleteApiTag',
           data: {
@@ -360,10 +371,10 @@ responses:
         })
       },
       /**
-       * 发布项目
+       * 申请发布项目
        */
-      publish: function () {
-        this.$prompt('输入备注', '发布', {
+      applyPublish: function () {
+        this.$prompt('输入备注', '申请发布', {
           inputPattern: /.{0,30}/,
           inputErrorMessage: '备注0到30个字'
         }).then(({ value }) => {
@@ -375,7 +386,8 @@ responses:
               description: value
             }
           }).then((response) => {
-            this.$message('发布成功')
+            this.apiInfo.status = 2
+            this.$message('申请成功')
           }).catch(() => {
             this.$message('发布失败')
           })
@@ -386,6 +398,38 @@ responses:
           })
         })
       },
+
+      /**
+       * 发布项目
+       */
+      publish: function () {
+        this.$prompt('输入备注', '发布', {
+          inputPattern: /.{0,30}/,
+          inputErrorMessage: '备注0到30个字'
+        }).then(({ value }) => {
+          Server({
+            url: 'api/update',
+            data: {
+              apiId: this.apiInfo.id,
+              content: this.apiInfo.content,
+              remark: value,
+              name: this.apiInfo.name,
+              method: this.apiInfo.method,
+              publishStatus: '3',
+              path: this.apiInfo.path
+            },
+            method: 'put'
+          }).then((response) => {
+            this.$message('修改成功')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+      },
+
       /**
        * 拷贝并创建
        */
@@ -404,6 +448,15 @@ responses:
           },
           methods: {}
         })
+      },
+      handleCommand (command) {
+        if (command == 'publish') {
+          if (this.apiInfo.role < 3) {
+            this.publish()
+          } else {
+            this.$message('需要管理员权限才能保存并发布。请申请发布等待管理员审核。')
+          }
+        }
       }
     }
   }
