@@ -1,0 +1,356 @@
+<template>
+  <div class="tool">
+    <div class="path">
+      <div class="input">
+        <el-input placeholder="请输入路径" @focus="pathParamsVisable=false" v-model="url">
+          <el-select class="el-my-select" v-model="method" slot="prepend" placeholder="请选择">
+            <el-option v-for="item in Metadata.methods" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+          <el-button slot="append" type="primary" @click="pathParamsVisable = !pathParamsVisable">参数</el-button>
+        </el-input>
+      </div>
+      <el-dropdown class="send" @click="send" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
+                   @command="sendTypeSelect">
+        发送
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item command="saveandsend">保存并发送</el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+    </div>
+    <div class="pathParams" v-if="pathParamsVisable">
+      <object-edit :info="requestInfo.query" :on-change="requestQueryChange"></object-edit>
+    </div>
+    <!-- 请求参数 -->
+    <div class="requestWarp">
+      <el-tabs v-model="requestTabName" @tab-click="requestTabClick">
+        <el-tab-pane label="Authorization" name="Authorization"></el-tab-pane>
+        <el-tab-pane label="Header" name="Header"></el-tab-pane>
+        <el-tab-pane label="Body" name="Body"></el-tab-pane>
+      </el-tabs>
+      <div class="tabContent" v-if="requestTabName=='Authorization'">
+        暂未开放
+      </div>
+      <div class="tabContent" v-if="requestTabName=='Header'">
+        <object-edit :info="requestInfo.header" :on-change="requestHeaderChange"></object-edit>
+      </div>
+      <div class="tabContent" v-if="requestTabName=='Body'">
+        <div class="nav">
+          <el-radio-group size="small" v-model="requestBodyViewType">
+            <el-radio label="formdata">form-data</el-radio>
+            <el-radio label="xwwwformurlencoded">x-www-form-urlencoded</el-radio>
+            <el-radio label="raw">raw</el-radio>
+            <el-radio label="binary">binary</el-radio>
+          </el-radio-group>
+          <el-dropdown size="small" class="bodyType" v-if="requestBodyViewType=='raw'" type="primary"
+                       @command="requestBodyViewTypeSelect">
+
+            <span class="el-dropdown-link">
+            {{requestBodyType.toUpperCase()}}<i class="el-icon-caret-bottom el-icon--right"></i>
+          </span>
+            <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="Text">Text</el-dropdown-item>
+              <el-dropdown-item command="Text(text/plain)">Text(text/plain)</el-dropdown-item>
+              <el-dropdown-item command="JSON(application/json)">JSON(application/json)</el-dropdown-item>
+              <el-dropdown-item command="javascript(application/javascript)">javascript(application/javascript)
+              </el-dropdown-item>
+              <el-dropdown-item command="XML(application/xml)">XML(application/xml)</el-dropdown-item>
+              <el-dropdown-item command="XML(text/xml)">XML(text/xml)</el-dropdown-item>
+              <el-dropdown-item command="HTML(text/html)">HTML(text/html)</el-dropdown-item>
+            </el-dropdown-menu>
+          </el-dropdown>
+        </div>
+        <div class="body">
+          <div class="raw" v-if="requestBodyViewType=='raw'">
+            <code-viewer :ctype="requestBodyType_view"
+                         :options="{theme:''}"
+                         :contents="JSON.stringify(requestInfo.body)"></code-viewer>
+          </div>
+          <div v-if="requestBodyViewType=='formdata'">
+            暂未开放
+          </div>
+          <div v-if="requestBodyViewType=='xwwwformurlencoded'">
+            暂未开放
+          </div>
+          <div v-if="requestBodyViewType=='binary'">
+            暂未开放
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 请求参数 end-->
+
+    <!-- 请求结果 -->
+    <div class="responseWarp" element-loading-text="拼命加载中"
+         v-loading="requestLoading">
+      <div v-if="!responseInfo.error">
+        <el-tabs v-model="responseTabName" @tab-click="responseTabClick">
+          <el-tab-pane label="Body" name="Body"></el-tab-pane>
+          <el-tab-pane label="Cookies" name="Cookies"></el-tab-pane>
+          <el-tab-pane label="Headers" name="Headers"></el-tab-pane>
+        </el-tabs>
+        <div class="tabContent" v-if="responseTabName=='Body'">
+          <div class="nav">
+            <el-radio-group size="small" v-model="responseBodyViewType">
+              <el-radio-button label="Pretty">Pretty</el-radio-button>
+              <el-radio-button label="Raw">Raw</el-radio-button>
+              <el-radio-button label="Preview">Preview</el-radio-button>
+            </el-radio-group>
+            <el-dropdown size="small" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
+                         @command="responseBodyViewTypeSelect">
+              {{responseBodyType.toUpperCase()}}
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item command="json">JSON</el-dropdown-item>
+                <el-dropdown-item command="html">HTML</el-dropdown-item>
+                <el-dropdown-item command="text">TEXT</el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+            <div v-if="responseInfo.status" class="tip">
+              状态码: <span>{{responseInfo.status}}</span>
+            </div>
+          </div>
+          <div class="body">
+            <div v-if="responseBodyViewType=='Pretty'">
+              <code-viewer :ctype="responseBodyType"
+                           :options="{theme:''}"
+                           :contents="responseInfo.responseText"></code-viewer>
+            </div>
+            <div v-if="responseBodyViewType=='Raw'">
+              {{responseInfo.responseText}}
+            </div>
+            <div v-if="responseBodyViewType=='Preview'">
+              {{responseInfo.responseText}}
+            </div>
+          </div>
+        </div>
+        <div class="tabContent" v-if="responseTabName=='Cookies'">
+          实现中
+        </div>
+        <div class="tabContent headers" v-if="responseTabName=='Headers'">
+          <div v-for="(item,key) in responseInfo.headers">
+            <span class="hkey">{{key}}</span>
+            :
+            <span class="hvalue">{{item}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="errorWarp" v-else>
+        {{responseInfo.message}}
+      </div>
+    </div>
+    <!-- 请求结果 end-->
+
+  </div>
+</template>
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+  .tool
+    width: 100%
+    .path
+      display flex
+      .input
+        -webkit-flex 1
+        .el-my-select
+          width 130px
+      .send
+        margin 0 0 0 30px
+    .pathParams
+      margin 10px 0
+    .responseWarp
+      .errorWarp
+        margin-top: 20px;
+        padding 20px
+        border-radius 5px
+        overflow scroll
+        border 1px solid #ddd
+      .tabContent
+        padding 0 20px
+      .nav
+        margin 5px 0
+        .tip
+          float right
+          line-height: 30px;
+          > span
+            color orange
+            margin 0 3px
+      .body
+        > div
+          height 400px
+          border-radius 5px
+          overflow scroll
+          border 1px solid #ddd
+      .headers
+        span
+          margin 5px 10px
+        .hkey
+          font-weight bold
+    .requestWarp
+      .tabContent
+        padding 0 20px
+      .nav
+        margin 5px 0
+      .bodyType
+        margin 0 20px
+        color orange
+      .body
+        .raw
+          height 200px
+          border-radius 5px
+          overflow scroll
+          border 1px solid #ddd
+</style>
+<script type="text/ecmascript-6">
+  import BaseComponent from 'src/extend/BaseComponent'
+  import ObjectEdit from './ObjectEdit.vue'
+  import CodeViewer from 'src/components/CodeViewer.vue'
+  import axios from 'axios'
+  import {mapState} from 'vuex'
+  var URL = window.url
+  export default {
+    mixins: [ BaseComponent ],
+    name: 'RestfulTool_index',
+    components: { ObjectEdit, CodeViewer },
+    props: {
+      apiInfo: {
+        type: Object,
+        default: function () {
+          return {}
+        }
+      }
+    },
+    data: function () {
+      return {
+        requestBodyViewType: 'raw',
+        responseBodyViewType: 'Pretty',
+        requestTabName: 'Authorization',
+        responseTabName: 'Body',
+        requestInfo: {
+          header: {},
+          body: {},
+          path: {},
+          query: {}
+        },
+        responseInfo: {
+          error: false,
+          message: '',
+          status: '',
+          responseText: '',
+          responseType: '',
+          headers: {}
+        },
+        requestLoading: false,
+        responseBodyType: 'json',
+        requestBodyType: 'text',
+        requestBodyType_view: 'text',
+        pathParamsVisable: false,
+        method: 'put',
+        url: 'http://114.215.120.151:9080/gointerface/'
+      }
+    },
+    computed: mapState({
+      Metadata: state => state.Metadata
+    }),
+    watch: {
+      url: function (newVal, oldVal) {
+        // url 变化 设置 提取query
+        var url = URL.parse(newVal)
+        if (typeof url.get == 'object') {
+          this.requestInfo.query = url.get
+        }
+        console.log(url)
+      }
+    },
+    mounted () {
+      this.instance = axios.create({
+        baseURL: '',
+        timeout: 1000,
+        headers: {}
+      })
+
+      this.url += this.apiInfo.path
+    },
+    methods: {
+      dealResponse: function (data) {
+        this.responseInfo.headers = data.headers
+        this.responseInfo.status = data.status
+        this.responseInfo.statusText = data.statusText
+        this.responseInfo.responseText = data.request.responseText
+        this.responseInfo.responseType = data.request.responseType
+      },
+      /**
+       * 保存mock数据
+       */
+      save: function () {
+      },
+      /**
+       * 发送请求测试
+       */
+      send: function () {
+        this.requestLoading = true
+        this.responseInfo.error = false
+        this.instance({
+          baseURL: this.url,
+          url: '',
+          method: this.method,
+          params: {},
+          headers: this.requestInfo.header
+        }).then((response) => {
+          console.log(response)
+          this.dealResponse(response)
+          this.requestLoading = false
+        }).catch((response) => {
+          if (response.code) {
+            this.responseInfo.message = response.message
+            this.responseInfo.error = true
+          }
+          if (response.response) {
+            this.dealResponse(response.response)
+          } else {
+            this.responseInfo.message = response.message
+            this.responseInfo.error = true
+          }
+          console.log(response.response)
+          this.requestLoading = false
+        })
+      },
+      requestHeaderChange: function (data) {
+        this.requestInfo.header = data
+      },
+      requestQueryChange: function (data) {
+        this.requestInfo.query = data
+        var url = URL.parse(this.url)
+        url.query = ''
+        url.get = data
+        this.url = URL.build(url)
+      },
+      requestTabClick: function () {
+      },
+      /**
+       * 修改响应结果显示格式
+       * @param command
+       */
+      responseBodyViewTypeSelect: function (command) {
+        this.responseBodyType = command
+      },
+      requestBodyViewTypeSelect: function (command) {
+        this.requestBodyType = command
+        var header = command.match(/\(.*\)/gi)
+        if (header) {
+          header = header[ 0 ]
+          this.requestBodyType_view = command.replace(header, '').toLocaleLowerCase()
+          this.requestInfo.header[ 'Content-Type' ] = header.replace(/[(]|[)]/gi, '')
+        } else {
+          this.requestBodyType_view = command.toLocaleLowerCase()
+          delete this.requestInfo.header[ 'Content-Type' ]
+        }
+      },
+      sendTypeSelect: function (command) {
+        if (command == 'saveandsend') {
+          this.send()
+          this.save()
+        }
+      },
+      responseTabClick: function () {
+      }
+    }
+  }
+</script>
+

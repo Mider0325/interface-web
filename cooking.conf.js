@@ -71,6 +71,7 @@ cooking.add('loader.markdown', {
   loaders: [ 'html-loader', 'markdown-loader' ]
 })
 cooking.add('externals.ace', 'ace')
+cooking.add('externals.jQuery', 'jQuery')
 if (process.env.NODE_ENV === 'production') {
   cooking.add('externals.vue', 'Vue')
   cooking.add('externals.vue-router', 'VueRouter')

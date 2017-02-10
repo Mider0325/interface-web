@@ -44,6 +44,9 @@
     watch: {
       contents: function (val) {
         this.changeContent()
+      },
+      ctype: function (val, old) {
+        this.$options.editor.getSession().setMode('ace/mode/' + val)
       }
     },
     mounted () {
@@ -65,12 +68,15 @@
         if (!this.$options.editor) {
           return
         }
-        try {
-          str = JSON.stringify(JSON.parse(this.contents), null, 2)
-        } catch (e) {
-
+        if (this.ctype == 'json') {
+          try {
+            str = JSON.stringify(JSON.parse(this.contents), null, 2)
+          } catch (e) {
+          }
+          this.$options.editor.setValue(str)
+        } else {
+          this.$options.editor.setValue(this.contents)
         }
-        this.$options.editor.setValue(str)
       }
     }
   }

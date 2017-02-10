@@ -2,6 +2,15 @@
  * 基本元数据配置
  */
 const state = {
+  methods: [
+    { value: 'put', label: 'PUT' },
+    { value: 'head', label: 'HEAD' },
+    { value: 'delete', label: 'DELETE' },
+    { value: 'post', label: 'POST' },
+    { value: 'patch', label: 'PATCH' },
+    { value: 'get', label: 'GET' },
+    { value: 'options', label: 'OPTIONS' }
+  ],
   projectPower: [
     {
       value: '1',

@@ -27,6 +27,19 @@
               <request-viewer :apiInfo="apiInfo.responses"></request-viewer>
             </div>
           </section>
+          <section class="responses">
+            <h4>
+              调试<el-switch
+                v-model="openTry"
+                on-text="关闭调试"
+                :width="100"
+                off-text="开启调试">
+            </el-switch></h4>
+          </section>
+        </div>
+        <hr>
+        <div>
+          <restful-tool :apiInfo="apiInfo" v-if="openTry"></restful-tool>
         </div>
       </div>
     </div>
@@ -71,11 +84,12 @@
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
   import CodeViewer from 'src/components/CodeViewer'
+  import RestfulTool from 'src/components/RestfulTool/index.vue'
   import RequestViewer from 'src/components/RequestViewer/index.vue'
   export default {
     mixins: [ BaseComponent ],
     name: 'DocViewer',
-    components: { CodeViewer, RequestViewer },
+    components: { CodeViewer, RequestViewer, RestfulTool },
     props: {
       apiInfo: {
         type: Object,
@@ -86,6 +100,7 @@
     },
     data: function () {
       return {
+        openTry: false,
         parameters: {},
         split: '!',
         jsonViewOption: {

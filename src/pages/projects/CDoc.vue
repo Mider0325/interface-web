@@ -42,7 +42,7 @@
           prop="time"
           width="160">
         <template scope="scope">
-          <span style="margin-left: 10px">{{ scope.row.time|datetime }}</span>
+          <span :id="'doctableexpanded_'+scope.row.id" style="margin-left: 10px">{{ scope.row.time|datetime }}</span>
         </template>
       </el-table-column>
       <el-table-column
@@ -134,6 +134,7 @@
   import DocViewer from 'src/components/DocViewer'
   import Clipboard from 'clipboard'
   import jsYaml from 'js-yaml'
+  import $ from 'jQuery'
 
   export default{
     mixins: [ BasePage ],
@@ -197,6 +198,13 @@
           }).then((response) => {
             var data = response.data.data
             this.$set(item, 'content', data.content)
+            this.$nextTick(function () {
+              $(window.document.body).scrollTo(`#doctableexpanded_${item.id}`, 200, {
+                offset: {
+                  top: -20
+                }
+              })
+            })
           }).catch((e) => {
 
           })
