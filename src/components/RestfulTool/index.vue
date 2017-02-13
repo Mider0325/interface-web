@@ -1,5 +1,6 @@
 <template>
   <div class="tool">
+    <!--请求路径信息-->
     <div class="path">
       <div class="input">
         <el-input placeholder="请输入路径" @focus="pathParamsVisable=false" v-model="requestInfo.url">
@@ -17,16 +18,24 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
+    <!--请求路径信息-->
+
+    <!--请求路径参数信息-->
     <div class="pathParams" v-if="pathParamsVisable">
       <object-edit :info="requestInfo.query" :on-change="requestQueryChange"></object-edit>
     </div>
+    <!--请求路径参数信息-->
+
     <!-- 请求参数 -->
     <div class="requestWarp">
+      <!-- tab切换标头-->
       <el-tabs v-model="requestTabName" @tab-click="requestTabClick">
         <el-tab-pane label="Authorization" name="Authorization"></el-tab-pane>
         <el-tab-pane label="Header" name="Header"></el-tab-pane>
         <el-tab-pane label="Body" name="Body"></el-tab-pane>
       </el-tabs>
+      <!-- tab切换标头-->
+      <!--tab内容-->
       <div class="tabContent" v-if="requestTabName=='Authorization'">
         暂未开放
       </div>
@@ -77,6 +86,7 @@
           </div>
         </div>
       </div>
+      <!--tab内容-->
     </div>
     <!-- 请求参数 end-->
 
@@ -199,6 +209,9 @@
           border 1px solid #ddd
 </style>
 <script type="text/ecmascript-6">
+  /*
+   * 模拟接口请求内容组件，负者对接口访问，获取返回数据，进行数据比对，得出一定的建议给到用户。
+   * */
   import BaseComponent from 'src/extend/BaseComponent'
   import ObjectEdit from './ObjectEdit.vue'
   import CodeViewer from 'src/components/CodeViewer.vue'
@@ -223,9 +236,10 @@
     data: function () {
       return {
         requestBodyViewType: 'raw',
-        responseBodyViewType: 'Pretty',
         requestTabName: 'Authorization',
-        responseTabName: 'Body',
+        requestLoading: false,
+        requestBodyType: 'text',
+        requestBodyType_view: 'text',
         requestInfo: {
           url: '',
           header: {},
@@ -241,13 +255,12 @@
           responseType: '',
           headers: {}
         },
-        requestLoading: false,
+        responseBodyViewType: 'Pretty',
+        responseTabName: 'Body',
         responseBodyType: 'json',
-        requestBodyType: 'text',
-        requestBodyType_view: 'text',
         pathParamsVisable: false,
         method: 'put',
-        url: 'http://114.215.120.151:9080/gointerface/'
+        url: 'http://114.215.120.151:9080/gointerface/'  // 初始化项目的基础url
       }
     },
     computed: mapState({
@@ -275,8 +288,21 @@
       this.dealRequestMock()
     },
     methods: {
+
       requestBodyInfoChange: function (data) {
         this.requestInfo.body = data
+      },
+      requestBodyViewTypeSelect: function (command) {
+        this.requestBodyType = command
+        var header = command.match(/\(.*\)/gi)
+        if (header) {
+          header = header[ 0 ]
+          this.requestBodyType_view = command.replace(header, '').toLocaleLowerCase()
+          this.requestInfo.header[ 'Content-Type' ] = header.replace(/[(]|[)]/gi, '')
+        } else {
+          this.requestBodyType_view = command.toLocaleLowerCase()
+          delete this.requestInfo.header[ 'Content-Type' ]
+        }
       },
       dealRequestMock: function () {
         var apiInfo = {}
@@ -294,6 +320,28 @@
         apiInfo.url = apiInfo.url || (this.url + this.info.path)
         this.requestInfo = apiInfo
       },
+      requestHeaderChange: function (data) {
+        this.requestInfo.header = data
+      },
+      requestQueryChange: function (data) {
+        this.requestInfo.query = data
+        var url = URL.parse(this.requestInfo.url)
+        url.query = ''
+        url.get = data
+        this.requestInfo.url = URL.build(url)
+      },
+      requestTabClick: function () {
+      },
+
+      responseBodyViewTypeSelect: function (command) {
+        this.responseBodyType = command
+      },
+      sendTypeSelect: function (command) {
+        if (command == 'saveandsend') {
+          this.send()
+          this.save()
+        }
+      },
       dealResponse: function (data) {
         this.responseInfo.headers = data.headers
         this.responseInfo.status = data.status
@@ -301,6 +349,9 @@
         this.responseInfo.responseText = data.request.responseText
         this.responseInfo.responseType = data.request.responseType
       },
+      responseTabClick: function () {
+      },
+      /* 发送消息内容 */
       /**
        * 保存mock数据
        */
@@ -347,45 +398,6 @@
           console.log(response.response)
           this.requestLoading = false
         })
-      },
-      requestHeaderChange: function (data) {
-        this.requestInfo.header = data
-      },
-      requestQueryChange: function (data) {
-        this.requestInfo.query = data
-        var url = URL.parse(this.requestInfo.url)
-        url.query = ''
-        url.get = data
-        this.requestInfo.url = URL.build(url)
-      },
-      requestTabClick: function () {
-      },
-      /**
-       * 修改响应结果显示格式
-       * @param command
-       */
-      responseBodyViewTypeSelect: function (command) {
-        this.responseBodyType = command
-      },
-      requestBodyViewTypeSelect: function (command) {
-        this.requestBodyType = command
-        var header = command.match(/\(.*\)/gi)
-        if (header) {
-          header = header[ 0 ]
-          this.requestBodyType_view = command.replace(header, '').toLocaleLowerCase()
-          this.requestInfo.header[ 'Content-Type' ] = header.replace(/[(]|[)]/gi, '')
-        } else {
-          this.requestBodyType_view = command.toLocaleLowerCase()
-          delete this.requestInfo.header[ 'Content-Type' ]
-        }
-      },
-      sendTypeSelect: function (command) {
-        if (command == 'saveandsend') {
-          this.send()
-          this.save()
-        }
-      },
-      responseTabClick: function () {
       }
     }
   }
