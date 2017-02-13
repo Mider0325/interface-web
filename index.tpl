@@ -15,6 +15,7 @@
     <script src="//cdn.staticfile.org/qiniu-js-sdk/1.0.14-beta/qiniu.min.js"></script>
     <script src="//cdn.bootcss.com/ace/1.2.6/ace.js"></script>
     <script src="//cdn.bootcss.com/ace/1.2.6/ext-language_tools.js"></script>
+    <script src="//cdn.bootcss.com/ace/1.2.6/ext-beautify.js"></script>
     <% if (process.env.NODE_ENV === 'production') { %>
         <script src="//cdn.bootcss.com/vue/2.1.8/vue.runtime.min.js"></script>
         <script src="//cdn.bootcss.com/vue-router/2.0.1/vue-router.min.js"></script>

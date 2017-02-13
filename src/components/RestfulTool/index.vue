@@ -2,7 +2,7 @@
   <div class="tool">
     <div class="path">
       <div class="input">
-        <el-input placeholder="请输入路径" @focus="pathParamsVisable=false" v-model="url">
+        <el-input placeholder="请输入路径" @focus="pathParamsVisable=false" v-model="requestInfo.url">
           <el-select class="el-my-select" v-model="method" slot="prepend" placeholder="请选择">
             <el-option v-for="item in Metadata.methods" :label="item.label" :value="item.value"></el-option>
           </el-select>
@@ -63,7 +63,8 @@
           <div class="raw" v-if="requestBodyViewType=='raw'">
             <code-viewer :ctype="requestBodyType_view"
                          :options="{theme:''}"
-                         :contents="JSON.stringify(requestInfo.body)"></code-viewer>
+                         :on-change="requestBodyInfoChange"
+                         :contents="requestInfo.body"></code-viewer>
           </div>
           <div v-if="requestBodyViewType=='formdata'">
             暂未开放
@@ -201,15 +202,18 @@
   import BaseComponent from 'src/extend/BaseComponent'
   import ObjectEdit from './ObjectEdit.vue'
   import CodeViewer from 'src/components/CodeViewer.vue'
+  import Server from 'src/extend/Server'
   import axios from 'axios'
   import {mapState} from 'vuex'
+  import jsYaml from 'js-yaml'
+
   var URL = window.url
   export default {
     mixins: [ BaseComponent ],
     name: 'RestfulTool_index',
     components: { ObjectEdit, CodeViewer },
     props: {
-      apiInfo: {
+      info: {
         type: Object,
         default: function () {
           return {}
@@ -223,8 +227,9 @@
         requestTabName: 'Authorization',
         responseTabName: 'Body',
         requestInfo: {
+          url: '',
           header: {},
-          body: {},
+          body: '',
           path: {},
           query: {}
         },
@@ -249,6 +254,9 @@
       Metadata: state => state.Metadata
     }),
     watch: {
+      info: function (newVal) {
+        this.dealRequestMock()
+      },
       url: function (newVal, oldVal) {
         // url 变化 设置 提取query
         var url = URL.parse(newVal)
@@ -264,10 +272,28 @@
         timeout: 1000,
         headers: {}
       })
-
-      this.url += this.apiInfo.path
+      this.dealRequestMock()
     },
     methods: {
+      requestBodyInfoChange: function (data) {
+        this.requestInfo.body = data
+      },
+      dealRequestMock: function () {
+        var apiInfo = {}
+        try {
+          apiInfo = jsYaml.safeLoad(this.info.mockRequest || '')
+        } catch (e) {
+          apiInfo = {}
+        } finally {
+        }
+        apiInfo = apiInfo || {}
+        apiInfo.header = apiInfo.header || {}
+        apiInfo.body = apiInfo.body || ''
+        apiInfo.path = apiInfo.path || {}
+        apiInfo.query = apiInfo.query || {}
+        apiInfo.url = apiInfo.url || (this.url + this.info.path)
+        this.requestInfo = apiInfo
+      },
       dealResponse: function (data) {
         this.responseInfo.headers = data.headers
         this.responseInfo.status = data.status
@@ -279,6 +305,17 @@
        * 保存mock数据
        */
       save: function () {
+        Server({
+          url: 'mock/saveOrUpdateRequest',
+          data: {
+            apiId: this.info.id,
+            type: this.info.type,
+            mockRequest: jsYaml.dump(this.requestInfo)
+          },
+          method: 'post'
+        }).then((response) => {
+          this.$message('保存成功')
+        })
       },
       /**
        * 发送请求测试
@@ -287,7 +324,7 @@
         this.requestLoading = true
         this.responseInfo.error = false
         this.instance({
-          baseURL: this.url,
+          baseURL: this.requestInfo.url,
           url: '',
           method: this.method,
           params: {},
@@ -316,10 +353,10 @@
       },
       requestQueryChange: function (data) {
         this.requestInfo.query = data
-        var url = URL.parse(this.url)
+        var url = URL.parse(this.requestInfo.url)
         url.query = ''
         url.get = data
-        this.url = URL.build(url)
+        this.requestInfo.url = URL.build(url)
       },
       requestTabClick: function () {
       },

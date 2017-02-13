@@ -147,6 +147,7 @@
     },
     data () {
       return {
+        info: {},
         tagTableFilters: [],
         role: 4,
         apiList: [],
@@ -172,6 +173,10 @@
           apiInfo = {}
         } finally {
         }
+        apiInfo.id = this.info.id
+        apiInfo.type = this.info.type
+        apiInfo.mockRequest = this.info.mockRequest
+        apiInfo.mockResponse = this.info.mockResponse
         return apiInfo
       },
       /**
@@ -197,6 +202,7 @@
             method: 'get'
           }).then((response) => {
             var data = response.data.data
+            this.info = data
             this.$set(item, 'content', data.content)
             this.$nextTick(function () {
               $(window.document.body).scrollTo(`#doctableexpanded_${item.id}`, 200, {

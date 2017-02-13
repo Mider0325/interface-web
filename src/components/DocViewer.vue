@@ -29,17 +29,19 @@
           </section>
           <section class="responses">
             <h4>
-              调试<el-switch
-                v-model="openTry"
-                on-text="关闭调试"
-                :width="100"
-                off-text="开启调试">
-            </el-switch></h4>
+              调试
+              <el-switch
+                  v-model="openTry"
+                  on-text="关闭调试"
+                  :width="100"
+                  off-text="开启调试">
+              </el-switch>
+            </h4>
           </section>
         </div>
         <hr>
         <div>
-          <restful-tool :apiInfo="apiInfo" v-if="openTry"></restful-tool>
+          <restful-tool :info="apiInfo" v-if="openTry"></restful-tool>
         </div>
       </div>
     </div>
@@ -86,6 +88,7 @@
   import CodeViewer from 'src/components/CodeViewer'
   import RestfulTool from 'src/components/RestfulTool/index.vue'
   import RequestViewer from 'src/components/RequestViewer/index.vue'
+
   export default {
     mixins: [ BaseComponent ],
     name: 'DocViewer',

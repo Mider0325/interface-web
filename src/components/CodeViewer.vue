@@ -9,6 +9,7 @@
 </style>
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
+  var debounce = require('lodash/debounce')
   import ace from 'ace'
   export default {
     mixins: [ BaseComponent ],
@@ -32,6 +33,12 @@
             'theme': 'ace/theme/solarized_dark'
           }
         }
+      },
+      // 内容变化后会调用
+      onChange: {
+        type: Function,
+        default: function () {
+        }
       }
     },
     editer: null,
@@ -42,8 +49,10 @@
       }
     },
     watch: {
-      contents: function (val) {
-        this.changeContent()
+      contents: function (newVal) {
+        if (newVal != this.$options.editor.getValue()) {
+          this.$options.editor.setValue(newVal) // editor初始化
+        }
       },
       ctype: function (val, old) {
         this.$options.editor.getSession().setMode('ace/mode/' + val)
@@ -52,10 +61,11 @@
     mounted () {
       this.$options.editor = ace.edit(this.$el)
       this.$options.editor.setOptions(this.options)
-      this.$options.editor.getSession().setMode('ace/mode/' + this.ctype)
       this.$options.editor.$blockScrolling = Infinity
+      this.$options.editor.getSession().setMode('ace/mode/' + this.ctype)
       this.changeContent()
       this.$options.editor.resize()
+      this.$options.editor.getSession().on('change', debounce(e => this.editorChange(e), 300))  // 监听editor内容变化 去抖
     },
     beforDestroy: function () {
       if (this.$options.editor) {
@@ -63,20 +73,12 @@
       }
     },
     methods: {
+      editorChange: function () {
+        var content = this.$options.editor.getValue()
+        this.onChange(content)
+      },
       changeContent: function () {
-        var str = ''
-        if (!this.$options.editor) {
-          return
-        }
-        if (this.ctype == 'json') {
-          try {
-            str = JSON.stringify(JSON.parse(this.contents), null, 2)
-          } catch (e) {
-          }
-          this.$options.editor.setValue(str)
-        } else {
-          this.$options.editor.setValue(this.contents)
-        }
+        this.$options.editor.setValue(this.contents)
       }
     }
   }

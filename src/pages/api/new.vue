@@ -343,6 +343,10 @@ responses:
       editorChange: function (data) {
         this.apiInfo.content = data
         this.apiInfoJson = jsYaml.safeLoad(this.apiInfo.content) || {}
+        this.apiInfoJson.id = this.apiInfo.id
+        this.apiInfoJson.type = this.apiInfo.type
+        this.apiInfoJson.mockResponse = this.apiInfo.mockResponse
+        this.apiInfoJson.mockRequest = this.apiInfo.mockRequest
         this.apiInfo.path = this.apiInfoJson.path
         this.apiInfo.method = this.apiInfoJson.method
         this.apiInfo.name = this.apiInfoJson.name
