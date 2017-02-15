@@ -40,7 +40,6 @@
   Vue.component('my-item-zh', {
     functional: true,
     render: function (h, ctx) {
-      debugger
       return h(InputItem, {
         props: {
           item: ctx.props.item

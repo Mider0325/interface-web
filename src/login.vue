@@ -26,7 +26,8 @@
                 <div class="login-body">
                   <el-form ref="loginForm" :model="loginForm" :rules="registerrule" label-width="80px">
                     <el-form-item label="账 号" prop="account">
-                      <el-input placeholder="邮箱" type="text" auto-complete="on" id="username" name="username" v-model="loginForm.account">
+                      <el-input placeholder="邮箱" type="text" auto-complete="on" id="username" name="username"
+                                v-model="loginForm.account">
                       </el-input>
                     </el-form-item>
                     <el-form-item label="密 码" prop="password">
@@ -201,9 +202,22 @@
           }
         })
       })
+      // this.checkLogin()
       this.changeKaptcha()
     },
     methods: {
+      checkLogin: function () {
+        Server({
+          url: 'users/info',
+          params: {
+            uid: 0
+          },
+          method: 'get'
+        }).then((response) => {
+          this.loginSuccess()
+        }).catch(() => {
+        })
+      },
       changeKaptcha: function () {
         Server({
           url: 'kaptcha/init',

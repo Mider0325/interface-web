@@ -12,6 +12,8 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .itemTree
     overflow hidden
+    .el-tooltip
+      display inline-block
     .content
       max-width 500px
     .schematype

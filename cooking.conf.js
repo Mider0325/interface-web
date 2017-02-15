@@ -47,7 +47,7 @@ cooking.set({
   clean: true,
   hash: true,
   sourceMap: true,
-  minimize: true,
+  minimize: false,
   chunk: true, // see https://cookingjs.github.io/zh-cn/configuration.html#chunk
   postcss: [
     // require('...')
@@ -71,6 +71,7 @@ cooking.add('loader.markdown', {
   loaders: [ 'html-loader', 'markdown-loader' ]
 })
 cooking.add('externals.ace', 'ace')
+cooking.add('externals.jQuery', 'jQuery')
 if (process.env.NODE_ENV === 'production') {
   cooking.add('externals.vue', 'Vue')
   cooking.add('externals.vue-router', 'VueRouter')
