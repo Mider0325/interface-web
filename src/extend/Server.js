@@ -48,6 +48,7 @@ instance.interceptors.response.use(function (response) {
     return response
   }
 }, function (error) {
+  window.console.log(error)
   var status = error.response.status
   var message = error.message
   if (status != 200) {
