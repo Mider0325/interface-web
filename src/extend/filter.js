@@ -70,10 +70,15 @@ Vue.filter('toArray', function (value) {
   return array
 })
 /**
- * 金额格式化（保存不同位小数）el
- *  value 金额，以分为单位
+ * 组角色过滤
  */
 Vue.filter('groupRole', function (value) {
   return Metadata.groupPower[ value - 1 ].label
+})
+/**
+ * 项目角色过滤
+ */
+Vue.filter('projectRole', function (value) {
+  return Metadata.projectPower[ value - 1 ].label
 })
 
