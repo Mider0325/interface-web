@@ -38,6 +38,7 @@ const state = {
   },
   Lng: Lng,
   userInfo: {},
+  updataMessageNum: { total: 0, project: 0, api: 0, groups: 0 },
   Metadata
 }
 

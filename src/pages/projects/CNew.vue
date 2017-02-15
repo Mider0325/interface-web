@@ -123,14 +123,14 @@
       },
       getProjectInfo: function () {
         Server({
-          url: 'project/project',
+          url: 'project/projectinfo',
           method: 'get',
           params: { id: this.id }
         }).then((response) => {
           var data = response.data.data
           this.form = {
             logo: data.logo,
-            name: data.name,
+            name: data.projectName,
             groupId: data.groupId,
             description: data.description
           }

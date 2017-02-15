@@ -39,3 +39,6 @@ export const changeAppSize = (state, data) => {
     state.app.size.height = data.height
   }
 }
+export const updataMessageNum = (state, data) => {
+  state.updataMessageNum = data
+}

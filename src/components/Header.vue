@@ -21,7 +21,7 @@
             <li>
               <router-link title="New project" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
                            data-container="body" to="dashboard_todo">
-                <el-badge :value="3">
+                <el-badge :hidden="updataMessageNum.total==0" :value="updataMessageNum.total">
                   <i class="ifont icon-tongzhi"></i>
                 </el-badge>
               </router-link>
@@ -102,11 +102,25 @@
     computed: mapState({
       theme: state => state.app.theme,
       packageInfo: state => state.app.packageInfo, // 项目信息
-      userInfo: state => state.userInfo // 用户信息
+      userInfo: state => state.userInfo, // 用户信息
+      updataMessageNum: state => state.updataMessageNum // 用户信息
     }),
-    created: function () {
+    mounted: function () {
+      this.getMessageNum()
     },
     methods: {
+      getMessageNum: function () {
+        Server({
+          url: 'notice/getMessageNums',
+          method: 'get'
+        }).then((response) => {
+          this.$store.dispatch('updataMessageNum', response.data.data)
+          setTimeout(() => {
+            this.getMessageNum()
+          }, 10000)
+        }).catch(() => {
+        })
+      },
       toggle: function () {
         var isOpen = !this.theme.isOpen
         this.$store.dispatch('updataTheme', {

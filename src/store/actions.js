@@ -79,3 +79,6 @@ export const changeNavTwoIndex = ({ commit }, data) => {
 export const changeAppSize = ({ commit }, data) => {
   commit('changeAppSize', data)
 }
+export const updataMessageNum = ({ commit }, data) => {
+  commit('updataMessageNum', data)
+}
