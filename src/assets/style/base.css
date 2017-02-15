@@ -1,4 +1,4 @@
-@import '//at.alicdn.com/t/font_0pr2zmpxdzk6gvi.css';
+@import '//at.alicdn.com/t/font_xvh8k7f8lfhwipb9.css';
 
 .ifont {
     font-family: "iconfont" !important;
@@ -11839,4 +11839,160 @@ h1 small, h2 small, h3 small, h4 small {
 
 .blank-state-welcome-title {
     font-size: 24px
+}
+
+
+.event-item {
+    font-size: 15px;
+    padding: 10px 0 10px 50px;
+    border-bottom: 1px solid #f0f0f0;
+    color: #5c5c5c
+}
+
+.event-item.event-inline .avatar {
+    position: relative;
+    top: -2px
+}
+
+.event-item.event-inline .event-title,.event-item.event-inline .event-item-timestamp {
+    line-height: 40px
+}
+
+.event-item a {
+    color: #333
+}
+
+.event-item .avatar {
+    margin-left: -50px
+}
+
+.event-item .event-title {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+    max-width: calc(100% - 174px);
+    font-weight: 600;
+    color: #5c5c5c
+}
+
+.event-item .event-body {
+    margin-right: 174px
+}
+
+.event-item .event-body .event-note {
+    word-wrap: break-word
+}
+
+.event-item .event-body .event-note .md {
+    color: #7f8fa4;
+    font-size: 15px
+}
+
+.event-item .event-body .event-note .md .label,.event-item .event-body .event-note .md .shortcut-mappings .key,.shortcut-mappings .event-item .event-body .event-note .md .key {
+    color: #5c5c5c;
+    font-size: inherit
+}
+
+.event-item .event-body .event-note .md iframe.twitter-share-button {
+    vertical-align: bottom
+}
+
+.event-item .event-body .event-note code {
+    white-space: pre-wrap
+}
+
+.event-item .event-body .event-note pre {
+    border: none;
+    background: #f9f9f9;
+    border-radius: 0;
+    color: #777;
+    margin: 0 20px;
+    overflow: hidden
+}
+
+.event-item .event-body .event-note .note-image-attach {
+    margin-top: 4px;
+    margin-left: 0;
+    max-width: 200px;
+    float: none
+}
+
+.event-item .event-body .event-note p:last-child {
+    margin-bottom: 0
+}
+
+.event-item .event-body .event-note-icon {
+    color: #777;
+    float: left;
+    font-size: 15px;
+    line-height: 16px;
+    margin-right: 5px
+}
+
+.event-item .event_icon {
+    position: relative;
+    float: right;
+    border: 1px solid #eee;
+    padding: 5px;
+    border-radius: 5px;
+    background: #f9f9f9;
+    margin-left: 10px;
+    top: -6px
+}
+
+.event-item .event_icon img {
+    width: 20px
+}
+
+.event-item:last-child {
+    border: none
+}
+
+.event-item .event_commits li.commit {
+    background: transparent;
+    padding: 3px;
+    padding-left: 0;
+    border: none
+}
+
+.event-item .event_commits li.commit .commit-row-title {
+    font-size: 15px
+}
+
+.event-item .event_commits li.commits-stat {
+    margin-top: 3px;
+    display: block;
+    padding: 3px;
+    padding-left: 0
+}
+
+.event-item .event_commits li.commits-stat:hover {
+    background: none
+}
+
+.event-item .event-item-timestamp {
+    float: right;
+    line-height: 22px
+}
+
+.event-last-push {
+    overflow: auto;
+    width: 100%
+}
+
+.event-last-push .event-last-push-text {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+    max-width: 100%;
+    padding: 4px 0;
+    font-size: 13px;
+    float: left;
+    margin-right: -150px;
+    padding-right: 150px;
+    line-height: 20px
 }

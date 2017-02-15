@@ -47,7 +47,7 @@ cooking.set({
   clean: true,
   hash: true,
   sourceMap: true,
-  minimize: true,
+  minimize: false,
   chunk: true, // see https://cookingjs.github.io/zh-cn/configuration.html#chunk
   postcss: [
     // require('...')

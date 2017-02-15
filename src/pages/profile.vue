@@ -5,6 +5,7 @@
         <div class="nav-control scrolling-tabs-container">
           <el-tabs class="nav-links" v-model="activeName" @tab-click="tabHandleClick">
             <el-tab-pane label="基本信息" name="base"></el-tab-pane>
+            <el-tab-pane label="消息订阅" name="active"></el-tab-pane>
             <el-tab-pane label="密码" name="password"></el-tab-pane>
           </el-tabs>
         </div>
@@ -49,6 +50,11 @@
 
               </el-form>
             </div>
+          </div>
+
+          <!--基本信息-->
+          <div v-show="activeName=='active'" class="row prepend-top-default">
+            暂未开放
           </div>
 
           <!--密码修改-->
@@ -167,6 +173,7 @@
       }
     },
     mounted: function () {
+      this.activeName = this.$route.params.data
       this.form.photo = this.userInfo.photo
       this.form.name = this.userInfo.name
       this.form.telephone = this.userInfo.telephone
