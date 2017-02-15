@@ -32,12 +32,12 @@
       </li>
       </li>
 
-      <li class="">
+    <!--  <li class="">
         <router-link to="dashboard_todo" class="dashboard-shortcuts-activity" title="Activity"><span>
 TODO
 </span>
         </router-link>
-      </li>
+      </li>-->
       <li class="">
         <router-link to="dashboard_groups" title="Groups"><span>
 我的分组

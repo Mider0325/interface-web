@@ -23,12 +23,12 @@
           </div>
 
           <div v-if="hasList(list)">
-            <div data-v-4e690f32="" class="blank-state">
-              <div data-v-4e690f32="" class="blank-state-icon">
-                <i data-v-4e690f32="" class="ifont icon-empty"></i>
+            <div class="blank-state">
+              <div class="blank-state-icon">
+                <i class="ifont icon-empty"></i>
               </div>
-              <h3 data-v-4e690f32="" class="blank-state-title">
-                暂无数据
+              <h3 class="blank-state-title">
+                暂无记录
               </h3>
             </div>
           </div>

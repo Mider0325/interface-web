@@ -26,11 +26,23 @@
       </div>
     </div>
     <!--接口列表信息-->
-    <el-table
-        @expand="handleChange"
-        :data="apiList"
-        border
-        style="width: 100%">
+    <div v-if="!hasData">
+      <div class="blank-state">
+        <div class="blank-state-icon">
+          <i class="ifont icon-empty"></i> <span>暂无文档信息，请先添加接口,然后发布</span>
+        </div>
+        <h3 class="blank-state-title">
+          <router-link tag="div" :to="{path:'api_new',query:{pid:id}}">
+            <el-button type="primary">添加接口</el-button>
+          </router-link>
+        </h3>
+      </div>
+    </div>
+    <el-table v-else
+              @expand="handleChange"
+              :data="apiList"
+              border
+              style="width: 100%">
       <el-table-column type="expand">
         <template scope="props">
           <doc-viewer v-if="props.row.content" :apiInfo="getApiInfo(props.row.content)"></doc-viewer>
@@ -116,7 +128,9 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .project-home-panel
     margin-bottom 30px
-
+  .blank-state-icon
+    span
+      font-size 24px
   .project-avatar
     width 80px
     height 80px
@@ -163,6 +177,11 @@
       })
       this.loadApis()
       this.loadProject()
+    },
+    computed: {
+      hasData: function (list) {
+        return this.apiList.length > 0
+      }
     },
     methods: {
       getApiInfo: function (data) {
