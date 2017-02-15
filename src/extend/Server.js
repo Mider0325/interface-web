@@ -10,7 +10,7 @@ import axios from 'axios'
 import Config from '../config'
 var instance = axios.create({
   baseURL: Config.host,
-  timeout: 1000,
+  timeout: 30000,
   headers: {},
   needLoading: false,  // 是否需要加载效果
   ignoreCode: false  // 是否忽略服务端的错误提示
