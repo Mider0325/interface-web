@@ -35,7 +35,7 @@ cooking.set({
     'process.env.CODE_ENV': "'" + process.env.CODE_ENV + "'"
   },
   devServer: {
-    port: 8099,
+    port: 7788,
     // 热替换
     hot: true,
     log: false,

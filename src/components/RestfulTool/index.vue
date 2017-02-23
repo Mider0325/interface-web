@@ -76,7 +76,7 @@
                          :contents="requestInfo.body"></code-viewer>
           </div>
           <div v-if="requestBodyViewType=='formdata'">
-            暂未开放
+            <object-edit :info="requestInfo.formDataBody" :param-type='true' :on-change="requestQueryChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='xwwwformurlencoded'">
             暂未开放
@@ -243,7 +243,12 @@
         requestInfo: {
           url: '',
           header: {},
+
           body: '',
+          formDataBody: {},
+          urlencodedBody: {},
+          binaryBody: undefined,
+
           path: {},
           query: {}
         },
