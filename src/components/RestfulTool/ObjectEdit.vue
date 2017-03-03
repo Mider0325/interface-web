@@ -84,6 +84,7 @@
           type: 'Text'
         })
       }
+      this.change()//
       this.infoList.push({ value: '', key: '', file: undefined, type: 'Text' })
     },
     methods: {

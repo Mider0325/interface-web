@@ -3,10 +3,10 @@
  */
 const state = {
   methods: [
+    { value: 'post', label: 'POST' },
     { value: 'put', label: 'PUT' },
     { value: 'head', label: 'HEAD' },
     { value: 'delete', label: 'DELETE' },
-    { value: 'post', label: 'POST' },
     { value: 'patch', label: 'PATCH' },
     { value: 'get', label: 'GET' },
     { value: 'options', label: 'OPTIONS' }
