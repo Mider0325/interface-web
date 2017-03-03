@@ -29,10 +29,10 @@
     <!-- 请求参数 -->
     <div class="requestWarp">
       <!-- tab切换标头-->
-      <el-tabs v-model="requestTabName" @tab-click="requestTabClick">
+      <el-tabs v-model="requestTabName" @tab-click="requestTabClick" :active-name="requestTabName">
         <el-tab-pane label="Authorization" name="Authorization"></el-tab-pane>
         <el-tab-pane label="Header" name="Header"></el-tab-pane>
-        <el-tab-pane label="Body" name="Body"></el-tab-pane>
+        <el-tab-pane label="Body" name="Body" :disabled="!showBody"></el-tab-pane>
       </el-tabs>
       <!-- tab切换标头-->
       <!--tab内容-->
@@ -76,13 +76,19 @@
                          :contents="requestInfo.body"></code-viewer>
           </div>
           <div v-if="requestBodyViewType=='formdata'">
-            暂未开放
+            <object-edit :info="requestInfo.formDataBody" :param-type='true'
+                         :on-change="requestQueryChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='xwwwformurlencoded'">
-            暂未开放
+            <object-edit :info="requestInfo.formDataBody"
+                         :on-change="requestQueryChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='binary'">
-            暂未开放
+            <br>
+            <form enctype="multipart/form-data">
+              <input type="file" @change="binaryChange">
+            </form>
+            <br>
           </div>
         </div>
       </div>
@@ -129,12 +135,15 @@
               {{responseInfo.responseText}}
             </div>
             <div v-if="responseBodyViewType=='Preview'">
-              {{responseInfo.responseText}}
+              <iframe :src="responseBlobUrl" width="100%" height="100%">
+              </iframe>
             </div>
           </div>
         </div>
         <div class="tabContent" v-if="responseTabName=='Cookies'">
-          实现中
+          <div v-for="co in responseCookies">
+            {{co}}
+          </div>
         </div>
         <div class="tabContent headers" v-if="responseTabName=='Headers'">
           <div v-for="(item,key) in responseInfo.headers">
@@ -217,6 +226,7 @@
   import CodeViewer from 'src/components/CodeViewer.vue'
   import Server from 'src/extend/Server'
   import axios from 'axios'
+  import qs from 'qs'
   import {mapState} from 'vuex'
   import jsYaml from 'js-yaml'
 
@@ -243,7 +253,12 @@
         requestInfo: {
           url: '',
           header: {},
+
           body: '',
+          formDataBody: {},
+          urlencodedBody: {},
+          binaryBody: undefined,
+
           path: {},
           query: {}
         },
@@ -255,12 +270,15 @@
           responseType: '',
           headers: {}
         },
+        responseBlobUrl: '',
         responseBodyViewType: 'Pretty',
         responseTabName: 'Body',
         responseBodyType: 'json',
         pathParamsVisable: false,
-        method: 'put',
-        url: 'http://114.215.120.151:9080/gointerface/'  // 初始化项目的基础url
+        responseCookies: [],
+        method: 'post',
+        url: 'http://dwz.ymm56.com/dwz-web/dwz/generate',  // 初始化项目的基础url
+        showBody: true // 是否显示body区域
       }
     },
     computed: mapState({
@@ -277,6 +295,12 @@
           this.requestInfo.query = url.get
         }
         console.log(url)
+      },
+      method: function (newVal) {
+        this.showBody = ![ 'get', 'copy', 'head', 'purge', 'unlock' ].includes(newVal)
+        if (!this.showBody && this.requestTabName == 'Body') {
+          this.requestTabName = 'Authorization'
+        }
       }
     },
     mounted () {
@@ -317,7 +341,7 @@
         apiInfo.body = apiInfo.body || ''
         apiInfo.path = apiInfo.path || {}
         apiInfo.query = apiInfo.query || {}
-        apiInfo.url = apiInfo.url || (this.url + this.info.path)
+        apiInfo.url = apiInfo.url || (this.url + (this.info.path || ''))
         this.requestInfo = apiInfo
       },
       requestHeaderChange: function (data) {
@@ -326,8 +350,6 @@
       requestQueryChange: function (data) {
         this.requestInfo.query = data
         var url = URL.parse(this.requestInfo.url)
-        url.query = ''
-        url.get = data
         this.requestInfo.url = URL.build(url)
       },
       requestTabClick: function () {
@@ -348,8 +370,54 @@
         this.responseInfo.statusText = data.statusText
         this.responseInfo.responseText = data.request.responseText
         this.responseInfo.responseType = data.request.responseType
+        // deal data to url by blob
+        var blob = new window.Blob([ data.request.responseText ], { type: 'text/html' })
+        var url = window.URL.createObjectURL(blob)
+        this.responseBlobUrl = url
+
+        // deal cookies
+        var me = this
+        me.responseCookies = []
+        var setcookie = data.headers[ 'set-cookie' ]
+        if (setcookie) {
+          setcookie.forEach(
+            function (cookiestr) {
+              me.responseCookies.push(cookiestr)
+            }
+          )
+        }
       },
       responseTabClick: function () {
+      },
+      binaryChange: function (e) {
+        var me = this
+        var file = e.target.files[ 0 ]
+        var reader = new window.FileReader()
+        // 将文件以二进制形式读取
+        reader.readAsArrayBuffer(file)
+        reader.onload = function (f) {
+          me.binaryBody = this.result
+        }
+      },
+      // 处理不同body 类型的参数
+      dealParams: function () {
+        var data = {}
+        if (this.showBody) {
+          if (this.requestBodyViewType == 'formdata') {
+            var fd = new window.FormData()
+            for (var key in this.requestInfo.query) {
+              fd.append(key, this.requestInfo.query[ key ])
+            }
+            data = fd
+          } else if (this.requestBodyViewType == 'xwwwformurlencoded') {
+            data = qs.stringify(this.requestInfo.query)
+          } else if (this.requestBodyViewType == 'binary') {
+            data = this.binaryBody
+          } else {
+            data = this.requestInfo.query
+          }
+        }
+        return data
       },
       /* 发送消息内容 */
       /**
@@ -374,9 +442,13 @@
       send: function () {
         this.requestLoading = true
         this.responseInfo.error = false
+
+        var data = this.dealParams()
+
         this.instance({
           baseURL: this.requestInfo.url,
           url: '',
+          data: data,
           method: this.method,
           params: {},
           headers: this.requestInfo.header

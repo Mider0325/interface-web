@@ -1,20 +1,35 @@
 <template>
   <div class="view">
-    <div v-for="(item,index) in infoList" class="inline">
-      <el-input class="key" @input="change(index)" @focus="addOne(index)" size="small" v-model="item.key"
-                placeholder="key"></el-input>
-      <el-input class="value" @input="change(index)" @focus="addOne(index)" size="small" v-model="item.value"
-                placeholder="value"></el-input>
-      <div class="remove">
-        <el-button v-if="getShow(index)" tabindex="100000000" size="small" type="primary" icon="delete"
-                   @click="remove(index)"></el-button>
-      </div>
-    </div>
+    <el-row :gutter="20" v-for="(item,index) in infoList">
+      <el-col :span="10">
+        <el-input class="key" @input="change(index)" @focus="addOne(index)" size="small" v-model="item.key"
+                  placeholder="key"></el-input>
+      </el-col>
+      <el-col :span="11">
+        <el-input v-show="item.type=='Text'" class="value" @input="change(index)" @focus="addOne(index)" size="small"
+                  v-model="item.value"
+                  placeholder="value"></el-input>
+        <input v-show="item.type=='File'" @change="change(index)" type="file"></el-col>
+      <el-col :span="2">
+        <el-select v-model="item.type" v-if="paramType" size="small" @change="change(index)">
+          <el-option label="Text" value="Text"></el-option>
+          <el-option label="File" value="File"></el-option>
+        </el-select>
+      </el-col>
+      <el-col :span="1">
+        <div class="remove">
+          <el-button v-if="getShow(index)" tabindex="100000000" size="small" type="primary" icon="delete"
+                     @click="remove(index)"></el-button>
+        </div>
+      </el-col>
+    </el-row>
 
   </div>
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .view
+    .el-row
+      margin-bottom 5px
     .inline
       display flex
       .key
@@ -48,6 +63,10 @@
             b: 2
           }
         }
+      },
+      paramType: {
+        type: Boolean,
+        default: false
       }
     },
     data: function () {
@@ -60,10 +79,13 @@
       for (var key in this.info) {
         this.infoList.push({
           key: key,
-          value: this.info[ key ]
+          value: this.info[ key ],
+          file: undefined,
+          type: 'Text'
         })
       }
-      this.infoList.push({ value: '', key: '' })
+      this.change()//
+      this.infoList.push({ value: '', key: '', file: undefined, type: 'Text' })
     },
     methods: {
       getShow: function (index) {
@@ -77,15 +99,18 @@
         if (this.infoList.length - 1 == index) {
           this.infoList.push({
             value: '',
-            key: ''
+            key: '',
+            file: undefined,
+            type: 'Text'
           })
         }
       },
       change: function (index) {
         var temp = {}
-        this.infoList.forEach(function (value) {
+        var files = this.$el.querySelectorAll('[type=file]')
+        this.infoList.forEach(function (value, i) {
           if (value.key) {
-            temp[ value.key ] = value.value
+            temp[ value.key ] = value.type == 'Text' ? value.value : files[ i ].files[ 0 ]
           }
         })
         this.onChange(temp)
