@@ -20,7 +20,7 @@
             </li>
             <li>
               <router-link title="New project" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
-                           data-container="body" to="dashboard_todo">
+                           data-container="body" to="dashboard_activity">
                 <el-badge :hidden="updataMessageNum.total==0" :value="updataMessageNum.total">
                   <i class="ifont icon-tongzhi"></i>
                 </el-badge>

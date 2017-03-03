@@ -130,7 +130,7 @@
   })
 
   export default{
-    mixins: [BasePage],
+    mixins: [ BasePage ],
     components: {},
     name: 'projects_members',
     data () {

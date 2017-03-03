@@ -73,12 +73,20 @@ Vue.filter('toArray', function (value) {
  * 组角色过滤
  */
 Vue.filter('groupRole', function (value) {
-  return Metadata.groupPower[ value - 1 ].label
+  var obj = Metadata.groupPower[ value - 1 ]
+  if (obj) {
+    return obj.label
+  }
+  return ''
 })
 /**
  * 项目角色过滤
  */
 Vue.filter('projectRole', function (value) {
-  return Metadata.projectPower[ value - 1 ].label
+  var obj = Metadata.projectPower[ value - 1 ]
+  if (obj) {
+    return obj.label
+  }
+  return ''
 })
 

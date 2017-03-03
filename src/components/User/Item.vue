@@ -10,7 +10,8 @@
   </li>
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
-
+  .select2-result
+    background-color #ffffff
 </style>
 <script type="text/ecmascript-6">
   export default {

@@ -77,7 +77,7 @@
   --------------------------*/
   /* Steps
   --------------------------*/
-  /* Steps
+  /* Menu
   --------------------------*/
   /* Rate
   --------------------------*/
@@ -99,11 +99,11 @@
 }
 
 .el-progress.is-exception .el-progress-bar__inner{
-  background-color:#d44545;
+  background-color:#ff4949;
 }
 
 .el-progress.is-exception .el-progress__text{
-  color:#d44545;
+  color:#ff4949;
 }
 
 .el-progress.is-success .el-progress-bar__inner{
@@ -116,7 +116,7 @@
 
 .el-progress__text{
   font-size:14px;
-  color:#475669;
+  color:rgb(72, 88, 106);
   display: inline-block;
   vertical-align: middle;
   margin-left: 10px;
@@ -174,7 +174,7 @@
 .el-progress-bar__outer{
   height: 6px;
   border-radius: 100px;
-  background-color: #e5e9f2;
+  background-color:rgb(228, 232, 241);
   overflow: hidden;
   position: relative;
   vertical-align: middle;
@@ -195,7 +195,7 @@
 .el-progress-bar__innerText{
   display: inline-block;
   vertical-align: middle;
-  color: #fff;
+  color:#fff;
   font-size: 12px;
   margin: 0 5px;
 }
@@ -207,4 +207,92 @@
   100% {
     background-position: 32px 0;
   }
+}
+:root{
+  /* Transition
+  -------------------------- */
+  /* Colors
+  -------------------------- */
+  /* Link
+  -------------------------- */
+  /* Border
+  -------------------------- */
+  /* Box-shadow
+  -------------------------- */
+  /* Fill
+  -------------------------- */
+  /* Font
+  -------------------------- */
+  /* Size
+  -------------------------- */
+  /* z-index
+  -------------------------- */
+  /* Disable base
+  -------------------------- */
+  /* Icon
+  -------------------------- */
+  /* Checkbox
+  -------------------------- */
+  /* Radio
+  -------------------------- */
+  /* Select
+  -------------------------- */
+  /* Alert
+  -------------------------- */
+  /* Message Box
+  -------------------------- */
+  /* Message
+  -------------------------- */
+  /* Notification
+  -------------------------- */
+  /* Input
+  -------------------------- */
+  /* Cascader
+  -------------------------- */
+  /* Group
+  -------------------------- */
+  /* Tab
+  -------------------------- */
+  /* Button
+  -------------------------- */
+  /* cascader
+  -------------------------- */
+  /* Switch
+ -------------------------- */
+  /* Dialog
+ -------------------------- */
+  /* Table
+ -------------------------- */
+  /* Pagination
+ -------------------------- */
+  /* Popover
+ -------------------------- */
+  /* Tooltip
+  -------------------------- */
+  /* Tag
+  -------------------------- */
+  /* Dropdown
+  -------------------------- */
+  /* Badge
+  -------------------------- */
+  /* Card
+  --------------------------*/
+  /* Slider
+  --------------------------*/
+  /* Steps
+  --------------------------*/
+  /* Menu
+  --------------------------*/
+  /* Rate
+  --------------------------*/
+  /* DatePicker
+  --------------------------*/
+  /* Loading
+  --------------------------*/
+  /* Scrollbar
+  --------------------------*/
+  /* Carousel
+  --------------------------*/
+  /* Collapse
+  --------------------------*/
 }

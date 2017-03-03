@@ -72,7 +72,7 @@
   --------------------------*/
     /* Steps
   --------------------------*/
-    /* Steps
+    /* Menu
   --------------------------*/
     /* Rate
   --------------------------*/
@@ -161,7 +161,7 @@
   --------------------------*/
     /* Steps
   --------------------------*/
-    /* Steps
+    /* Menu
   --------------------------*/
     /* Rate
   --------------------------*/
@@ -179,7 +179,7 @@
 .el-select-dropdown{
     position: absolute;
     z-index: 1001;
-    border: solid 1px #D3DCE6;
+    border: solid 1px rgb(209, 219, 229);
     border-radius: 2px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, .12), 0 0 6px rgba(0, 0, 0, .04);
@@ -195,7 +195,7 @@
     background-color: #fff;
 }
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected.hover{
-    background-color: #e5e9f2;
+    background-color: rgb(228, 232, 241);
 }
 .el-select-dropdown.is-multiple .el-select-dropdown__item.selected::after{
     position: absolute;
@@ -215,7 +215,6 @@
 }
 .el-select-dropdown__wrap{
     max-height: 274px;
-    width: 100%;
 }
 .el-select-dropdown__list{
     list-style: none;
@@ -297,7 +296,7 @@
   --------------------------*/
     /* Steps
   --------------------------*/
-    /* Steps
+    /* Menu
   --------------------------*/
     /* Rate
   --------------------------*/
@@ -319,22 +318,22 @@
     width: 100%;
 }
 .el-input.is-disabled .el-input__inner{
-    background-color: #EFF2F7;
-    border-color: #D3DCE6;
+    background-color: rgb(238, 241, 246);
+    border-color: rgb(209, 219, 229);
     color: #bbb;
     cursor: not-allowed;
 }
 .el-input.is-disabled .el-input__inner::-webkit-input-placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-input.is-disabled .el-input__inner::-moz-placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-input.is-disabled .el-input__inner:-ms-input-placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-input.is-disabled .el-input__inner::placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-input.is-active .el-input__inner{
     outline: none;
@@ -347,9 +346,9 @@
     background-color: #fff;
     background-image: none;
     border-radius: 4px;
-    border: 1px solid #c0ccda;
+    border: 1px solid rgb(191, 204, 217);
     box-sizing: border-box;
-    color: #1f2d3d;
+    color: rgb(31, 46, 61);
     display: block;
     font-size: inherit;
     height: 36px;
@@ -360,19 +359,19 @@
     width: 100%;
 }
 .el-input__inner::-webkit-input-placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-input__inner::-moz-placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-input__inner:-ms-input-placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-input__inner::placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-input__inner:hover{
-    border-color: #8492a6;
+    border-color: rgb(131, 146, 165);
 }
 .el-input__inner:focus{
     outline: none;
@@ -385,7 +384,8 @@
     right: 0;
     top: 0;
     text-align: center;
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
+    transition: all .3s;
 }
 .el-input__icon:after{
     content: '';
@@ -396,6 +396,14 @@
 }
 .el-input__icon + .el-input__inner{
     padding-right: 35px;
+}
+.el-input__icon.is-clickable{}
+.el-input__icon.is-clickable:hover{
+    cursor: pointer;
+    color: rgb(131, 146, 165);
+}
+.el-input__icon.is-clickable:hover + .el-input__inner{
+    border-color: rgb(131, 146, 165);
 }
 .el-input--large{
     font-size: 16px;
@@ -426,12 +434,12 @@
     display: table-cell;
 }
 .el-input-group__append, .el-input-group__prepend{
-    background-color: #f9fafc;
-    color: #99a9bf;
+    background-color: rgb(250, 252, 253);
+    color: rgb(151, 169, 190);
     vertical-align: middle;
     display: table-cell;
     position: relative;
-    border: 1px solid #c0ccda;
+    border: 1px solid rgb(191, 204, 217);
     border-radius: 4px;
     padding: 0 10px;
     width: 1%;
@@ -472,24 +480,25 @@
 .el-textarea{
     display: inline-block;
     width: 100%;
+    vertical-align: bottom;
 }
 .el-textarea.is-disabled .el-textarea__inner{
-    background-color: #EFF2F7;
-    border-color: #D3DCE6;
+    background-color: rgb(238, 241, 246);
+    border-color: rgb(209, 219, 229);
     color: #bbb;
     cursor: not-allowed;
 }
 .el-textarea.is-disabled .el-textarea__inner::-webkit-input-placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-textarea.is-disabled .el-textarea__inner::-moz-placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-textarea.is-disabled .el-textarea__inner:-ms-input-placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-textarea.is-disabled .el-textarea__inner::placeholder{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 .el-textarea__inner{
     display: block;
@@ -499,27 +508,27 @@
     box-sizing: border-box;
     width: 100%;
     font-size: 14px;
-    color: #1f2d3d;
+    color: rgb(31, 46, 61);
     background-color: #fff;
     background-image: none;
-    border: 1px solid #c0ccda;
+    border: 1px solid rgb(191, 204, 217);
     border-radius: 4px;
     transition: border-color .2s cubic-bezier(.645,.045,.355,1);
 }
 .el-textarea__inner::-webkit-input-placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-textarea__inner::-moz-placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-textarea__inner:-ms-input-placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-textarea__inner::placeholder{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 .el-textarea__inner:hover{
-    border-color: #8492a6;
+    border-color: rgb(131, 146, 165);
 }
 .el-textarea__inner:focus{
     outline: none;
@@ -599,7 +608,7 @@
   --------------------------*/
     /* Steps
   --------------------------*/
-    /* Steps
+    /* Menu
   --------------------------*/
     /* Rate
   --------------------------*/
@@ -615,7 +624,7 @@
   --------------------------*/
 }
 .el-tag{
-    background-color: #8492a6;
+    background-color: rgb(131, 146, 165);
     display: inline-block;
     padding: 0 5px;
     height: 24px;
@@ -643,23 +652,23 @@
 }
 .el-tag .el-icon-close:hover{
     background-color: #fff;
-    color: #8492a6;
+    color: rgb(131, 146, 165);
 }
 .el-tag--gray{
-    background-color: #e5e9f2;
-    border-color: #e5e9f2;
-    color: #475669;
+    background-color: rgb(228, 232, 241);
+    border-color: rgb(228, 232, 241);
+    color: rgb(72, 88, 106);
 }
 .el-tag--gray .el-tag__close:hover{
-    background-color: #475669;
+    background-color: rgb(72, 88, 106);
     color: #fff;
 }
 .el-tag--gray.is-hit{
-    border-color: #475669;
+    border-color: rgb(72, 88, 106);
 }
 .el-tag--primary{
-    background-color: rgba(32,159,255,0.10);
-    border-color: rgba(32,159,255,0.20);
+    background-color: rgba(25, 112, 169, 0.1);
+    border-color: rgba(25, 112, 169, 0.2);
     color: #1970a9;
 }
 .el-tag--primary .el-tag__close:hover{
@@ -696,14 +705,14 @@
 .el-tag--danger{
     background-color: rgba(255,73,73,0.10);
     border-color: rgba(255,73,73,0.20);
-    color: #d44545;
+    color: #ff4949;
 }
 .el-tag--danger .el-tag__close:hover{
-    background-color: #d44545;
+    background-color: #ff4949;
     color: #fff;
 }
 .el-tag--danger.is-hit{
-    border-color: #d44545;
+    border-color: #ff4949;
 }
 @charset "UTF-8";
 :root{
@@ -779,7 +788,7 @@
   --------------------------*/
     /* Steps
   --------------------------*/
-    /* Steps
+    /* Menu
   --------------------------*/
     /* Rate
   --------------------------*/
@@ -802,27 +811,27 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #475669;
+    color: rgb(72, 88, 106);
     height: 36px;
     line-height: 1.5;
     box-sizing: border-box;
     cursor: pointer;
 }
 .el-select-dropdown__item.hover{
-    background-color: #e5e9f2;
+    background-color: rgb(228, 232, 241);
 }
 .el-select-dropdown__item.selected{
     color: #fff;
     background-color: #1970a9;
 }
 .el-select-dropdown__item.selected.hover{
-    background-color: #1D8CE0;
+    background-color: rgb(22, 99, 149);
 }
 .el-select-dropdown__item span{
     line-height: 1.5 !important;
 }
 .el-select-dropdown__item.is-disabled{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
     cursor: not-allowed;
 }
 .el-select-dropdown__item.is-disabled:hover{
@@ -902,7 +911,7 @@
   --------------------------*/
     /* Steps
   --------------------------*/
-    /* Steps
+    /* Menu
   --------------------------*/
     /* Rate
   --------------------------*/
@@ -936,6 +945,147 @@
     height: 30px;
     line-height: 30px;
 }
+@charset "UTF-8";
+:root{
+    /* Transition
+  -------------------------- */
+    /* Colors
+  -------------------------- */
+    /* Link
+  -------------------------- */
+    /* Border
+  -------------------------- */
+    /* Box-shadow
+  -------------------------- */
+    /* Fill
+  -------------------------- */
+    /* Font
+  -------------------------- */
+    /* Size
+  -------------------------- */
+    /* z-index
+  -------------------------- */
+    /* Disable base
+  -------------------------- */
+    /* Icon
+  -------------------------- */
+    /* Checkbox
+  -------------------------- */
+    /* Radio
+  -------------------------- */
+    /* Select
+  -------------------------- */
+    /* Alert
+  -------------------------- */
+    /* Message Box
+  -------------------------- */
+    /* Message
+  -------------------------- */
+    /* Notification
+  -------------------------- */
+    /* Input
+  -------------------------- */
+    /* Cascader
+  -------------------------- */
+    /* Group
+  -------------------------- */
+    /* Tab
+  -------------------------- */
+    /* Button
+  -------------------------- */
+    /* cascader
+  -------------------------- */
+    /* Switch
+ -------------------------- */
+    /* Dialog
+ -------------------------- */
+    /* Table
+ -------------------------- */
+    /* Pagination
+ -------------------------- */
+    /* Popover
+ -------------------------- */
+    /* Tooltip
+  -------------------------- */
+    /* Tag
+  -------------------------- */
+    /* Dropdown
+  -------------------------- */
+    /* Badge
+  -------------------------- */
+    /* Card
+  --------------------------*/
+    /* Slider
+  --------------------------*/
+    /* Steps
+  --------------------------*/
+    /* Menu
+  --------------------------*/
+    /* Rate
+  --------------------------*/
+    /* DatePicker
+  --------------------------*/
+    /* Loading
+  --------------------------*/
+    /* Scrollbar
+  --------------------------*/
+    /* Carousel
+  --------------------------*/
+    /* Collapse
+  --------------------------*/
+}
+.el-scrollbar{
+    overflow: hidden;
+    position: relative;
+}
+.el-scrollbar:hover .el-scrollbar__bar, .el-scrollbar:active .el-scrollbar__bar, .el-scrollbar:focus .el-scrollbar__bar{
+    opacity: 1;
+    transition: opacity 340ms ease-out;
+}
+.el-scrollbar__wrap{
+    overflow: scroll;
+}
+.el-scrollbar__wrap--hidden-default{}
+.el-scrollbar__wrap--hidden-default::-webkit-scrollbar{
+    width: 0;
+    height: 0;
+}
+.el-scrollbar__thumb{
+    position: relative;
+    display: block;
+    width: 0;
+    height: 0;
+    cursor: pointer;
+    border-radius: inherit;
+    background-color: rgba(151, 169, 190, 0.3);
+    transition: .3s background-color;
+}
+.el-scrollbar__thumb:hover{
+    background-color: rgba(151, 169, 190, 0.5);
+}
+.el-scrollbar__bar{
+    position: absolute;
+    right: 2px;
+    bottom: 2px;
+    z-index: 1;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 120ms ease-out;
+}
+.el-scrollbar__bar.is-horizontal{
+    height: 6px;
+    left: 2px;
+}
+.el-scrollbar__bar.is-horizontal > div{
+    height: 100%;
+}
+.el-scrollbar__bar.is-vertical{
+    width: 6px;
+    top: 2px;
+}
+.el-scrollbar__bar.is-vertical > div{
+    width: 100%;
+}
 
 .el-select{
     display: inline-block;
@@ -943,7 +1093,7 @@
 }
 
 .el-select:hover .el-input__inner{
-    border-color: #8492a6;
+    border-color: rgb(131, 146, 165);
 }
 
 .el-select .el-input__inner{
@@ -957,7 +1107,7 @@
 .el-select .el-input{}
 
 .el-select .el-input .el-input__icon{
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
     font-size: 12px;
     transition: transform .3s;
     transform: translateY(-50%) rotateZ(180deg);
@@ -975,11 +1125,11 @@
     text-align: center;
     transform: translateY(-50%) rotateZ(180deg);
     border-radius: 100%;
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
 }
 
 .el-select .el-input .el-input__icon.is-show-close:hover{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 
 .el-select .el-input .el-input__icon.is-reverse{
@@ -993,7 +1143,7 @@
 }
 
 .el-select .el-input.is-disabled .el-input__inner:hover{
-    border-color: #D3DCE6;
+    border-color: rgb(209, 219, 229);
 }
 
 .el-select .el-tag__close{
@@ -1032,13 +1182,13 @@
     top: 8px;
     z-index: 1000;
     right: 25px;
-    color: #c0ccda;
+    color: rgb(191, 204, 217);
     line-height: 18px;
     font-size: 12px;
 }
 
 .el-select__close:hover{
-    color: #99a9bf;
+    color: rgb(151, 169, 190);
 }
 
 .el-select__tags{
@@ -1062,4 +1212,92 @@
 
 .el-select__tag .el-icon-close{
     font-size: 12px;
+}
+:root{
+    /* Transition
+  -------------------------- */
+    /* Colors
+  -------------------------- */
+    /* Link
+  -------------------------- */
+    /* Border
+  -------------------------- */
+    /* Box-shadow
+  -------------------------- */
+    /* Fill
+  -------------------------- */
+    /* Font
+  -------------------------- */
+    /* Size
+  -------------------------- */
+    /* z-index
+  -------------------------- */
+    /* Disable base
+  -------------------------- */
+    /* Icon
+  -------------------------- */
+    /* Checkbox
+  -------------------------- */
+    /* Radio
+  -------------------------- */
+    /* Select
+  -------------------------- */
+    /* Alert
+  -------------------------- */
+    /* Message Box
+  -------------------------- */
+    /* Message
+  -------------------------- */
+    /* Notification
+  -------------------------- */
+    /* Input
+  -------------------------- */
+    /* Cascader
+  -------------------------- */
+    /* Group
+  -------------------------- */
+    /* Tab
+  -------------------------- */
+    /* Button
+  -------------------------- */
+    /* cascader
+  -------------------------- */
+    /* Switch
+ -------------------------- */
+    /* Dialog
+ -------------------------- */
+    /* Table
+ -------------------------- */
+    /* Pagination
+ -------------------------- */
+    /* Popover
+ -------------------------- */
+    /* Tooltip
+  -------------------------- */
+    /* Tag
+  -------------------------- */
+    /* Dropdown
+  -------------------------- */
+    /* Badge
+  -------------------------- */
+    /* Card
+  --------------------------*/
+    /* Slider
+  --------------------------*/
+    /* Steps
+  --------------------------*/
+    /* Menu
+  --------------------------*/
+    /* Rate
+  --------------------------*/
+    /* DatePicker
+  --------------------------*/
+    /* Loading
+  --------------------------*/
+    /* Scrollbar
+  --------------------------*/
+    /* Carousel
+  --------------------------*/
+    /* Collapse
+  --------------------------*/
 }
