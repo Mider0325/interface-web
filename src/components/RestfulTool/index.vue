@@ -452,11 +452,11 @@
           method: this.method,
           params: {},
           headers: this.requestInfo.header
-        }).then((response, a, b) => {
+        }).then((response) => {
           console.log(response)
           this.dealResponse(response)
           this.requestLoading = false
-        }).catch((response, a, b) => {
+        }).catch((response) => {
           if (response.code) {
             this.responseInfo.message = response.message
             this.responseInfo.error = true
