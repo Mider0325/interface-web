@@ -137,7 +137,7 @@
       annotation: function (error) {
         var session = this.$options.editor.getSession()
         session.setAnnotations(session.getAnnotations().concat([ {
-          row: error.mark.line - 1,
+          row: error.mark.line,
           column: error.mark.column,
           text: error.message,
           type: 'error'

@@ -31,3 +31,4 @@ if (isLogin != -1) {
 }
 window.EMA = new EmaProxy()
 export default new Vue(appData)
+
