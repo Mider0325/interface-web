@@ -96,7 +96,8 @@
     name: 'Header',
     data: function () {
       return {
-        visibleUser: false
+        visibleUser: false,
+        input2: 1
       }
     },
     computed: mapState({
@@ -114,7 +115,7 @@
           url: 'notice/getMessageNums',
           method: 'get'
         }).then((response) => {
-          this.$store.dispatch('updataMessageNum', response.data.data)
+          // this.$store.dispatch('updataMessageNum', response.data.data)
           setTimeout(() => {
             this.getMessageNum()
           }, 10000)

@@ -1,18 +1,9 @@
-.PHONY: dist test
-
-dev:
-	@npm run dev
-
-dist:
-	@npm run dist
-
-deploy:
-	@npm run deploy
-
+#测试环境代码发布
 sync-dev:
 	rsync -az -v -r --delete-after --force \
 	  --filter="- node_modules" \
 	  -e "ssh -p 22" \
 	  ./dist/ \
-	  root@114.215.120.151:/home/deploy/web
+      root@192.168.199.131:~/server/interface-server/app/public
+
 deploy-dev:sync-dev

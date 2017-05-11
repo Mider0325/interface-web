@@ -37,6 +37,7 @@
             <el-select v-model="form.groupId" filterable placeholder="请选择">
               <el-option
                   v-for="item in options"
+                  :key="item.id"
                   :label="item.name"
                   :value="item.id">
                 <span style="float: left">{{ item.name }}</span>

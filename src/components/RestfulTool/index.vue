@@ -5,7 +5,7 @@
       <div class="input">
         <el-input placeholder="请输入路径" @focus="pathParamsVisable=false" v-model="requestInfo.url">
           <el-select class="el-my-select" v-model="method" slot="prepend" placeholder="请选择">
-            <el-option v-for="item in Metadata.methods" :label="item.label" :value="item.value"></el-option>
+            <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label" :value="item.value"></el-option>
           </el-select>
           <el-button slot="append" type="primary" @click="pathParamsVisable = !pathParamsVisable">参数</el-button>
         </el-input>
@@ -141,12 +141,12 @@
           </div>
         </div>
         <div class="tabContent" v-if="responseTabName=='Cookies'">
-          <div v-for="co in responseCookies">
-            {{co}}
+          <div :key="key" v-for="(item, kye) in responseCookies">
+            {{item}}
           </div>
         </div>
         <div class="tabContent headers" v-if="responseTabName=='Headers'">
-          <div v-for="(item,key) in responseInfo.headers">
+          <div :key="key" v-for="(item,key) in responseInfo.headers">
             <span class="hkey">{{key}}</span>
             :
             <span class="hvalue">{{item}}</span>

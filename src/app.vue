@@ -73,7 +73,7 @@
     methods: {
       logout: function () {
         window.sessionStorage.removeItem('session')
-        window.location.replace(`login.html?url=${encodeURIComponent(window.location.href)}`)
+        window.location.replace(`/login.html?url=${encodeURIComponent(window.location.href)}`)
       }
     }
   }

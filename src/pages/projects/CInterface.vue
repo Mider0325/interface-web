@@ -55,7 +55,8 @@
           :filters="tagTableFilters"
           :filter-method="filterTag">
         <template scope="scope">
-          <el-tag v-for="tag in scope.row.tags"
+          <el-tag v-for="(tag, key) in scope.row.tags"
+                  :key="key"
                   :type='primary'
                   close-transition>{{tag.name}}
           </el-tag>

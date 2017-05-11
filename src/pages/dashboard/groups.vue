@@ -14,7 +14,7 @@
             <el-tab-pane label="我的组" name="me"></el-tab-pane>
           </el-tabs>
           <div class="nav-controls">
-            <router-link class="btn btn-new" to="groups_new">新建分组
+            <router-link class="btn btn-new" to="/groups/new">新建分组
             </router-link>
           </div>
         </div>
@@ -24,7 +24,7 @@
                  :src="item.logo"
                  alt="">
             <div class="title">
-              <router-link class="group-name" :to="{path:'groups_index',query:{id:item.id}}">
+              <router-link class="group-name" :to="{path:'/groups/index',query:{id:item.id}}">
                 {{item.name}}
               </router-link>
               我是 <span>{{item.role | groupRole}}</span>
@@ -40,7 +40,7 @@
                  :src="item.logo"
                  alt="">
             <div class="title">
-              <router-link class="group-name" :to="{path:'/groups_members',query:{id:item.id}}">
+              <router-link class="group-name" :to="{path:'/groups/members',query:{id:item.id}}">
                 {{item.name}}
               </router-link>
               我是 <span>{{item.role | groupRole}}</span>

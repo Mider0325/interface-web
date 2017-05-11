@@ -22,6 +22,7 @@
             <el-tag
                 v-for="(tag,key) in dynamicTags"
                 :closable="true"
+                :key="key"
                 :close-transition="false"
                 @close="handleClose(key,tag)"
             >

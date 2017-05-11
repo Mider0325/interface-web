@@ -25,8 +25,8 @@
 
         <div class="projects-list-holder">
           <ul v-if="activeName==='me'" class="projects-list content-list">
-            <router-link :to="{path:'project',query:{id:item.id}}" tag="li"
-                         v-for="item in myProjects" class="project-row">
+            <router-link :to="{path:'/project',query:{id:item.id}}" tag="li"
+                         v-for="item in myProjects" :key="item.id" class="project-row">
               <div class="title">
                 <div class="project">
                   <div class="dash-project-avatar">
@@ -35,16 +35,16 @@
                     </div>
                   </div>
                   <span class="project-full-name">
-                  <router-link tag="span" :to="{path:'user',query:{id:item.creatorId}}" class="namespace-name">
+                  <router-link tag="span" :to="{path:'/user',query:{id:item.creatorId}}" class="namespace-name">
                     <span v-if="item.creatorId==userInfo.userId" class="label label-success">我自己</span>
                     <span v-else>{{item.creatorName}}</span>
                   /
                   </router-link>
-                  <router-link tag="span" :to="{path:'groups_index',query:{id:item.groupId}}" class="namespace-name">
+                  <router-link tag="span" :to="{path:'/groups/index',query:{id:item.groupId}}" class="namespace-name">
                   {{item.groupName}}
                   /
                   </router-link>
-                  <router-link tag="span" :to="{path:'project',query:{id:item.id}}" class="project-name filter-title">
+                  <router-link tag="span" :to="{path:'/project',query:{id:item.id}}" class="project-name filter-title">
                   {{item.projectName}}
                   </router-link>
                   </span>
@@ -56,8 +56,8 @@
             </router-link>
           </ul>
           <ul v-if="activeName==='star'" class="projects-list content-list">
-            <router-link :to="{path:'project',query:{id:item.id}}" tag="li"
-                         v-for="item in starProjects" class="project-row">
+            <router-link :to="{path:'/project',query:{id:item.id}}" tag="li"
+                         v-for="item in starProjects" :key="item.id" class="project-row">
               <div class="title">
                 <div class="project">
                   <div class="dash-project-avatar">
@@ -66,15 +66,15 @@
                     </div>
                   </div>
                   <span class="project-full-name">
-                    <router-link tag="span" :to="{path:'user',query:{id:item.creatorId}}" class="namespace-name">
+                    <router-link tag="span" :to="{path:'/user',query:{id:item.creatorId}}" class="namespace-name">
                     {{item.creatorName}}
                     /
                     </router-link>
-                    <router-link tag="span" :to="{path:'groups_index',query:{id:item.groupId}}" class="namespace-name">
+                    <router-link tag="span" :to="{path:'/groups_index',query:{id:item.groupId}}" class="namespace-name">
                     {{item.groupName}}
                     /
                     </router-link>
-                    <router-link tag="span" :to="{path:'project',query:{id:item.id}}" class="project-name filter-title">
+                    <router-link tag="span" :to="{path:'/project',query:{id:item.id}}" class="project-name filter-title">
                     {{item.projectName}}
                     </router-link>
                     </span>

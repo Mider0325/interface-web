@@ -13,7 +13,7 @@
             </div>
             <el-tabs class="nav-links" :active-name="activeName" @tab-click="tabHandleClick">
 
-              <el-tab-pane v-for="item in getMessage(messages)" :name="item.key">
+              <el-tab-pane v-for="item in getMessage(messages)" :name="item.key" :key="item.key">
                 <span slot="label">
                   {{item.name}}
                     <el-badge :hidden="updataMessageNum[item.key]==0" :value="updataMessageNum[item.key]"></el-badge>
@@ -39,12 +39,12 @@
                 <time class="js-timeago" data-placement="top" data-container="body">{{item.time|datetime}}</time>
               </div>
               <router-link
-                  :to="{path:'user',query:{id:item.userId}}">
+                  :to="{path:'/user',query:{id:item.userId}}">
                 <img class="avatar has-tooltip  s40" :src="item.userPhoto">
               </router-link>
               <div class="event-title">
                 <span class="author_name"><router-link
-                    :to="{path:'user',query:{id:item.userId}}">{{item.userName}}</router-link></span>
+                    :to="{path:'/user',query:{id:item.userId}}">{{item.userName}}</router-link></span>
                 <span class="accepted"></span>
                 {{item.title}}
               </div>

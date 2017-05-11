@@ -11,18 +11,7 @@
         <div class="project-home-desc">
           <p>{{project.description}}</p>
         </div>
-        <!--<div class="project-repo-buttons project-action-buttons">
-          <div class="count-buttons">
-            <el-button>
-              关注<i class="el-icon-star-off"></i>
-            </el-button>
-            <el-input class="url" placeholder="请输入内容" v-model="input5">
-              <el-button slot="append" class="btn">
-                <i class="ifont icon-copy"></i>
-              </el-button>
-            </el-input>
-          </div>
-        </div>-->
+
       </div>
     </div>
     <!--接口列表信息-->
@@ -32,7 +21,7 @@
           <i class="ifont icon-empty"></i> <span>暂无文档信息，请先添加接口,然后发布</span>
         </div>
         <h3 class="blank-state-title">
-          <router-link tag="div" :to="{path:'api_new',query:{pid:id}}">
+          <router-link tag="div" :to="{path:'/api/new',query:{pid:id}}">
             <el-button type="primary">添加接口</el-button>
           </router-link>
         </h3>
@@ -92,7 +81,8 @@
           :filters="tagTableFilters"
           :filter-method="filterTag">
         <template scope="scope">
-          <el-tag v-for="tag in scope.row.tags"
+          <el-tag v-for="(tag, key) in scope.row.tags"
+                  :key="key"
                   :type='primary'
                   close-transition>{{tag.name}}
           </el-tag>

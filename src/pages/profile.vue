@@ -173,7 +173,7 @@
       }
     },
     mounted: function () {
-      this.activeName = this.$route.params.data
+      // this.activeName = this.$route.params.data
       this.form.photo = this.userInfo.photo
       this.form.name = this.userInfo.name
       this.form.telephone = this.userInfo.telephone

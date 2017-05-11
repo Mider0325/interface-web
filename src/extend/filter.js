@@ -1,4 +1,4 @@
-var Vue = require('vue')
+import Vue from 'vue'
 import Metadata from '../store/metadata'
 /**
  * 时间格式化

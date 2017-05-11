@@ -12,7 +12,7 @@
           </el-tabs>
         </div>
         <div class="controls">
-          <router-link tag="span" :to="{path:'api_new',query:{pid:this.$route.query.id}}" v-if="activeName=='apis'">
+          <router-link tag="span" :to="{path:'/api/new',query:{pid:this.$route.query.id}}" v-if="activeName=='apis'">
             <el-button type="primary" icon="search">添加接口</el-button>
           </router-link>
           <el-dropdown>

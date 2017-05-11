@@ -24,7 +24,8 @@
             <el-form-item label="权限">
               <el-select v-model="value" placeholder="请选择">
                 <el-option
-                    v-for="item in Metadata.groupPower"
+                    v-for="(item,key) in Metadata.groupPower"
+                    :key="key"
                     :label="item.label"
                     :value="item.value">
                 </el-option>
@@ -49,14 +50,14 @@
         </div>
       </div>
       <ul class="content-list">
-        <li class="group_member js-toggle-container" v-for="item in users">
+        <li class="group_member js-toggle-container" :key="key" v-for="(item, key) in users">
           <div class="controls">
             <el-dropdown @command="handleCommand">
               <span class="el-dropdown-link">
                 {{item.role | groupRole}}<i class="el-icon-caret-bottom el-icon--right"></i>
               </span>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="e in Metadata.groupPower" trigger="click"
+                <el-dropdown-item :key="item.userId" v-for="e in Metadata.groupPower" trigger="click"
                                   :command="e.value + ',' + item.userId">{{e.label}}
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -67,7 +68,7 @@
           <span class="list-item-name">
             <img class="avatar s40" alt="" :src="item.photo">
             <strong>
-              <router-link :to="{path:'user',query:{id:item.userId}}">{{item.name}}</router-link>
+              <router-link :to="{path:'/user',query:{id:item.userId}}">{{item.name}}</router-link>
             </strong>
             <span class="label label-success" v-if="item.userId === userInfo.userId">当前用户</span>
             <div class="cgray">{{item.email}}</div>
@@ -133,16 +134,18 @@
     },
     methods: {
       querySearchAsync (queryString, cb) {
-        Server({
-          url: 'users/search',
-          method: 'get',
-          params: { key: queryString }
-        }).then((response) => {
-          var results = this.pretreatmentList(response.data.data)
-          cb(results)
-        }).catch(() => {
+        if (queryString) {
+          Server({
+            url: 'users/search',
+            method: 'get',
+            params: { key: (queryString) }
+          }).then((response) => {
+            var results = this.pretreatmentList(response.data.data)
+            cb(results)
+          }).catch(() => {
 
-        })
+          })
+        }
       },
       pretreatmentList (list) {
         var result = []
@@ -167,7 +170,7 @@
             start: 0
           }
         }).then((response) => {
-          this.users = response.data.data
+          this.users = response.data.data || []
         })
         Server({
           url: 'project/groupinfo',

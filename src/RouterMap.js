@@ -12,11 +12,27 @@ var map = {
   base: __dirname,
   routes: [
     {
-      path: '/:page/:data?',
+      path: '/:name/:name1/:name2/:name3/:name4/name5',
       component: PageRouter
     },
     {
-      path: '/:page?',
+      path: '/:name/:name1/:name2/:name3/:name4',
+      component: PageRouter
+    },
+    {
+      path: '/:name/:name1/:name2/:name3',
+      component: PageRouter
+    },
+    {
+      path: '/:name/:name1/:name2',
+      component: PageRouter
+    },
+    {
+      path: '/:name/:name1',
+      component: PageRouter
+    },
+    {
+      path: '/:name',
       component: PageRouter
     }
   ]

@@ -17,7 +17,7 @@
     </div>
     <ul class="nav nav-sidebar" tabindex="0" @click="closePanel" style="overflow: hidden; outline: none;">
       <li class="home">
-        <router-link to="dashboard_projects" title="Projects" class="dashboard-shortcuts-projects">
+        <router-link to="/dashboard/projects" title="Projects" class="dashboard-shortcuts-projects">
           <span>
             项目
           </span>
@@ -25,7 +25,7 @@
       </li>
 
       <li class="">
-        <router-link to="dashboard_activity" class="dashboard-shortcuts-activity" title="Activity"><span>
+        <router-link to="/dashboard/activity" class="dashboard-shortcuts-activity" title="Activity"><span>
 动态
 </span>
         </router-link>
@@ -39,18 +39,18 @@ TODO
         </router-link>
       </li>-->
       <li class="">
-        <router-link to="dashboard_groups" title="Groups"><span>
+        <router-link to="/dashboard/groups" title="Groups"><span>
 我的分组
 </span>
         </router-link>
       <li class="">
-        <router-link to="help" title="Help"><span>
+        <router-link to="/help" title="Help"><span>
 帮助
 </span>
         </router-link>
       </li>
       <li class="">
-        <router-link to="profile" title="Profile Settings" data-placement="bottom"><span>
+        <router-link to="/profile" title="Profile Settings" data-placement="bottom"><span>
 用户设置
 </span>
         </router-link>

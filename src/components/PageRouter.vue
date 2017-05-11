@@ -1,55 +1,133 @@
 <template>
-  <component :is="currPage"></component>
-</template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
 
+
+  <el-tabs :class="{hideHeader:hideHeader}" v-model="editableTabsValue2" closable @tab-remove="removeTab">
+    <el-tab-pane
+        v-for="(item, index) in editableTabs2"
+        :label="item.pageName"
+        :name="item.key"
+        :key="item.name"
+    >
+      <component :is="item.name"></component>
+    </el-tab-pane>
+  </el-tabs>
+
+
+</template>
+<style lang="styl" rel="stylesheet/stylus" type="text/css">
+  .hideHeader
+    > .el-tabs__header
+      display none
 </style>
 <script type="text/ecmascript-6">
   import Vue from 'vue'
   import BaseComponent from 'src/extend/BaseComponent'
-  import noPage from '../pages/404'
+  import noPage from '../pages/noPage'
   var pagePrex = 'page-'
+  var keyIndex = 0
   export default {
     mixins: [ BaseComponent ],
     name: 'PageRouter',
     data: function () {
       return {
-        currPage: ''
+        hideHeader: true,
+        editableTabsValue2: '2',
+        editableTabs2: [],
+        tabIndex: 2
       }
     },
-    components: { 'page-404': noPage },
+    components: { 'page-noPage': noPage },
     mounted: function () {
-      this.loadPage(this.$route.params, () => {})
+      this.loadPage(this.$route.params, (data) => {
+        this.setPage(data)
+      })
+      this.ema.bind('Page.push', (data) => {
+        this.addPage(data)
+      })
     },
     watch: {
+      editableTabs2: function (newVal) {
+        if (newVal.length > 1) {
+          this.hideHeader = false
+        } else {
+          this.hideHeader = true
+        }
+      },
       '$route' (to, from) {
         // 对路由变化作出响应...
         console.log(to, from)
-        if (to.params.page != from.params.page) {
+        if (to.path != from.path) {
           // 如果页面改变。load新页面加入
-          this.loadPage(to.params, () => {
+          this.loadPage(to.params, (data) => {
+            this.setPage(data)
           })
         }
       }
     },
     methods: {
-      noPage: function () {
-        this.currPage = pagePrex + '404'
-      },
-      loadPage: function (data, fn) {
-        var name = data.page || 'home'
-        var path = name.split('_').join('/')
+      loadPage: function (data, fn, isAddPage) {
+        var path = isAddPage ? data.name : this.getPath()
         System.import('../pages/' + path + '').then(module => {
-          if (name != module.name) {
-            console.warn('/(ㄒoㄒ)/~~页面名称和路径名称不同,请修改' + path + '.vue 文件中的name:' + module.name + ' 为 ' + 'name:' + name)
-          }
-          Vue.component(`${pagePrex}${name}`, module)
-          this.currPage = pagePrex + name
-          fn()
+          var tempModule = Vue.extend(module)
+          tempModule = tempModule.extend({
+            data: function () {
+              return data.data || {}
+            },
+            methods: data.methods || {}
+          })
+          keyIndex++
+          Vue.component(`${pagePrex}${path}-${keyIndex}`, tempModule)
+          fn({
+            pageName: data.pageName || module.pageName || '无名',
+            name: `${pagePrex}${path}-${keyIndex}`,
+            key: `${pagePrex}${path}-${keyIndex}`
+          })
         }).catch(() => {
-          console.error('不存在该页面', name)
-          this.noPage()
+          console.error('不存在该页面', path)
+          fn({
+            pageName: '该页面不存在',
+            name: `${pagePrex}noPage`,
+            key: `${pagePrex}noPage`
+          })
         })
+      },
+      addPage (data) {
+        this.loadPage(data, (data) => {
+          this.editableTabs2.push(data)
+          this.editableTabsValue2 = data.key
+        }, true)
+      },
+      setPage: function (data) {
+        this.editableTabs2 = []
+        this.editableTabs2.push(data)
+        this.editableTabsValue2 = data.key
+      },
+      removeTab (targetName) {
+        let tabs = this.editableTabs2
+        let activeName = this.editableTabsValue2
+        var indexTab = 0
+        if (activeName === targetName) {
+          tabs.forEach((tab, index) => {
+            if (tab.key === targetName) {
+              let nextTab = tabs[ index + 1 ] || tabs[ index - 1 ]
+              if (nextTab) {
+                activeName = nextTab.key
+              }
+              indexTab = index
+            }
+          })
+        }
+        this.editableTabsValue2 = activeName
+        this.editableTabs2.splice(indexTab, 1)
+      },
+      getPath () {
+        var params = this.$route.params
+        var arr = []
+        for (var k in params) {
+          arr.push(params[ k ])
+        }
+        if (arr.length == 0) arr.push('home')
+        return arr.join('/')
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <div class="view">
-    <el-row :gutter="20" v-for="(item,index) in infoList">
+    <el-row :gutter="20" :key="index" v-for="(item,index) in infoList">
       <el-col :span="10">
         <el-input class="key" @input="change(index)" @focus="addOne(index)" size="small" v-model="item.key"
                   placeholder="key"></el-input>

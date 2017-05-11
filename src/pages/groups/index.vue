@@ -21,7 +21,7 @@
         <div v-if="activeName=='project'" class="projects-list-holder">
           <ul class="projects-list content-list">
             <router-link :to="{path:'project',query:{id:item.id}}" tag="li"
-                         v-for="item in projects" class="project-row">
+                         v-for="item in projects" :key="item.id" class="project-row">
               <div class="title">
                 <div class="project">
                   <div class="dash-project-avatar">
@@ -30,11 +30,11 @@
                     </div>
                   </div>
                   <span class="project-full-name">
-                    <router-link tag="span" :to="{path:'user',query:{id:item.creatorId}}" class="namespace-name">
+                    <router-link tag="span" :to="{path:'/user',query:{id:item.creatorId}}" class="namespace-name">
                     {{item.creatorName}}
                     /
                     </router-link>
-                    <router-link tag="span" :to="{path:'project',query:{id:item.id}}" class="project-name filter-title">
+                    <router-link tag="span" :to="{path:'/project',query:{id:item.id}}" class="project-name filter-title">
                     {{item.projectName}}
                     </router-link>
                     </span>

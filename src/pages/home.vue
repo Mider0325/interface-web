@@ -29,7 +29,7 @@
           <p class="blank-state-text">
             所有的项目都在每个分组中，便于管理自己的项目
           </p>
-          <router-link class="btn btn-new" to="groups_new">创建分组
+          <router-link class="btn btn-new" to="groups/new">创建分组
           </router-link>
         </div>
         <div class="blank-state">
