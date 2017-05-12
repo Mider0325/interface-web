@@ -1,10 +1,14 @@
 /**
  * 所有页面基础类
  */
-
+import {mapState} from 'vuex'
 export default {
   /* 父类向下传递的参数数据 */
   props: [],
+  computed: mapState({
+    packageInfo: state => state.app.packageInfo,
+    userInfo: state => state.userInfo
+  }),
   data: function () {
     return {}
   },

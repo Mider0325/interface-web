@@ -228,7 +228,7 @@
         }).then((response) => {
           this.$message('删除成功')
           if (item.userId === this.userInfo.userId) {
-            this.$router.push({ path: 'dashboard_groups' })
+            this.$router.push({ path: '/dashboard/groups' })
           } else {
             this.loadData()
           }

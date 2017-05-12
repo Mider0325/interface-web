@@ -10,6 +10,7 @@ const PageRouter = require('./components/PageRouter.vue')
 var map = {
   mode: 'history',
   base: __dirname,
+  // base: '/public/',
   routes: [
     {
       path: '/:name/:name1/:name2/:name3/:name4/name5',

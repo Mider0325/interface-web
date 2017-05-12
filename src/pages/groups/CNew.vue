@@ -105,7 +105,7 @@
           }).then((response) => {
             this.$message('修改成功')
             if (!this.id) {
-              this.$router.push({ path: 'groups_members', query: { id: this.info.id } })
+              this.$router.push({ path: '/groups/members', query: { id: this.info.id } })
             }
           }).catch(() => {
 
@@ -117,7 +117,7 @@
             data: this.form
           }).then((response) => {
             this.$message('添加成功')
-            this.$router.push({ path: 'dashboard_groups' })
+            this.$router.push({ path: '/dashboard/groups' })
           }).catch(() => {
 
           })

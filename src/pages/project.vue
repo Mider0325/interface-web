@@ -174,7 +174,7 @@
               id: this.$route.query.id
             }
           }).then((response) => {
-            this.$router.push({ path: 'dashboard_projects' })
+            this.$router.push({ path: '/dashboard/projects' })
           }).catch(() => {
           })
         }).catch(() => {

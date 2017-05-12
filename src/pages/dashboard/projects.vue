@@ -19,7 +19,7 @@
               </el-input>
             </div>
 
-            <router-link class="btn btn-new" to="projects_new">创建项目</router-link>
+            <router-link class="btn btn-new" to="/projects/new">创建项目</router-link>
           </div>
         </div>
 

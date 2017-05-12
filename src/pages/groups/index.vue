@@ -20,7 +20,7 @@
         </div>
         <div v-if="activeName=='project'" class="projects-list-holder">
           <ul class="projects-list content-list">
-            <router-link :to="{path:'project',query:{id:item.id}}" tag="li"
+            <router-link :to="{path:'/project',query:{id:item.id}}" tag="li"
                          v-for="item in projects" :key="item.id" class="project-row">
               <div class="title">
                 <div class="project">
@@ -138,7 +138,7 @@
           }
         }).then((response) => {
           this.$message('删除成功')
-          this.$router.push({ path: 'dashboard_groups' })
+          this.$router.push({ path: '/dashboard/groups' })
         }).catch(() => {
         })
       }

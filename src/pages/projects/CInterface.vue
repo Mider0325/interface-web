@@ -171,7 +171,7 @@
        */
       handleEdit: function (index, row) {
         this.$router.push({
-          path: 'api_new',
+          path: '/api/new',
           query: {
             id: row.id
           }

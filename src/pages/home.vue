@@ -44,7 +44,7 @@
             <strong>20</strong>
             个项目.
           </p>
-          <router-link class="btn btn-new" to="projects_new">新建项目
+          <router-link class="btn btn-new" to="/projects/new">新建项目
           </router-link>
         </div>
 

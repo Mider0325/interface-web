@@ -367,7 +367,7 @@ responses:
               apiId: this.apiInfo.id
             }
           }).then((response) => {
-            this.$router.push({ path: 'dashboard_projects' })
+            this.$router.push({ path: '/dashboard/projects' })
           }).catch(() => {
             this.$message('删除失败')
           })

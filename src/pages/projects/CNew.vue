@@ -107,7 +107,7 @@
         form: {
           logo: '',
           name: '',
-          groupId: 1003,
+          groupId: '',
           description: ''
         }
       }
@@ -188,7 +188,7 @@
               type: 'success'
             })
             this.$router.push({
-              path: 'dashboard_projects'
+              path: '/dashboard/projects'
             })
           }).catch(() => {
             this.loading = false

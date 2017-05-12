@@ -20,7 +20,7 @@
             </li>
             <li>
               <router-link title="New project" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
-                           data-container="body" to="dashboard_activity">
+                           data-container="body" to="/dashboard/activity">
                 <el-badge :hidden="updataMessageNum.total==0" :value="updataMessageNum.total">
                   <i class="ifont icon-tongzhi"></i>
                 </el-badge>
@@ -28,7 +28,7 @@
             </li>
             <li>
               <router-link title="New project" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
-                           data-container="body" to="projects_new">
+                           data-container="body" to="/projects/new">
                 <i class="el-icon-plus"></i>
               </router-link>
             </li>
@@ -41,11 +41,11 @@
                 <div class="dropdown-menu-nav dropdown-menu-align-right">
                   <ul>
                     <li>
-                      <router-link class="profile-link" aria-label="Profile" data-user="wangkm" to="user">用户信息
+                      <router-link class="profile-link" aria-label="Profile" data-user="wangkm" to="/user">用户信息
                       </router-link>
                     </li>
                     <li>
-                      <router-link aria-label="Profile Settings" to="profile">用户设置</router-link>
+                      <router-link aria-label="Profile Settings" to="/profile">用户设置</router-link>
                     </li>
                     <li class="divider"></li>
                     <li>
