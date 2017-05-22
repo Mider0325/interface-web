@@ -65,7 +65,7 @@
           name: 'mockjs',
           desc: 'mock文档详情',
           router: {
-            path: 'help_doc',
+            path: 'help/doc',
             query: {
               path: 'help/mockjs.html'
             }

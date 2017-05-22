@@ -90,15 +90,14 @@
                   title="注意该接口处于审核中状态。修改不会被保存。"
                   type="warning">
         </el-alert>
+
         <div class="content">
           <div class="editor">
-            <yaml-editer :contents="apiInfo.content" :on-change="editorChange"></yaml-editer>
+            <c-new :contents="apiInfo"></c-new>
           </div>
 
-          <div class="preview">
-            <doc-viewer :apiInfo="apiInfoJson"></doc-viewer>
-          </div>
         </div>
+
       </div>
     </div>
   </div>
@@ -150,6 +149,7 @@
       .controls-left
         float left
     .content-wrapper
+      overflow auto
       display flex
       flex 1
       width 100%
@@ -176,12 +176,12 @@
   import Server from 'src/extend/Server'
   import CodeViewer from 'src/components/CodeViewer'
   import DocViewer from 'src/components/DocViewer'
-  import YamlEditer from 'src/components/YamlEditer'
   import jsYaml from 'js-yaml'
+  import CNew from './CNew.vue'
   import {mapState} from 'vuex'
   export default{
     mixins: [ BasePage ],
-    components: { CodeViewer, DocViewer, YamlEditer },
+    components: { CodeViewer, DocViewer, CNew },
     name: 'api_new',
     data () {
       return {

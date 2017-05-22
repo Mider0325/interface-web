@@ -1,0 +1,219 @@
+<template>
+  <div class="ObjectEditer">
+
+    <div style="margin: 0px 0 10px 0">
+      <el-button size="small" @click="importJson" type="primary" icon="upload">导入JSON</el-button>
+      <el-button v-if="empty(data)" size="small" @click="showMock" type="primary" icon="document">mock</el-button>
+      <el-button size="small" @click="addItem(data)" type="primary" icon="plus">添加列</el-button>
+    </div>
+    <div class="div-table">
+      <ul class="div-table-header div-table-line cb">
+        <li class="name">
+          参数名称
+        </li>
+        <li class="type">类型</li>
+        <li class="mock">
+          mock
+          <router-link tag="i" :to="{path:'/help/doc',query:{path:'help/mockjs.html'},hash:'DPD'}"
+                       href="/help/doc?path=help%2Fmockjs.html#DPD" class="el-icon-warning"></router-link>
+        </li>
+        <li class="desc">
+          描述
+        </li>
+        <li class="require" v-if="required">是否必须</li>
+        <li class="operate">
+          操作
+          <el-popover
+              ref="popover1"
+              placement="top-start"
+              title="常用快捷键"
+              width="400"
+              trigger="hover"
+          >
+            <pre>
+ctrl+del 或 ctrl+backspace 删除行
+ctrl+d 复制行
+shift+enter 添加子行元素
+shift+up 向上移动光标
+shift+down 向下移动光标
+shift+left 向左移动光标
+shift+right 向右移动光标
+            </pre>
+          </el-popover>
+          <i class="el-icon-warning" v-popover:popover1></i>
+        </li>
+      </ul>
+    </div>
+    <div
+        @keydown.shift.up="changeFocus($event,-inputnum)"
+        @keydown.shift.down="changeFocus($event,inputnum)"
+        @keydown.shift.left="changeFocus($event,-1)"
+        @keydown.shift.right="changeFocus($event,1)"
+    >
+      <item :required="required" :data="data"></item>
+    </div>
+
+  </div>
+</template>
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+  .ObjectEditer
+    width 100%
+    .nameWarp
+      display flex
+      .levelPosition
+        width 20px
+        display inline-block
+        height 100%
+      .nameInput
+        flex 1
+        border none
+</style>
+<script type="text/ecmascript-6">
+  import BaseComponent from 'src/extend/BaseComponent'
+  import Item from './Item.vue'
+  import {jsonToMock} from 'src/extend/Util'
+  import {mapState} from 'vuex'
+  import $ from 'jQuery'
+  export default {
+    mixins: [ BaseComponent ],
+    name: 'ObjectEditer',
+    components: { Item },
+    props: {
+      datas: {
+        type: Array,
+        default: function () {
+          return []
+        }
+      },
+      required: {
+        type: Boolean,
+        default: function () {
+          return false
+        }
+      },
+      flat: {
+        type: Boolean,
+        default: false
+      }
+    },
+    data: function () {
+      return {
+        focusInput: null,
+        inputnum: 5,
+        data: this.datas
+      }
+    },
+    computed: mapState({
+      Metadata: state => state.Metadata
+    }),
+    watch: {},
+    mounted () {
+      this.inputnum = this.required ? 5 : 4
+    },
+    methods: {
+      changeFocus: function (event, flag) {
+        if (this.focusInput) {
+          this.focusInput.blur()
+        }
+        var allInput = $(event.currentTarget).find('input,textarea,select')
+        allInput = [ ...allInput ]
+        var currInput = event.target
+        var index = allInput.indexOf(currInput)
+        currInput.blur()
+        index += flag
+        if (index < 0) {
+          index = 0
+        }
+        if (index >= allInput.length) {
+          index = allInput.length - 1
+        }
+        this.focusInput = allInput[ index ]
+        allInput[ index ].focus()
+      },
+      empty: function (data) {
+        return data.length
+      },
+      showMock: function () {
+        var me = this
+        this.openDialog({
+          name: 'DShowJson',
+          data: {
+            title: 'mock数据显示',
+            info: JSON.stringify(jsonToMock(me.data), null, 4)
+          },
+          methods: {
+            onImport: function (data) {
+              me.data = me.jsonDismantle(data)
+            }
+          }
+        })
+      },
+      importJson: function () {
+        var me = this
+        this.openDialog({
+          name: 'DImportJson',
+          data: {
+            title: '导入JSON'
+          },
+          methods: {
+            onImport: function (data) {
+              me.data = me.jsonDismantle(data)
+            }
+          }
+        })
+      },
+
+      /**
+       * 对给定的json数据拆解成为可以
+       * @param data
+       */
+      jsonDismantle: function (data) {
+        var info = []
+        var work = function (data) {
+          var list = []
+          var base = {
+            name: '',
+            require: 'true',
+            type: 'string',
+            mock: '',
+            description: ''
+          }
+          for (var key in data) {
+            let obj = Object.assign({}, base)
+            // 设置名称
+            obj.name = key
+            // 判断设置类型
+            let value = data[ key ]
+            if (value) {
+              obj.type = typeof value
+              if (typeof value === 'object') {
+                obj.type = 'object'
+                if (value instanceof Array) {
+                  obj.type = 'array'
+                  value = value[ 0 ]
+                }
+                obj.child = work(value)
+              }
+            } else {
+              obj.type = 'string'
+            }
+            list.push(obj)
+          }
+          return list
+        }
+        info = work(data, info)
+
+        return info
+      },
+      addItem: function (item) {
+        item.push({
+          name: '',
+          require: 'true',
+          type: 'string',
+          mock: '',
+          description: ''
+        })
+      }
+    }
+  }
+</script>

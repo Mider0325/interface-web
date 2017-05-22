@@ -15,7 +15,7 @@
               <el-input
                   size="large"
                   placeholder="搜索"
-                  v-model="input6">
+                  v-model="searchText">
               </el-input>
             </div>
 
@@ -25,33 +25,24 @@
 
         <div class="projects-list-holder">
           <ul v-if="activeName==='me'" class="projects-list content-list">
-            <router-link :to="{path:'/project',query:{id:item.id}}" tag="li"
-                         v-for="item in myProjects" :key="item.id" class="project-row">
-              <div class="title">
-                <div class="project">
-                  <div class="dash-project-avatar">
-                    <div class="avatar project-avatar s40 identicon">
-                      <img class="avatar project-avatar s40" :src="item.logo">
-                    </div>
-                  </div>
-                  <span class="project-full-name">
-                  <router-link tag="span" :to="{path:'/user',query:{id:item.creatorId}}" class="namespace-name">
-                    <span v-if="item.creatorId==userInfo.userId" class="label label-success">我自己</span>
-                    <span v-else>{{item.creatorName}}</span>
-                  /
-                  </router-link>
-                  <router-link tag="span" :to="{path:'/groups/index',query:{id:item.groupId}}" class="namespace-name">
-                  {{item.groupName}}
-                  /
-                  </router-link>
-                  <router-link tag="span" :to="{path:'/project',query:{id:item.id}}" class="project-name filter-title">
+            <router-link v-for="(item, index) in myProjects" :key="item.id" class="card"
+                         :to="{path:'/project',query:{id:item.id}}" tag="div">
+              <img :src="item.logo" class="image">
+              <div class="cardContent">
+                <router-link tag="div" class="title" :to="{path:'/groups/index',query:{id:item.groupId}}">
                   {{item.projectName}}
-                  </router-link>
-                  </span>
+                </router-link>
+                <div class="desc">
+                  {{item.description}}
                 </div>
-              </div>
-              <div class="description">
-                <p>{{item.description}}</p>
+                <div class="bottom clearfix">
+                  <time class="time"></time>
+                  <!--<el-button-group class="buttons">
+                    <el-button type="primary" size="mini" icon="edit"></el-button>
+                    <el-button type="primary" size="mini" icon="share"></el-button>
+                    <el-button type="primary"  size="mini" icon="delete"></el-button>
+                  </el-button-group>-->
+                </div>
               </div>
             </router-link>
           </ul>
@@ -74,7 +65,8 @@
                     {{item.groupName}}
                     /
                     </router-link>
-                    <router-link tag="span" :to="{path:'/project',query:{id:item.id}}" class="project-name filter-title">
+                    <router-link tag="span" :to="{path:'/project',query:{id:item.id}}"
+                                 class="project-name filter-title">
                     {{item.projectName}}
                     </router-link>
                     </span>
@@ -94,6 +86,40 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .project-name, .namespace-name
     cursor pointer
+
+  .card
+    float left
+    margin 20px
+    width 260px
+    height 160px
+    border 1px solid #dddddd
+    border-radius 5px
+    overflow hidden
+    position relative
+    .cardContent
+      z-index 2
+      position absolute
+      width 100%
+      height 100%
+      .title
+        padding: 5px 10px;
+        font-size: 16px;
+        color: #fff;
+        background-color: rgba(0, 0, 0, 0.46);
+      .desc
+        padding 5px 10px
+      .bottom
+        width 100%
+        position absolute
+        bottom 0
+        text-align right
+        .buttons
+          float right
+    .image
+      z-index 0
+      width 100%
+      bottom 0
+      position absolute
 </style>
 
 <script type="text/ecmascript-6">
@@ -105,6 +131,7 @@
     name: 'dashboard_projects',
     data () {
       return {
+        searchText: '',
         activeName: 'me',
         // 一个典型列表数据格式
         myProjects: [],
@@ -125,7 +152,7 @@
       },
       loadMyProject: function () {
         Server({
-          url: ' project/project',
+          url: 'project/project',
           method: 'get',
           params: {
             count: 100,

@@ -99,8 +99,154 @@ options = #0f6ab4
   border-left: 1px solid #ccc;
 }
 
-.el-radio-button__orig-radio:checked+.el-radio-button__inner {
+.el-radio-button__orig-radio:checked + .el-radio-button__inner {
   color: #fff;
   background-color: #1970a9;
   border-color: #1970a9;
+}
+
+
+
+/*============表格==========*/
+
+.div-table{
+  width: 100%;
+}
+
+.div-table-header li{
+  background-color: #eef1f6;
+  padding: 8px 10px!important;
+  border-top:1px solid #ccc!important
+  text-align center
+  font-weight bold
+  height: 38px!important
+}
+.div-table .el-input__inner{
+  height 28px
+}
+.div-table .cb{
+  display: -webkit-box;
+  width 100%
+  list-style: none;
+  margin 0
+  padding 0
+}
+.div-table li.operate{ width:75px;text-align:left;padding:8px 10px}
+.div-table li.operate .el-button + .el-button{
+  margin-left 0px
+}
+.div-table li.name{
+  width:300px;flex:1;position:relative
+}
+.div-table li.name .prefix{
+  flex:1
+  display block
+}
+.div-table li.name .prefix:before{
+  content ' '
+  position: absolute;
+  left: -8px;
+  height: 100%;
+  background-color: red;
+  width: 1px;
+}
+.div-table li.require{ width:90px}
+.div-table li.type{ width:150px}
+.div-table li.mock{ width:150px}
+.div-table li.desc{ width:100px;flex:1}
+.div-table li .noborder input,.div-table li .noborder textarea{
+  border none;
+}
+.div-table .sortable-placeholder{
+  width: 100%;
+  height: 32px;
+  background-color: #ddecf4;
+}
+.div-table .icon-drag-copy{
+  cursor: move;
+}
+.div-table-line li{
+  padding: 0;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-left:none;
+  border-top:none;
+  height: 30px;
+  line-height: 20px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  outline: none;
+}
+.div-table-line li.full-height:hover{
+  min-height: 32px;
+  height: auto;
+  position: absolute;
+  right: 0;
+  z-index: 2;
+  background-color: #fff;
+}
+.div-table-line li:first-child{
+  border-left: 1px solid #ccc;
+}
+.div-table-line .sub{
+  padding: 0;
+  border: none;
+  height: auto;
+}
+.div-table-line .name{
+}
+.div-table.editing .input{
+  overflow: hidden;
+  padding: 0;
+}
+.div-table.editing .input .text{
+  border-color: transparent;
+}
+.div-table-line .name{
+  padding-left: 10px;
+  overflow: visible;
+  position: relative;
+}
+.div-table-line .name .iconfont{
+  color: #666;
+  font-size: 14px;
+  position: absolute;
+  left: -16px;
+  top:8px;
+  width: 16px;
+  height: 16px;
+  background-position:center;
+  background-repeat:no-repeat;
+}
+
+
+.div-table-line .div-table-line .name{
+  padding-left: 25px;
+}
+.div-table-line .div-table-line .div-table-line .name{
+  padding-left: 40px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .name{
+  padding-left: 55px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .name{
+  padding-left: 70px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .name{
+  padding-left: 85px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .name{
+  padding-left: 100px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .name{
+  padding-left: 115px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line.name{
+  padding-left: 130px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .name{
+  padding-left: 145px;
+}
+.div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line .div-table-line.name{
+  padding-left: 160px;
 }

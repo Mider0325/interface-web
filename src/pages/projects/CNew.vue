@@ -52,6 +52,17 @@
           <el-form-item label="描述">
             <el-input type="textarea" v-model="form.description"></el-input>
           </el-form-item>
+          <el-form-item label="环境">
+            <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" :placeholder="evnPlaceholder"
+                      v-model="form.environment"></el-input>
+            <div class="desc">
+              <div>例子如下。环境名称+空格+地址</div>
+              <div>开发环境 http://www.baidu.com</div>
+              <div>测试环境 http://google.com</div>
+              <div>线上环境 http://google.com</div>
+            </div>
+          </el-form-item>
+
           <el-form-item>
             <el-button type="primary" :loading="loading" @click="onSubmit">提交</el-button>
           </el-form-item>
@@ -70,6 +81,16 @@
     float right
     position relative
     bottom 5px
+
+  .desc
+    line-height 15px;
+    color darkred
+    margin 5px
+    padding 5px
+    font-size: 90%;
+    color: #c7254e;
+    background-color: #f9f2f4;
+    border-radius: 3px;
 
   .headIcon
     width 150px
@@ -104,7 +125,10 @@
         loading: false,
         options: [],
         value: '',
+        evnPlaceholder: `dev http://www.baidu.com
+qa http://google.com`,
         form: {
+          environment: '',
           logo: '',
           name: '',
           groupId: '',
@@ -133,7 +157,8 @@
             logo: data.logo,
             name: data.projectName,
             groupId: data.groupId,
-            description: data.description
+            description: data.description,
+            environment: data.environment
           }
         })
       },

@@ -1,6 +1,6 @@
 <template>
   <div class="row">
-    <div class="col-sm-2">
+    <div style="position: fixed;top: 0;height: 100%;overflow: auto;" class="col-sm-2">
       <div class="mb10">
         <a href="#DPD" class="fontsize-16" data-scroll="">数据模板定义<!-- Data Template Definition, DTD --></a>
       </div>
@@ -239,7 +239,7 @@
         </li>
       </ul>
     </div>
-    <div class="col-sm-10">
+    <div style="margin-left: 220px" class="col-sm-10">
       <blockquote>
         <p>
           <span class="specfont" style="font-size: 20px; margin-right: 10px; color: #999;"></span>
