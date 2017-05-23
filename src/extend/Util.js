@@ -6,7 +6,7 @@
  * Time: 上午11:02
  * To change this template use File | Settings | File Templates.
  */
-var mock = require('mockjs')
+var Mock = require('mockjs')
 exports.pipe = function () {
   var args = [].slice.call(arguments, 0)
   var val = args[ 0 ]
@@ -60,14 +60,147 @@ exports.jsonToMock = function (data) {
       if (value.type == 'object') {
         info[ value.name + value.mock ] = {}
         work(value.child, info[ value.name + value.mock ])
-      } else if (value.type == 'array') {
-        info[ value.name + value.mock ] = []
-        var data1 = {}
-        info[ value.name + value.mock ].push(data1)
-        work(value.child, data1)
+      } else if (value.type.indexOf('array') != -1) {
+        info[ value.name ] = []
+        var type = value.type.replace('array(', '').replace(')', '')
+        var arrayLength = value.mock - 0
+        for (let i = 0; i < arrayLength; i++) {
+          if (type == 'object') {
+            var data1 = {}
+            info[ value.name ].push(data1)
+            work(value.child, data1)
+          } else if (type == 'array') {
+          } else if (type == 'number') {
+            info[ value.name ].push(Mock.mock('@integer'))
+          } else if (type == 'string') {
+            info[ value.name ].push(Mock.mock('@string'))
+          } else if (type == 'boolean') {
+            info[ value.name ].push(Mock.mock('@boolean'))
+          }
+        }
       }
     }
   }
   work(data, info)
-  return mock.mock(info)
+  return Mock.mock(info)
 }
+
+/**
+ * 对给定的json数据拆解成为可以
+ * @param data
+ */
+exports.jsonDismantle = function (data) {
+  var info = []
+  var work = function (data) {
+    var list = []
+    var base = {
+      name: '',
+      require: 'true',
+      type: 'string',
+      mock: '',
+      description: ''
+    }
+    for (var key in data) {
+      let obj = Object.assign({}, base)
+      // 设置名称
+      obj.name = key
+      // 判断设置类型
+      let value = data[ key ]
+      if (value) {
+        obj.type = typeof value
+        if (typeof value === 'object') {
+          obj.type = 'object'
+          if (value instanceof Array) {
+            obj.type = 'array'
+            value = value[ 0 ]
+            let arryType = typeof value
+            if (value instanceof Array) {
+              arryType = 'array'
+            }
+            obj.type += `(${arryType})`
+          }
+          if (typeof value == 'object') {
+            obj.child = work(value)
+          }
+        }
+      } else {
+        obj.type = 'string'
+      }
+      list.push(obj)
+    }
+    return list
+  }
+  info = work(data, info)
+
+  return info
+}
+/*
+
+console.log(JSON.stringify(test([
+  {
+    "name": "code",
+    "require": "true",
+    "type": "number",
+    "mock": "",
+    "description": ""
+  },
+  {
+    "name": "list",
+    "require": "true",
+    "type": "array(number)",
+    "mock": "10",
+    "description": ""
+  },
+  {
+    "name": "data",
+    "require": "true",
+    "type": "array(object)",
+    "mock": "2",
+    "description": "",
+    "child": [
+      {
+        "name": "id",
+        "require": "true",
+        "type": "number",
+        "mock": "@id",
+        "description": ""
+      },
+      {
+        "name": "name",
+        "require": "true",
+        "type": "string",
+        "mock": "@now('T')",
+        "description": ""
+      },
+      {
+        "name": "email",
+        "require": "true",
+        "type": "string",
+        "mock": "/\d{5,10}\-/",
+        "description": ""
+      },
+      {
+        "name": "account",
+        "require": "true",
+        "type": "string",
+        "mock": "",
+        "description": ""
+      },
+      {
+        "name": "createTime",
+        "require": "true",
+        "type": "number",
+        "mock": "",
+        "description": ""
+      },
+      {
+        "name": "updateTime",
+        "require": "true",
+        "type": "number",
+        "mock": "",
+        "description": ""
+      }
+    ]
+  }
+]), null, 4))
+*/

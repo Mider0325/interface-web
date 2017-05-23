@@ -1,8 +1,15 @@
 <template>
   <el-dialog :title="title" v-model="Visible" @close="close">
-    <div class="mockContent">
+    <el-tabs v-model="activeName">
+      <el-tab-pane label="用户管理" name="json"></el-tab-pane>
+      <el-tab-pane label="配置管理" name="data"></el-tab-pane>
+    </el-tabs>
+    <div v-show="activeName=='json'" class="mockContent">
       <code-viewer :contents="'{}'" :options="{}"
                    :ctype="'json'" :on-change="change"></code-viewer>
+    </div>
+    <div v-show="activeName=='data'" class="mockContent">
+      TODO
     </div>
     <div class="footer">
       <el-button v-if="!error" type="primary" @click="importJson">导入</el-button>
@@ -26,6 +33,7 @@
     name: 'DImportJson',
     data: function () {
       return {
+        activeName: 'json',
         info: {},
         error: false
       }

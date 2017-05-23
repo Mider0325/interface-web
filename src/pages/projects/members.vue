@@ -162,6 +162,9 @@
     }),
     methods: {
       querySearchAsync (queryString, cb) {
+        if (queryString == '') {
+          return
+        }
         Server({
           url: 'users/search',
           method: 'get',

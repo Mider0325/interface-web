@@ -2,7 +2,7 @@
   <div class="ObjectEditer">
 
     <div style="margin: 0px 0 10px 0">
-      <el-button size="small" @click="importJson" type="primary" icon="upload">导入JSON</el-button>
+      <el-button size="small" @click="importJson" type="primary" icon="upload">导入数据</el-button>
       <el-button v-if="empty(data)" size="small" @click="showMock" type="primary" icon="document">mock</el-button>
       <el-button size="small" @click="addItem(data)" type="primary" icon="plus">添加列</el-button>
     </div>
@@ -34,6 +34,7 @@
 ctrl+del 或 ctrl+backspace 删除行
 ctrl+d 复制行
 shift+enter 添加子行元素
+ctrl+i 当前行导入json子元素
 shift+up 向上移动光标
 shift+down 向下移动光标
 shift+left 向左移动光标
@@ -71,7 +72,7 @@ shift+right 向右移动光标
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
   import Item from './Item.vue'
-  import {jsonToMock} from 'src/extend/Util'
+  import {jsonToMock, jsonDismantle} from 'src/extend/Util'
   import {mapState} from 'vuex'
   import $ from 'jQuery'
   export default {
@@ -143,7 +144,7 @@ shift+right 向右移动光标
           },
           methods: {
             onImport: function (data) {
-              me.data = me.jsonDismantle(data)
+              me.data = jsonDismantle(data)
             }
           }
         })
@@ -153,58 +154,16 @@ shift+right 向右移动光标
         this.openDialog({
           name: 'DImportJson',
           data: {
-            title: '导入JSON'
+            title: '导入数据'
           },
           methods: {
             onImport: function (data) {
-              me.data = me.jsonDismantle(data)
+              me.data = jsonDismantle(data)
             }
           }
         })
       },
 
-      /**
-       * 对给定的json数据拆解成为可以
-       * @param data
-       */
-      jsonDismantle: function (data) {
-        var info = []
-        var work = function (data) {
-          var list = []
-          var base = {
-            name: '',
-            require: 'true',
-            type: 'string',
-            mock: '',
-            description: ''
-          }
-          for (var key in data) {
-            let obj = Object.assign({}, base)
-            // 设置名称
-            obj.name = key
-            // 判断设置类型
-            let value = data[ key ]
-            if (value) {
-              obj.type = typeof value
-              if (typeof value === 'object') {
-                obj.type = 'object'
-                if (value instanceof Array) {
-                  obj.type = 'array'
-                  value = value[ 0 ]
-                }
-                obj.child = work(value)
-              }
-            } else {
-              obj.type = 'string'
-            }
-            list.push(obj)
-          }
-          return list
-        }
-        info = work(data, info)
-
-        return info
-      },
       addItem: function (item) {
         item.push({
           name: '',

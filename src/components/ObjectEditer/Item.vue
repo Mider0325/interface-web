@@ -5,6 +5,7 @@
          @keydown.ctrl.68.stop="parentAddItem(data,item)"
          @keydown.ctrl.delete.stop="removeItem(item)"
          @keydown.ctrl.187.stop="changeOpen(item)"
+         @keydown.ctrl.73.stop="importJson(item)"
          :key="key" v-for="(item,key) in data">
       <ul class="cb">
         <li class="name input">
@@ -25,8 +26,10 @@
           <el-autocomplete
               class="noborder"
               v-model="item.mock"
+              popper-class="my-autocomplete"
               :fetch-suggestions="querySearch"
               placeholder="输入"
+              custom-item="my-item-zh"
               :trigger-on-focus="false"
               @select="handleSelect"
           ></el-autocomplete>
@@ -48,7 +51,7 @@
           <span v-if="item.child" @click="changeOpen(item)">
               <i :class="!item._close?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
           </span>
-          <span v-if="item.type=='object'||item.type=='array'" @click="addItem(item,key)">
+          <span v-if="canAdd(item)" @click="addItem(item,key)">
                 <i class="ifont icon-add"></i>
           </span>
         </li>
@@ -65,12 +68,28 @@
     width 100%
     height 100%
     border none
+
 </style>
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
   import {mapState} from 'vuex'
+  import {jsonDismantle} from 'src/extend/Util'
   import $ from 'jQuery'
+  import Vue from 'vue'
 
+  Vue.component('my-item-zh', {
+    functional: true,
+    render: function (h, ctx) {
+      var item = ctx.props.item
+      return h('li', ctx.data, [
+        h('div', { attrs: { class: 'name' } }, [ item.value ]),
+        h('span', { attrs: { class: 'addr', style: 'font-size:10px' } }, [ item.desc ])
+      ])
+    },
+    props: {
+      item: { type: Object, required: true }
+    }
+  })
   export default {
     mixins: [ BaseComponent ],
     name: 'ObjectEditerItem',
@@ -102,6 +121,13 @@
       })
     },
     methods: {
+      canAdd: function (item) {
+        var flag = false
+        if (item.type.indexOf('object') != -1) {
+          flag = true
+        }
+        return flag
+      },
       querySearch (queryString, cb) {
         var restaurants = this.Metadata.mockAdvice
         var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
@@ -127,6 +153,21 @@
         this.data.splice(id, 1)
         console.log(id)
       },
+      importJson: function (item) {
+        this.openDialog({
+          name: 'DImportJson',
+          data: {
+            title: '导入数据'
+          },
+          methods: {
+            onImport: function (data) {
+              item.type = 'object'
+              item.child = jsonDismantle(data)
+            }
+          }
+        })
+      },
+
       addItem: function (item) {
         if (!item.child) {
           this.$set(item, 'child', [])
@@ -138,7 +179,9 @@
           mock: '',
           description: ''
         })
-        item.type = 'object'
+        if (item.type.indexOf('object') == -1) {
+          item.type = 'object'
+        }
       },
       parentAddItem: function (data, item) {
         data.push(Object.assign({}, item))
@@ -146,4 +189,3 @@
     }
   }
 </script>
-
