@@ -35,28 +35,36 @@
             <member></member>
           </div>
           <div v-if="activeName==='object'">
+            <div class="panel panel-default prepend-top-default">
+              <div class="panel-heading">
+                添加/更新基础数据
+              </div>
+              <div>
+                <c-base-object :id="this.$route.query.id+''"></c-base-object>
+              </div>
+            </div>
           </div>
           <div class="apis" v-if="activeName==='apis'">
             <c-interface :id="this.$route.query.id+''"></c-interface>
           </div>
           <div v-if="activeName==='setting'">
-            <div class="project-edit-container">
-              <div class="prepend-top-default">
+            <div class="panel panel-default prepend-top-default">
+              <div class="panel-heading">
+                基本设置
+              </div>
+              <div class="panel-body">
                 <c-new :id="$route.query.id-0"></c-new>
               </div>
-              <div class="prepend-top-default"></div>
-              <hr>
-              <div class="prepend-top-default append-bottom-default">
-                <div class="col-lg-3">
-                  <h4 class="prepend-top-0 danger-title">
-                    删除项目
-                  </h4>
-                  <p class="append-bottom-0">
-                    删除项目是不可逆的，确认
-                  </p>
-                </div>
-                <div class="col-lg-9">
-                  <el-button type="danger" @click="delectProject">删除</el-button>
+            </div>
+            <div class="panel panel-danger">
+              <div class="panel-heading">删除项目</div>
+              <div class="panel-body">
+                <p>
+                  删除项目是不可逆的，确认
+                  <br>
+                </p>
+                <div class="form-actions">
+                  <a class="btn btn-remove" rel="nofollow" @click="delectProject">删除项目</a>
                 </div>
               </div>
             </div>
@@ -115,10 +123,11 @@
   import CNew from './projects/CNew.vue'
   import CDoc from './projects/CDoc.vue'
   import CInterface from './projects/CInterface.vue'
+  import CBaseObject from './projects/CBaseObject.vue'
 
   export default{
     mixins: [ BasePage ],
-    components: { Member, CNew, CDoc, CInterface },
+    components: { Member, CNew, CDoc, CInterface, CBaseObject },
     name: 'project',
     data: function () {
       return {
@@ -143,23 +152,16 @@
     },
     methods: {
       newApi: function () {
-        Server({
-          url: 'api/add',
+        this.openDialog({
+          name: 'DAddApi',
           data: {
-            request: '',
-            response: '',
-            description: '',
-            method: 'get',
-            name: 'hahahf' + Math.random(),
-            path: 'path',
-            projectId: this.$route.query.id - 0
+            title: '添加接口',
+            form: {
+              projectId: this.$route.query.id
+            }
           },
-          method: 'post'
-        }).then((response) => {
-          var data = response.data.data
-          this.$router.push({ path: '/api/new', query: { id: data.id } })
-        }).catch((e) => {
-          console.log(e)
+          methods: {
+          }
         })
       },
       tabHandleClick (tab) {

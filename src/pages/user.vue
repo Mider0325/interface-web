@@ -11,26 +11,21 @@
         <div class="user-profile">
           <div class="cover-block">
             <div class="cover-controls">
-              <a class="btn btn-gray" href="/u/mingyuan.wei.atom?private_token=yfATUx1kcCzcuBAZbdyC"><i
-                  class="fa fa-rss"></i>
-              </a></div>
+            </div>
             <div class="avatar-holder">
-              <a target="_blank"
-                 href="http://secure.gravatar.com/avatar/706766aba6ccf2210430c35913569b9b?s=800&amp;d=identicon"><img
-                  class="avatar s90" alt=""
-                  :src="info.photo">
-              </a></div>
+              <img class="avatar s90" alt=""
+                   :src="info.photo">
+            </div>
             <div class="cover-title">
               {{info.name}}
             </div>
             <div class="cover-desc">
-              <span class="middle-dot-divider">
-                            {{info.email}}
-
+              <span v-if="info.email" class="middle-dot-divider">
+                邮箱:{{info.email}}
               </span>
             </div>
-            <div class="cover-desc">
-              电话：{{info.telephone}}
+            <div class="cover-desc" v-if="info.telephone">
+              电话:{{info.telephone}}
             </div>
             <ul class="nav-links center user-profile-nav">
             </ul>

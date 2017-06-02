@@ -60,6 +60,8 @@ instance.interceptors.response.use(function (response) {
       window.EMA.fire('alert.show', '用户无权限,重新登录', function () {
         window.EMA.fire('logout')
       })
+    } else if (status == 422) {
+      window.EMA.fire('alert.show', '传递参数错误', function () {})
     } else {
       window.EMA.fire('alert.show', message, function () {})
     }

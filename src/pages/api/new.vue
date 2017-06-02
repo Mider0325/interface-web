@@ -3,7 +3,7 @@
     <div class="layout-nav">
       <div class="container-fluid">
         <div class="leftcontrols">
-          <span class="members">
+          <!--<span class="members">
             <span class="member">
               <img src="http://ok0m4xukx.bkt.clouddn.com/b8ad7b37c8a20c71aa346271a9aca38d.jpg" alt="">
             </span>
@@ -16,7 +16,7 @@
             <span v-popover:searchmember class="member add">
               <i class="ifont icon-add"></i>
             </span>
-          </span>
+          </span>-->
           <span class="tag">
             <i class="ifont icon-tag"></i>
             <el-tag
@@ -67,6 +67,11 @@
           <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId}})"
                      size="small">
             文档列表
+            <i class="el-icon-document"></i>
+          </el-button>
+          <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId}})"
+                     size="small">
+            接口列表
             <i class="el-icon-document"></i>
           </el-button>
           <el-button v-popover:setting type="primary" size="small">

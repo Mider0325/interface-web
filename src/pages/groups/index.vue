@@ -10,16 +10,66 @@
       <div class="content">
         <div class="top-area">
           <el-tabs class="nav-links" :active-name="activeName" @tab-click="tabHandleClick">
-            <el-tab-pane label="成 员" name="member"></el-tab-pane>
-            <el-tab-pane label="项 目" name="project"></el-tab-pane>
-            <el-tab-pane label="设 置" name="setting"></el-tab-pane>
+            <el-tab-pane label="信 息" name="info"></el-tab-pane>
+            <el-tab-pane v-if="info.id" label="成 员" name="member"></el-tab-pane>
+            <el-tab-pane v-if="info.id" label="项 目" name="project"></el-tab-pane>
+            <el-tab-pane v-if="info.id" label="设 置" name="setting"></el-tab-pane>
           </el-tabs>
         </div>
+
+        <div v-if="activeName=='info'" class="group-members-page prepend-top-default">
+          <div class="panel panel-default prepend-top-default">
+            <div class="panel-heading">
+              基本信息
+            </div>
+            <div class="panel-body">
+              <div v-if="!info.id">
+                <div class="blank-state">
+                  <div class="blank-state-icon">
+                    <i class="ifont icon-empty"></i> <span>你无权访问该组信息</span>
+                  </div>
+                </div>
+              </div>
+              <el-form v-else ref="form" :model="info" label-width="80px">
+                <el-form-item label="图标">
+                  <div class="headIcon">
+                    <img :src="info.logo">
+                  </div>
+                </el-form-item>
+
+                <el-form-item label="名称"
+                              prop="name"
+                >
+                  <el-input placeholder="名称" :disabled="true" v-model="info.name">
+                  </el-input>
+                </el-form-item>
+                <el-form-item label="描述"
+                              prop="description"
+                >
+                  <el-input :disabled="true" type="textarea" v-model="info.description"></el-input>
+                </el-form-item>
+              </el-form>
+            </div>
+          </div>
+        </div>
         <div v-if="activeName=='member'" class="group-members-page prepend-top-default">
-          <members :id="info.id"></members>
+          <members v-if="info.id" :id="info.id"></members>
         </div>
         <div v-if="activeName=='project'" class="projects-list-holder">
-          <ul class="projects-list content-list">
+
+          <div v-if="!hasData">
+            <div class="blank-state">
+              <div class="blank-state-icon">
+                <i class="ifont icon-empty"></i> <span>暂无项目</span>
+              </div>
+              <h3 class="blank-state-title">
+                <router-link :to="{path:'/projects/new'}">
+                  <el-button type="primary">添加项目</el-button>
+                </router-link>
+              </h3>
+            </div>
+          </div>
+          <ul v-else class="projects-list content-list">
             <router-link :to="{path:'/project',query:{id:item.id}}" tag="li"
                          v-for="item in projects" :key="item.id" class="project-row">
               <div class="title">
@@ -93,16 +143,23 @@
         // 一个典型列表数据格式
         info: {},
         projects: [],
-        activeName: 'member'
+        activeName: 'info'
       }
     },
     mounted: function () {
       this.getDetail()
-      this.getProjects()
+    },
+    computed: {
+      hasData: function () {
+        return this.projects.length > 0
+      }
     },
     methods: {
       tabHandleClick (tab) {
         this.activeName = tab.name
+        if (tab.name == 'project') {
+          this.getProjects()
+        }
       },
       getProjects () {
         Server({
@@ -118,7 +175,7 @@
         }).catch(() => {
         })
       },
-      getDetail () {
+      getDetail (call) {
         Server({
           url: 'project/groupinfo',
           method: 'get',
@@ -127,8 +184,9 @@
           }
         }).then((response) => {
           this.info = response.data.data
-        }).catch(() => {
-        })
+          call()
+        }).catch(() => {}
+        )
       },
       remove () {
         this.$confirm('此操作将永久删除该分组和分组下面的项目, 是否继续?', '提示', {

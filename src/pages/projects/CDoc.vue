@@ -206,23 +206,16 @@
         })
       },
       newApi: function () {
-        Server({
-          url: 'api/add',
+        this.openDialog({
+          name: 'DAddApi',
           data: {
-            request: '',
-            response: '',
-            description: '',
-            method: 'get',
-            name: 'hahahf' + Math.random(),
-            path: 'path',
-            projectId: this.$route.query.id - 0
+            title: '添加接口',
+            form: {
+              projectId: this.$route.query.id
+            }
           },
-          method: 'post'
-        }).then((response) => {
-          var data = response.data.data
-          this.$router.push({ path: '/api/new', query: { id: data.id } })
-        }).catch((e) => {
-          console.log(e)
+          methods: {
+          }
         })
       },
       initClipboard: function () {

@@ -7,9 +7,7 @@
         <section class="activities">
           <div class="nav-block top-area">
             <div class="controls">
-              <a class="btn rss-btn" href="/dashboard/projects.atom?private_token=yfATUx1kcCzcuBAZbdyC"><i
-                  class="fa fa-rss"></i>
-              </a>
+
             </div>
             <el-tabs class="nav-links" :active-name="activeName" @tab-click="tabHandleClick">
 
@@ -34,9 +32,11 @@
           </div>
           <div class="content_list" v-else>
             <!--接口消息-->
-            <div v-for="item in list" @click="reade(item)" class="event-block event-item">
+            <div v-for="(item,index) in list" @click="reade(item)" class="event-block event-item">
               <div class="event-item-timestamp">
+
                 <time class="js-timeago" data-placement="top" data-container="body">{{item.time|datetime}}</time>
+
               </div>
               <router-link
                   :to="{path:'/user',query:{id:item.userId}}">
@@ -165,7 +165,7 @@
           method: 'get'
         }).then((response) => {
           this.loading = false
-          this.list = this.list.concat(response.data.data)
+          this.list = [] || this.list.concat(response.data.data)
         }).catch(() => {
           this.loading = false
         })

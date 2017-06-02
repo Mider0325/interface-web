@@ -60,7 +60,7 @@
       <div class="bottom">
         <el-button v-if="content.status==1" @click="applyPublish" type="warning" size="small">
           <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
-            申请发布 <i class="ifont icon-menu"></i>
+            <span>申请发布 <i class="ifont icon-menu"></i></span>
           </el-tooltip>
         </el-button>
         <el-dropdown v-if="content.status==1" split-button size="small" type="primary" @command="handleCommand"

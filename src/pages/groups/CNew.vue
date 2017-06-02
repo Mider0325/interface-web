@@ -11,11 +11,17 @@
         </el-upload>
       </el-form-item>
 
-      <el-form-item label="名称">
+      <el-form-item label="名称"
+                    prop="name"
+                    :rules="[{ required: true,message: '输入1-10位组名', trigger: 'blur'}]"
+      >
         <el-input placeholder="名称" v-model="form.name">
         </el-input>
       </el-form-item>
-      <el-form-item label="描述">
+      <el-form-item label="描述"
+                    prop="description"
+                    :rules="[{ required: true,message: '输入描述', trigger: 'blur'}]"
+      >
         <el-input type="textarea" v-model="form.description"></el-input>
       </el-form-item>
 
@@ -32,7 +38,9 @@
       </div>
 
       <el-form-item>
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+
+        <el-button v-if="id" type="primary" @click="onSubmit">立即修改</el-button>
+        <el-button v-else type="primary" @click="onSubmit">立即创建</el-button>
       </el-form-item>
 
     </el-form>
@@ -91,37 +99,44 @@
         this.form.logo = url
       },
       onSubmit: function () {
-        if (this.info.id) {
-          var req = {
-            logo: this.form.logo,
-            name: this.form.name,
-            description: this.form.description,
-            id: this.info.id
-          }
-          Server({
-            url: 'project/group',
-            method: 'put',
-            data: req
-          }).then((response) => {
-            this.$message('修改成功')
-            if (!this.id) {
-              this.$router.push({ path: '/groups/members', query: { id: this.info.id } })
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            if (this.info.id) {
+              var req = {
+                logo: this.form.logo,
+                name: this.form.name,
+                description: this.form.description,
+                id: this.info.id
+              }
+              Server({
+                url: 'project/group',
+                method: 'put',
+                data: req
+              }).then((response) => {
+                this.$message('修改成功')
+                if (!this.id) {
+                  this.$router.push({ path: '/groups/members', query: { id: this.info.id } })
+                }
+              }).catch(() => {
+
+              })
+            } else {
+              Server({
+                url: 'project/group',
+                method: 'post',
+                data: this.form
+              }).then((response) => {
+                this.$message('添加成功')
+                this.$router.push({ path: '/dashboard/groups' })
+              }).catch(() => {
+
+              })
             }
-          }).catch(() => {
-
-          })
-        } else {
-          Server({
-            url: 'project/group',
-            method: 'post',
-            data: this.form
-          }).then((response) => {
-            this.$message('添加成功')
-            this.$router.push({ path: '/dashboard/groups' })
-          }).catch(() => {
-
-          })
-        }
+          } else {
+            this.$message('信息填写错误')
+            return false
+          }
+        })
       }
     }
   }

@@ -25,13 +25,28 @@
 
         <div class="projects-list-holder">
           <ul v-if="activeName==='me'" class="projects-list content-list">
-            <router-link v-for="(item, index) in myProjects" :key="item.id" class="card"
+            <div v-if="!hasMyData">
+              <div class="blank-state">
+                <div class="blank-state-icon">
+                  <i class="ifont icon-empty"></i> <span>暂无项目</span>
+                </div>
+                <h3 class="blank-state-title">
+                  <router-link :to="{path:'/projects/new'}">
+                    <el-button type="primary">添加项目</el-button>
+                  </router-link>
+                </h3>
+              </div>
+            </div>
+            <router-link v-else v-for="(item, index) in myProjects" :key="item.id" class="card"
                          :to="{path:'/project',query:{id:item.id}}" tag="div">
               <img :src="item.logo" class="image">
               <div class="cardContent">
-                <router-link tag="div" class="title" :to="{path:'/groups/index',query:{id:item.groupId}}">
+                <div class="title">
+                  <router-link tag="span" :to="{path:'/groups/index',query:{id:item.groupId}}" class="namespace-name">
+                    {{item.groupName}}
+                  </router-link>/
                   {{item.projectName}}
-                </router-link>
+                </div>
                 <div class="desc">
                   {{item.description}}
                 </div>
@@ -47,6 +62,13 @@
             </router-link>
           </ul>
           <ul v-if="activeName==='star'" class="projects-list content-list">
+            <div v-if="!hasMyStarData">
+              <div class="blank-state">
+                <div class="blank-state-icon">
+                  <i class="ifont icon-empty"></i> <span>暂无关注项目</span>
+                </div>
+              </div>
+            </div>
             <router-link :to="{path:'/project',query:{id:item.id}}" tag="li"
                          v-for="item in starProjects" :key="item.id" class="project-row">
               <div class="title">
@@ -141,6 +163,14 @@
     mounted: function () {
       this.loadMyProject()
     },
+    computed: {
+      hasMyData: function () {
+        return this.myProjects.length > 0
+      },
+      hasMyStarData: function () {
+        return this.starProjects.length > 0
+      }
+    },
     methods: {
       tabHandleClick (tab) {
         this.activeName = tab.name
@@ -159,7 +189,7 @@
             start: 0
           }
         }).then((response) => {
-          this.myProjects = response.data.data
+          this.myProjects = response.data.data || []
         }).catch(() => {
 
         })
@@ -174,7 +204,7 @@
             start: 0
           }
         }).then((response) => {
-          this.starProjects = response.data.data
+          this.starProjects = response.data.data || []
         }).catch(() => {
 
         })

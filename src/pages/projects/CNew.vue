@@ -45,11 +45,17 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="项目名称">
+          <el-form-item label="项目名称"
+                        prop="name"
+                        :rules="[{ required: true,message: '输入1-10位项目名', trigger: 'blur'}]"
+          >
             <el-input placeholder="项目名称" v-model="form.name">
             </el-input>
           </el-form-item>
-          <el-form-item label="描述">
+          <el-form-item label="描述"
+                        prop="description"
+                        :rules="[{ required: true,message: '输入描述', trigger: 'blur'}]"
+          >
             <el-input type="textarea" v-model="form.description"></el-input>
           </el-form-item>
           <el-form-item label="环境">
@@ -179,46 +185,53 @@ qa http://google.com`,
         })
       },
       onSubmit: function () {
-        this.loading = true
-        if (this.id) {
-          Server({
-            url: 'project/project',
-            method: 'put',
-            data: { ...this.form, id: this.id }
-          }).then((response) => {
-            this.loading = false
-            this.$notify({
-              title: '成功',
-              message: '修改成功',
-              type: 'success'
-            })
-          }).catch(() => {
-            this.loading = false
-            this.$notify({
-              itle: '警告',
-              message: '修改失败',
-              type: 'warning'
-            })
-          })
-        } else {
-          Server({
-            url: 'project/project',
-            method: 'post',
-            data: this.form
-          }).then((response) => {
-            this.loading = false
-            this.$notify({
-              title: '成功',
-              message: '创建成功',
-              type: 'success'
-            })
-            this.$router.push({
-              path: '/dashboard/projects'
-            })
-          }).catch(() => {
-            this.loading = false
-          })
-        }
+        this.$refs.form.validate((valid) => {
+          if (valid) {
+            this.loading = true
+            if (this.id) {
+              Server({
+                url: 'project/project',
+                method: 'put',
+                data: { ...this.form, id: this.id }
+              }).then((response) => {
+                this.loading = false
+                this.$notify({
+                  title: '成功',
+                  message: '修改成功',
+                  type: 'success'
+                })
+              }).catch(() => {
+                this.loading = false
+                this.$notify({
+                  itle: '警告',
+                  message: '修改失败',
+                  type: 'warning'
+                })
+              })
+            } else {
+              Server({
+                url: 'project/project',
+                method: 'post',
+                data: this.form
+              }).then((response) => {
+                this.loading = false
+                this.$notify({
+                  title: '成功',
+                  message: '创建成功',
+                  type: 'success'
+                })
+                this.$router.push({
+                  path: '/dashboard/projects'
+                })
+              }).catch(() => {
+                this.loading = false
+              })
+            }
+          } else {
+            this.$message('信息填写错误')
+            return false
+          }
+        })
       }
     }
   }

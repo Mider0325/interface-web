@@ -1,14 +1,14 @@
 <template>
   <el-dialog :title="title" v-model="Visible" @close="close">
-    <el-tabs v-model="activeName">
-      <el-tab-pane label="用户管理" name="json"></el-tab-pane>
-      <el-tab-pane label="配置管理" name="data"></el-tab-pane>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+      <el-tab-pane label="JSON导入" name="json"></el-tab-pane>
+      <el-tab-pane label="基础对象导入" name="data"></el-tab-pane>
     </el-tabs>
-    <div v-show="activeName=='json'" class="mockContent">
+    <div v-if="activeName=='json'" class="mockContent">
       <code-viewer :contents="'{}'" :options="{}"
                    :ctype="'json'" :on-change="change"></code-viewer>
     </div>
-    <div v-show="activeName=='data'" class="mockContent">
+    <div v-if="activeName=='data'" class="mockContent">
       TODO
     </div>
     <div class="footer">
@@ -27,6 +27,7 @@
 <script type="text/ecmascript-6">
   import BaseDialog from 'src/extend/BaseDialog'
   import CodeViewer from 'src/components/CodeViewer'
+  import Server from 'src/extend/Server'
 
   export default {
     mixins: [ BaseDialog ],
@@ -35,12 +36,30 @@
       return {
         activeName: 'json',
         info: {},
+        baseDatas:[],
         error: false
       }
     },
     components: { CodeViewer },
     computed: {},
     methods: {
+      handleClick(tab, event) {
+        console.log(tab, event);
+        if(tab.name=='data'){
+          this.loadData()
+        }
+      },
+      loadData () {
+        Server({
+          url: 'api/getDatas',
+          method: 'get',
+          params: {
+            projectId: this.id
+          }
+        }).then((response) => {
+          this.baseDatas = response.data.data.datas
+        })
+      },
       change: function (info) {
         this.error = false
         var data = {}

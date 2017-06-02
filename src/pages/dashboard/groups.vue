@@ -11,7 +11,7 @@
         <div class="top-area">
           <el-tabs class="nav-links" :active-name="activeName" @tab-click="tabHandleClick">
             <el-tab-pane label="所有组" name="all"></el-tab-pane>
-            <el-tab-pane label="我的组" name="me"></el-tab-pane>
+           <!-- <el-tab-pane label="我的组" name="me"></el-tab-pane>-->
           </el-tabs>
           <div class="nav-controls">
             <router-link class="btn btn-new" to="/groups/new">新建分组
