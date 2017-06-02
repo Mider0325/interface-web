@@ -34,7 +34,8 @@
                     {{item.creatorName}}
                     /
                     </router-link>
-                    <router-link tag="span" :to="{path:'/project',query:{id:item.id}}" class="project-name filter-title">
+                    <router-link tag="span" :to="{path:'/project',query:{id:item.id}}"
+                                 class="project-name filter-title">
                     {{item.projectName}}
                     </router-link>
                     </span>
@@ -47,27 +48,27 @@
           </ul>
         </div>
         <div v-if="activeName=='setting'">
-            <div class="panel panel-default prepend-top-default">
-              <div class="panel-heading">
-                基本设置
-              </div>
-              <div class="panel-body">
-                <c-new :id="info.id"></c-new>
+          <div class="panel panel-default prepend-top-default">
+            <div class="panel-heading">
+              基本设置
+            </div>
+            <div class="panel-body">
+              <c-new :id="info.id"></c-new>
+            </div>
+          </div>
+          <div class="panel panel-danger">
+            <div class="panel-heading">删除分组</div>
+            <div class="panel-body">
+              <p>
+                删除分组会导致该分组的项目全部被删除
+                <br>
+                <strong>移除分组后不能回退，确定移除分组</strong>
+              </p>
+              <div class="form-actions">
+                <a class="btn btn-remove" rel="nofollow" @click="remove">移除分组</a>
               </div>
             </div>
-            <div class="panel panel-danger">
-              <div class="panel-heading">删除分组</div>
-              <div class="panel-body">
-                <p>
-                  删除分组会导致该分组的项目全部被删除
-                  <br>
-                  <strong>移除分组后不能回退，确定移除分组</strong>
-                </p>
-                <div class="form-actions">
-                  <a class="btn btn-remove" rel="nofollow" @click="remove">移除分组</a>
-                </div>
-              </div>
-            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -130,16 +131,27 @@
         })
       },
       remove () {
-        Server({
-          url: 'project/group',
-          method: 'delete',
-          data: {
-            id: this.$route.query.id
-          }
-        }).then((response) => {
-          this.$message('删除成功')
-          this.$router.push({ path: '/dashboard/groups' })
+        this.$confirm('此操作将永久删除该分组和分组下面的项目, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Server({
+            url: 'project/group',
+            method: 'delete',
+            data: {
+              id: this.$route.query.id - 0
+            }
+          }).then(() => {
+            this.$message('删除成功')
+            this.$router.push({ path: '/dashboard/groups' })
+          }).catch(() => {
+          })
         }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
         })
       }
     }

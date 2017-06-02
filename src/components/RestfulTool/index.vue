@@ -2,13 +2,23 @@
   <div class="tool">
     <!--请求路径信息-->
     <div class="path">
-      <div class="input">
-        <el-input placeholder="请输入路径" @focus="pathParamsVisable=false" v-model="requestInfo.url">
-          <el-select class="el-my-select" v-model="method" slot="prepend" placeholder="请选择">
-            <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label" :value="item.value"></el-option>
-          </el-select>
-          <el-button slot="append" type="primary" @click="pathParamsVisable = !pathParamsVisable">参数</el-button>
-        </el-input>
+      <div class="input" :gutter="20">
+        <el-select class="el-my-select" v-model="requestInfo.method">
+          <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label"
+                     :value="item.value"></el-option>
+        </el-select>
+        <el-autocomplete
+            class="noborder inline-input evn"
+            @focus="pathParamsVisable=false"
+            v-model="requestInfo.domain"
+            :fetch-suggestions="queryEvnPath"
+            placeholder="环境"
+        >
+        </el-autocomplete>
+        <!--  <div class="inline-input division">/</div>
+        -->
+        <el-input class="noborder inline-input path" placeholder="路径" v-model="requestInfo.path"></el-input>
+        <el-button class="params" type="primary" @click="pathParamsVisable = !pathParamsVisable">参数</el-button>
       </div>
       <el-dropdown class="send" @click="send" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
                    @command="sendTypeSelect">
@@ -22,7 +32,7 @@
 
     <!--请求路径参数信息-->
     <div class="pathParams" v-if="pathParamsVisable">
-      <object-edit :info="requestInfo.query" :on-change="requestQueryChange"></object-edit>
+      <object-edit :info="requestInfo.request.query" :on-change="requestQueryChange"></object-edit>
     </div>
     <!--请求路径参数信息-->
 
@@ -73,7 +83,7 @@
             <code-viewer :ctype="requestBodyType_view"
                          :options="{theme:''}"
                          :on-change="requestBodyInfoChange"
-                         :contents="requestInfo.body"></code-viewer>
+                         :contents="requestBodyCopy"></code-viewer>
           </div>
           <div v-if="requestBodyViewType=='formdata'">
             <object-edit :info="requestInfo.formDataBody" :param-type='true'
@@ -168,6 +178,22 @@
       display flex
       .input
         -webkit-flex 1
+        display: flex;
+        .inline-input
+          display block
+          width auto
+        .evn
+          -webkit-flex 1
+          border-bottom 1px solid #ddd
+          min-width 100px
+        .division
+          padding: 8px 0px;
+          font-size: 15px;
+          line-height: 20px;
+        .path
+          margin-right 10px
+          -webkit-flex 1
+          border-bottom 1px solid #ddd
         .el-my-select
           width 130px
       .send
@@ -228,7 +254,7 @@
   import axios from 'axios'
   import qs from 'qs'
   import {mapState} from 'vuex'
-  import jsYaml from 'js-yaml'
+  import {jsonToMock} from 'src/extend/Util'
 
   var URL = window.url
   export default {
@@ -239,28 +265,43 @@
       info: {
         type: Object,
         default: function () {
-          return {}
+          return {
+            path: '',
+            name: '',
+            method: '',
+            description: '',
+            request: {
+              path: [],
+              query: [],
+              body: []
+            },
+            resopnse: {}
+          }
         }
       }
     },
     data: function () {
       return {
+        projectInfo: {},
         requestBodyViewType: 'raw',
         requestTabName: 'Authorization',
         requestLoading: false,
+        requestBodyCopy: '',
         requestBodyType: 'text',
         requestBodyType_view: 'text',
         requestInfo: {
-          url: '',
-          header: {},
-
-          body: '',
+          path: '',
           formDataBody: {},
           urlencodedBody: {},
           binaryBody: undefined,
-
-          path: {},
-          query: {}
+          domain: 'good',
+          method: 'post',
+          request: {
+            body: '',
+            path: {},
+            query: {},
+            header: {}
+          }
         },
         responseInfo: {
           error: false,
@@ -276,7 +317,6 @@
         responseBodyType: 'json',
         pathParamsVisable: false,
         responseCookies: [],
-        method: 'post',
         url: 'http://dwz.ymm56.com/dwz-web/dwz/generate',  // 初始化项目的基础url
         showBody: true // 是否显示body区域
       }
@@ -292,7 +332,7 @@
         // url 变化 设置 提取query
         var url = URL.parse(newVal)
         if (typeof url.get == 'object') {
-          this.requestInfo.query = url.get
+          this.requestInfo.request.query = url.get
         }
         console.log(url)
       },
@@ -310,11 +350,39 @@
         headers: {}
       })
       this.dealRequestMock()
+
+      window.document.addEventListener('result1.success', (response) => {
+        this.sendSuccess(response.detail)
+      })
+      window.document.addEventListener('result1.error', (response) => {
+        this.sendError(response.detail)
+      })
     },
     methods: {
-
+      queryEvnPath: function (queryString, cb) {
+        console.log(this.projectInfo.environment)
+        var restaurants = []
+        var list = []
+        if (this.projectInfo.environment) {
+          list = this.projectInfo.environment.split('\n')
+          list.forEach((value) => {
+            restaurants.push({
+              value: value.split(' ')[ 1 ],
+              desc: value.split(' ')[ 0 ]
+            })
+          })
+        }
+        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+        // 调用 callback 返回建议列表的数据
+        cb(results)
+      },
+      createFilter (queryString) {
+        return (restaurant) => {
+          return (restaurant.value.indexOf(queryString.toLowerCase()) === 0)
+        }
+      },
       requestBodyInfoChange: function (data) {
-        this.requestInfo.body = data
+        this.requestInfo.request.body = data
       },
       requestBodyViewTypeSelect: function (command) {
         this.requestBodyType = command
@@ -329,28 +397,45 @@
         }
       },
       dealRequestMock: function () {
+        // 使用mockRequest里面保存的数据
         var apiInfo = {}
         try {
-          apiInfo = jsYaml.safeLoad(this.info.mockRequest || '')
+          apiInfo = JSON.parse(this.info.mockRequest)
         } catch (e) {
-          apiInfo = {}
+          apiInfo = Object.assign({}, this.info)
+          apiInfo.request = {}
         } finally {
         }
         apiInfo = apiInfo || {}
-        apiInfo.header = apiInfo.header || {}
-        apiInfo.body = apiInfo.body || ''
-        apiInfo.path = apiInfo.path || {}
-        apiInfo.query = apiInfo.query || {}
-        apiInfo.url = apiInfo.url || (this.url + (this.info.path || ''))
+        apiInfo.request = apiInfo.request || {}
+        apiInfo.request.body = apiInfo.request.body || jsonToMock(this.info.request.body)
+        this.requestBodyCopy = apiInfo.request.body
+        apiInfo.request.path = apiInfo.request.path || jsonToMock(this.info.request.path)
+        apiInfo.request.query = apiInfo.request.query || jsonToMock(this.info.request.query)
+        apiInfo.path = apiInfo.path || this.info.path
+        apiInfo.domain = apiInfo.domain || ''
+        if (this.info.projectId) {
+          this.loadProject(this.info.projectId)
+        }
         this.requestInfo = apiInfo
+      },
+      /**
+       * 加载项目信息
+       */
+      loadProject: function (id) {
+        Server({
+          url: 'project/projectinfo',
+          method: 'get',
+          params: { id: id }
+        }).then((response) => {
+          this.projectInfo = response.data.data
+        })
       },
       requestHeaderChange: function (data) {
         this.requestInfo.header = data
       },
       requestQueryChange: function (data) {
-        this.requestInfo.query = data
-        var url = URL.parse(this.requestInfo.url)
-        this.requestInfo.url = URL.build(url)
+        this.requestInfo.request.query = data
       },
       requestTabClick: function () {
       },
@@ -368,8 +453,14 @@
         this.responseInfo.headers = data.headers
         this.responseInfo.status = data.status
         this.responseInfo.statusText = data.statusText
-        this.responseInfo.responseText = data.request.responseText
         this.responseInfo.responseType = data.request.responseType
+        this.responseInfo.responseText = data.request.responseText
+        if (this.responseBodyType == 'json') {
+          try {
+            this.responseInfo.responseText = JSON.stringify(JSON.parse(data.request.responseText), null, 4)
+          } catch (e) {
+          }
+        }
         // deal data to url by blob
         var blob = new window.Blob([ data.request.responseText ], { type: 'text/html' })
         var url = window.URL.createObjectURL(blob)
@@ -405,16 +496,16 @@
         if (this.showBody) {
           if (this.requestBodyViewType == 'formdata') {
             var fd = new window.FormData()
-            for (var key in this.requestInfo.query) {
-              fd.append(key, this.requestInfo.query[ key ])
+            for (var key in this.requestInfo.request.query) {
+              fd.append(key, this.requestInfo.request.query[ key ])
             }
             data = fd
           } else if (this.requestBodyViewType == 'xwwwformurlencoded') {
-            data = qs.stringify(this.requestInfo.query)
+            data = qs.stringify(this.requestInfo.request.query)
           } else if (this.requestBodyViewType == 'binary') {
             data = this.binaryBody
           } else {
-            data = this.requestInfo.query
+            data = this.requestInfo.request.query
           }
         }
         return data
@@ -425,16 +516,51 @@
        */
       save: function () {
         Server({
-          url: 'mock/saveOrUpdateRequest',
+          url: 'mock/addMock',
           data: {
-            apiId: this.info.id,
-            type: this.info.type,
-            mockRequest: jsYaml.dump(this.requestInfo)
+            apiId: this.info.id - 0,
+            type: this.info.type - 0,
+            mockRequest: JSON.stringify(this.requestInfo)
           },
           method: 'post'
         }).then((response) => {
           this.$message('保存成功')
         })
+      },
+      getSendUrl: function () {
+        var url = this.requestInfo.domain + this.requestInfo.path
+        /*
+         var queryString = []
+         if (Object.keys(query).lenght > 0) {
+         for (var key in query) {
+         queryString.push(key + '=' + query[ key ])
+         }
+         queryString = queryString.join('&')
+         } else {
+         queryString = ''
+         }
+         */
+        return url
+      },
+      sendSuccess: function (response) {
+        console.log(response)
+        this.dealResponse(response)
+        this.requestLoading = false
+      },
+      sendError: function (response) {
+        console.log(response)
+        if (response.code) {
+          this.responseInfo.message = response.message
+          this.responseInfo.error = true
+        }
+        if (response.response) {
+          this.dealResponse(response.response)
+        } else {
+          this.responseInfo.message = response.message
+          this.responseInfo.error = true
+        }
+        console.log(response.response)
+        this.requestLoading = false
       },
       /**
        * 发送请求测试
@@ -442,34 +568,25 @@
       send: function () {
         this.requestLoading = true
         this.responseInfo.error = false
-
         var data = this.dealParams()
 
-        this.instance({
-          baseURL: this.requestInfo.url,
+        var info = {
+          baseURL: this.getSendUrl(),
           url: '',
           data: data,
-          method: this.method,
-          params: {},
+          method: this.requestInfo.method,
+          params: this.requestInfo.request.query,
           headers: this.requestInfo.header
-        }).then((response) => {
-          console.log(response)
-          this.dealResponse(response)
-          this.requestLoading = false
-        }).catch((response) => {
-          if (response.code) {
-            this.responseInfo.message = response.message
-            this.responseInfo.error = true
-          }
-          if (response.response) {
-            this.dealResponse(response.response)
-          } else {
-            this.responseInfo.message = response.message
-            this.responseInfo.error = true
-          }
-          console.log(response.response)
-          this.requestLoading = false
-        })
+        }
+        if (document.body.getAttribute('data-interface-version') > '0') {
+          window.document.dispatchEvent(new window.CustomEvent('request', { detail: info }))
+        } else {
+          this.instance(info).then((response) => {
+            this.sendSuccess((response))
+          }).catch((response) => {
+            this.sendError(response)
+          })
+        }
       }
     }
   }

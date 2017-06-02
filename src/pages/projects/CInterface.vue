@@ -57,7 +57,7 @@
         <template scope="scope">
           <el-tag v-for="(tag, key) in scope.row.tags"
                   :key="key"
-                  :type='primary'
+                  :type="'primary'"
                   close-transition>{{tag.name}}
           </el-tag>
         </template>
@@ -215,6 +215,9 @@
             }
           }
         })
+      },
+      filterStatus: function () {
+
       },
       filterTag (value, row) {
         var flag = false

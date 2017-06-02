@@ -40,7 +40,7 @@ cooking.set({
     hot: true,
     log: false,
     publicPath: '/',
-    hostname: 'localhost'
+    hostname: getIPAdress()
   },
 
   // production

@@ -2,9 +2,11 @@
   <div class="ObjectEditer">
 
     <div style="margin: 0px 0 10px 0">
-      <el-button size="small" @click="importJson" type="primary" icon="upload">导入数据</el-button>
-      <el-button v-if="empty(data)" size="small" @click="showMock" type="primary" icon="document">mock</el-button>
-      <el-button size="small" @click="addItem(data)" type="primary" icon="plus">添加列</el-button>
+      <el-button v-if="empty(info)" size="small" @click="showMock" type="primary" icon="document">mock</el-button>
+      <template v-if="editable">
+        <el-button size="small" @click="importJson" type="primary" icon="upload">导入数据</el-button>
+        <el-button size="small" @click="addItem(info)" type="primary" icon="plus">添加列</el-button>
+      </template>
     </div>
     <div class="div-table">
       <ul class="div-table-header div-table-line cb">
@@ -51,7 +53,7 @@ shift+right 向右移动光标
         @keydown.shift.left="changeFocus($event,-1)"
         @keydown.shift.right="changeFocus($event,1)"
     >
-      <item :required="required" :data="data"></item>
+      <item :required="required" :editable="editable" :data="info"></item>
     </div>
 
   </div>
@@ -80,7 +82,7 @@ shift+right 向右移动光标
     name: 'ObjectEditer',
     components: { Item },
     props: {
-      datas: {
+      infos: {
         type: Array,
         default: function () {
           return []
@@ -92,22 +94,28 @@ shift+right 向右移动光标
           return false
         }
       },
-      flat: {
+      editable: {
         type: Boolean,
-        default: false
+        default: function () {
+          return true
+        }
       }
     },
     data: function () {
       return {
         focusInput: null,
         inputnum: 5,
-        data: this.datas
+        info: this.infos
       }
     },
     computed: mapState({
       Metadata: state => state.Metadata
     }),
-    watch: {},
+    watch: {
+      infos: function (newValue) {
+        this.info = newValue
+      }
+    },
     mounted () {
       this.inputnum = this.required ? 5 : 4
     },
@@ -140,12 +148,9 @@ shift+right 向右移动光标
           name: 'DShowJson',
           data: {
             title: 'mock数据显示',
-            info: JSON.stringify(jsonToMock(me.data), null, 4)
+            info: JSON.stringify(jsonToMock(me.info), null, 4)
           },
           methods: {
-            onImport: function (data) {
-              me.data = jsonDismantle(data)
-            }
           }
         })
       },
@@ -158,7 +163,7 @@ shift+right 向右移动光标
           },
           methods: {
             onImport: function (data) {
-              me.data = jsonDismantle(data)
+              me.$emit('update:infos', jsonDismantle(data))
             }
           }
         })

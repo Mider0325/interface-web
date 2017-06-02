@@ -18,13 +18,30 @@
           <section class="parameters">
             <h4>参数</h4>
             <div class="apiInfo">
-              <request-viewer :apiInfo="apiInfo.parameters"></request-viewer>
+              <el-tabs v-model="activeRequestName">
+                <el-tab-pane label="请求(query)" name="query"></el-tab-pane>
+                <el-tab-pane label="请求(body)" name="body"></el-tab-pane>
+                <el-tab-pane label="请求(path)" name="path"></el-tab-pane>
+              </el-tabs>
+              <div class="objectEditer" v-if="activeRequestName=='query'">
+                <!--对象编辑器-->
+                <object-editer key="1" :editable="false" :required="true"
+                               :infos.sync="apiInfo.request.query"></object-editer>
+              </div>
+              <div class="objectEditer" v-if="activeRequestName=='body'">
+                <object-editer key="2" :editable="false" :required="true"
+                               :infos.sync="apiInfo.request.body"></object-editer>
+              </div>
+              <div class="objectEditer" v-if="activeRequestName=='path'">
+                <object-editer key="3" :editable="false" :infos.sync="apiInfo.request.path"></object-editer>
+              </div>
             </div>
           </section>
           <section class="responses">
             <h4>响应数据</h4>
             <div class="apiInfo">
-              <request-viewer :apiInfo="apiInfo.responses"></request-viewer>
+              <object-editer class="objectEditer" :editable="false" key="4"
+                             :infos.sync="apiInfo.response"></object-editer>
             </div>
           </section>
           <section class="responses">
@@ -85,48 +102,33 @@
 </style>
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
-  import CodeViewer from 'src/components/CodeViewer'
   import RestfulTool from 'src/components/RestfulTool/index.vue'
-  import RequestViewer from 'src/components/RequestViewer/index.vue'
+  import ObjectEditer from 'src/components/ObjectEditer/index.vue'
 
   export default {
     mixins: [ BaseComponent ],
     name: 'DocViewer',
-    components: { CodeViewer, RequestViewer, RestfulTool },
+    components: { RestfulTool, ObjectEditer },
     props: {
       apiInfo: {
         type: Object,
         default: function () {
-          return {}
+          return {
+            request: {}
+          }
         }
       }
     },
     data: function () {
       return {
-        openTry: false,
-        parameters: {},
-        split: '!',
-        jsonViewOption: {
-          'theme': '',
-          'showLineNumbers': false
-        }
+        activeRequestName: 'query',
+        openTry: false
       }
     },
     watch: {},
     mounted () {
     },
-    methods: {
-      getResponse: function (data) {
-        var array = []
-        if (data) {
-          for (let key in data) {
-            data[ key ].code = key
-            array.push(data[ key ])
-          }
-        }
-        return array
-      }
-    }
+    methods: {}
   }
 </script>
 

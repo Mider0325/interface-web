@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <restful-tool :apiInfo="apiInfo"></restful-tool>
+    <restful-tool :info="apiInfo"></restful-tool>
   </div>
 </template>
 
@@ -23,10 +23,20 @@
           name: '接口demo',
           method: 'get',
           description: '获取用fdsafdsa户姓名',
-          parameters: {
-            path: null,
-            query: null
-          }
+          request: {
+            path: [],
+            body: [{
+              name: 'fdsa',
+              mock: '@id',
+              type: 'string'
+            } ],
+            query: [ {
+              name: 'fdsa',
+              mock: '@id',
+              type: 'string'
+            } ]
+          },
+          resopnse: {}
         }
       }
     },

@@ -60,7 +60,6 @@
     },
     data: function () {
       return {
-
         tips: {
           body: body,
           path: path,

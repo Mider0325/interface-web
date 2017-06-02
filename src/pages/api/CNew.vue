@@ -39,23 +39,38 @@
             </el-tabs>
             <div class="objectEditer" v-if="activeRequestName=='query'">
               <!--对象编辑器-->
-              <object-editer key="1" :required="true" :datas="content.request.query"></object-editer>
+              <object-editer key="1" :required="true" :infos.sync="content.request.query"></object-editer>
             </div>
             <div class="objectEditer" v-if="activeRequestName=='body'">
-              <object-editer key="2" :required="true" :datas="content.request.body"></object-editer>
+              <object-editer key="2" :required="true" :infos.sync="content.request.body"></object-editer>
             </div>
             <div class="objectEditer" v-if="activeRequestName=='path'">
-              <object-editer key="3" :datas="content.request.path"></object-editer>
+              <object-editer key="3" :infos.sync="content.request.path"></object-editer>
             </div>
           </div>
         </div>
         <div class="response">
           <h4>响应数据</h4>
           <div class="contentWarp">
-            <object-editer class="objectEditer" key="4" :datas="content.response"></object-editer>
+            <object-editer class="objectEditer" key="4" :infos.sync="content.response"></object-editer>
           </div>
         </div>
+
       </el-form>
+      <div class="bottom">
+        <el-button v-if="content.status==1" @click="applyPublish" type="warning" size="small">
+          <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
+            申请发布 <i class="ifont icon-menu"></i>
+          </el-tooltip>
+        </el-button>
+        <el-dropdown v-if="content.status==1" split-button size="small" type="primary" @command="handleCommand"
+                     @click="upDateApi">
+          保存
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="publish">保存并发布</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+      </div>
     </div>
     <div class="editText" v-show="model=='editText'"></div>
   </div>
@@ -65,7 +80,12 @@
   .editWarp
     max-width 1200px
     height 100%
+    margin auto
     padding 20px
+    .bottom
+      position: fixed
+      bottom 0px
+      border-top 1px solid #ddd
 </style>
 
 <script type="text/ecmascript-6">
@@ -73,6 +93,7 @@
   import ObjectEditer from 'src/components/ObjectEditer/index.vue'
   import {apiToJson} from 'src/extend/Util'
   import {mapState} from 'vuex'
+  import Server from 'src/extend/Server'
 
   export default{
     mixins: [ BasePage ],
@@ -86,11 +107,114 @@
         content: apiToJson(this.contents)
       }
     },
+    watch: {
+      contents: function (newVal) {
+        console.log(newVal)
+        this.content = apiToJson(newVal)
+      }
+    },
     computed: mapState({
       Metadata: state => state.Metadata
     }),
     mounted: function () {
+      console.log('fdsafdsa-----', this.contents)
+      console.log('fdsafdsa', this.content)
     },
-    methods: {}
+    methods: {
+      upDateApi: function () {
+        Server({
+          url: 'api/update',
+          data: {
+            apiId: this.content.id + '',
+            request: JSON.stringify(this.content.request),
+            response: JSON.stringify(this.content.response),
+            description: this.content.description,
+            name: this.content.name,
+            method: this.content.method,
+            publishStatus: '1',
+            path: this.content.path
+          },
+          method: 'put'
+        }).then((response) => {
+          this.$message('修改成功')
+        }).catch((e) => {
+
+        })
+      },
+      /**
+       * 删除api
+       */
+      delectApi: function () {
+
+      },
+      /**
+       * 申请发布项目
+       */
+      applyPublish: function () {
+        this.$prompt('输入备注', '申请发布', {
+          inputPattern: /.{0,30}/,
+          inputErrorMessage: '备注0到30个字'
+        }).then(({ value }) => {
+          Server({
+            url: 'api/requestRelease',
+            method: 'post',
+            data: {
+              apiId: this.content.id + '',
+              description: value
+            }
+          }).then((response) => {
+            this.content.status = 2
+            this.$message('申请成功')
+          }).catch(() => {
+            this.$message('发布失败')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+      },
+      /**
+       * 发布项目
+       */
+      publish: function () {
+        this.$prompt('输入备注', '发布', {
+          inputPattern: /.{0,30}/,
+          inputErrorMessage: '备注0到30个字'
+        }).then(({ value }) => {
+          Server({
+            url: 'api/update',
+            data: {
+              apiId: this.content.id + '',
+              request: JSON.stringify(this.content.request),
+              response: JSON.stringify(this.content.response),
+              remark: value,
+              name: this.content.name,
+              method: this.content.method,
+              publishStatus: '3',
+              path: this.content.path
+            },
+            method: 'put'
+          }).then((response) => {
+            this.$message('修改成功')
+          })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
+      },
+      handleCommand (command) {
+        if (command == 'publish') {
+          if (this.content.role < 3) {
+            this.publish()
+          } else {
+            this.$message('需要管理员权限才能保存并发布。请申请发布等待管理员审核。')
+          }
+        }
+      }
+    }
   }
 </script>

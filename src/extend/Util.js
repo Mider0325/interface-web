@@ -26,17 +26,17 @@ exports.apiToJson = function (data) {
     description: '',
     method: ''
   }
-  Object.assign(apiInfo, data)
+  apiInfo = Object.assign(apiInfo, data)
   // 处理response和request数据
-  apiInfo.request = getJson(apiInfo, Object)
+  apiInfo.request = getJson(apiInfo.request, Object)
   apiInfo.request.query = apiInfo.request.query || []
   apiInfo.request.path = apiInfo.request.path || []
   apiInfo.request.body = apiInfo.request.body || []
-  apiInfo.response = getJson(apiInfo, Array)
+  apiInfo.response = getJson(apiInfo.response, Array)
   function getJson (str, Types) {
     var obj
     try {
-      obj = JSON.parse(str)
+      obj = JSON.parse(str || '')
     } catch (e) {
       obj = new Types()
     }
@@ -136,71 +136,71 @@ exports.jsonDismantle = function (data) {
 }
 /*
 
-console.log(JSON.stringify(test([
-  {
-    "name": "code",
-    "require": "true",
-    "type": "number",
-    "mock": "",
-    "description": ""
-  },
-  {
-    "name": "list",
-    "require": "true",
-    "type": "array(number)",
-    "mock": "10",
-    "description": ""
-  },
-  {
-    "name": "data",
-    "require": "true",
-    "type": "array(object)",
-    "mock": "2",
-    "description": "",
-    "child": [
-      {
-        "name": "id",
-        "require": "true",
-        "type": "number",
-        "mock": "@id",
-        "description": ""
-      },
-      {
-        "name": "name",
-        "require": "true",
-        "type": "string",
-        "mock": "@now('T')",
-        "description": ""
-      },
-      {
-        "name": "email",
-        "require": "true",
-        "type": "string",
-        "mock": "/\d{5,10}\-/",
-        "description": ""
-      },
-      {
-        "name": "account",
-        "require": "true",
-        "type": "string",
-        "mock": "",
-        "description": ""
-      },
-      {
-        "name": "createTime",
-        "require": "true",
-        "type": "number",
-        "mock": "",
-        "description": ""
-      },
-      {
-        "name": "updateTime",
-        "require": "true",
-        "type": "number",
-        "mock": "",
-        "description": ""
-      }
-    ]
-  }
-]), null, 4))
-*/
+ console.log(JSON.stringify(test([
+ {
+ "name": "code",
+ "require": "true",
+ "type": "number",
+ "mock": "",
+ "description": ""
+ },
+ {
+ "name": "list",
+ "require": "true",
+ "type": "array(number)",
+ "mock": "10",
+ "description": ""
+ },
+ {
+ "name": "data",
+ "require": "true",
+ "type": "array(object)",
+ "mock": "2",
+ "description": "",
+ "child": [
+ {
+ "name": "id",
+ "require": "true",
+ "type": "number",
+ "mock": "@id",
+ "description": ""
+ },
+ {
+ "name": "name",
+ "require": "true",
+ "type": "string",
+ "mock": "@now('T')",
+ "description": ""
+ },
+ {
+ "name": "email",
+ "require": "true",
+ "type": "string",
+ "mock": "/\d{5,10}\-/",
+ "description": ""
+ },
+ {
+ "name": "account",
+ "require": "true",
+ "type": "string",
+ "mock": "",
+ "description": ""
+ },
+ {
+ "name": "createTime",
+ "require": "true",
+ "type": "number",
+ "mock": "",
+ "description": ""
+ },
+ {
+ "name": "updateTime",
+ "require": "true",
+ "type": "number",
+ "mock": "",
+ "description": ""
+ }
+ ]
+ }
+ ]), null, 4))
+ */

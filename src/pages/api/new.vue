@@ -47,18 +47,7 @@
         </div>
         <div class="controls">
 
-          <el-button v-if="apiInfo.status==1" @click="applyPublish" type="warning" size="small">
-            <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
-              申请发布 <i class="ifont icon-menu"></i>
-            </el-tooltip>
-          </el-button>
-          <el-dropdown v-if="apiInfo.status==1" split-button size="small" type="primary" @command="handleCommand"
-                       @click="upDateApi">
-            保存
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item command="publish">保存并发布</el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+
           <el-popover
               ref="setting"
               width="200"
@@ -68,9 +57,6 @@
                 <li @click="copyNew">
                   <a aria-label="Profile Settings">拷贝并新建</a>
                 </li>
-                <li @click="editMock">
-                  <a aria-label="Profile Settings">MOCK数据</a>
-                </li>
                 <li class="divider"></li>
                 <li @click="delectApi">
                   <a class="sign-out-link" aria-label="Sign out" rel="nofollow" data-method="delete">删除接口</a>
@@ -78,6 +64,11 @@
               </ul>
             </div>
           </el-popover>
+          <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId}})"
+                     size="small">
+            文档列表
+            <i class="el-icon-document"></i>
+          </el-button>
           <el-button v-popover:setting type="primary" size="small">
             <i class="el-icon-setting"></i>
           </el-button>
@@ -176,7 +167,6 @@
   import Server from 'src/extend/Server'
   import CodeViewer from 'src/components/CodeViewer'
   import DocViewer from 'src/components/DocViewer'
-  import jsYaml from 'js-yaml'
   import CNew from './CNew.vue'
   import {mapState} from 'vuex'
   export default{
@@ -192,23 +182,10 @@
         apiInfoJson: {},
         apiInfo: {
           id: '',
-          content: `path: /demo
-name: 接口demo${Math.random()}
-method: get
-description: 获取用fdsafdsa户姓名
-parameters:
-  body:
-    name!string: 内容
-    isCat!boolean:
-    body:
-      age!number: 1
-  path:
-  query:
-responses:
-  200:
-    a: 1`,
-          description: '描述',
-          name: '接口demo',
+          request: '',
+          response: '',
+          description: '',
+          name: '',
           method: 'get',
           path: 'demo',
           status: 1,
@@ -246,43 +223,10 @@ responses:
 
           })
         } else {
-          Server({
-            url: 'api/add',
-            data: {
-              content: this.apiInfo.content,
-              description: this.apiInfo.description,
-              method: this.apiInfo.method,
-              name: this.apiInfo.name,
-              path: this.apiInfo.path,
-              projectId: this.apiInfo.projectId || this.$route.query.pid
-            },
-            method: 'post'
-          }).then((response) => {
-            var data = response.data.data
-            this.apiInfo.id = data.id
-            this.apiInfo.status = 1
-          }).catch((e) => {
-          })
+
         }
       },
       upDateApi: function () {
-        Server({
-          url: 'api/update',
-          data: {
-            apiId: this.apiInfo.id,
-            content: this.apiInfo.content,
-            remark: this.apiInfo.description,
-            name: this.apiInfo.name,
-            method: this.apiInfo.method,
-            publishStatus: '1',
-            path: this.apiInfo.path
-          },
-          method: 'put'
-        }).then((response) => {
-          this.$message('修改成功')
-        }).catch((e) => {
-
-        })
       },
       /* =============tag=========== */
       /**
@@ -292,8 +236,8 @@ responses:
         Server({
           url: 'api/deleteApiTag',
           data: {
-            apiId: this.apiInfo.id,
-            tagId: tag.id
+            apiId: this.apiInfo.id - 0,
+            tagId: tag.id - 0
           },
           method: 'delete'
         }).then((response) => {
@@ -337,21 +281,6 @@ responses:
         })
       },
       /* =============事件=========== */
-
-      /**
-       * 编辑内容改变调用事件
-       */
-      editorChange: function (data) {
-        this.apiInfo.content = data
-        this.apiInfoJson = jsYaml.safeLoad(this.apiInfo.content) || {}
-        this.apiInfoJson.id = this.apiInfo.id
-        this.apiInfoJson.type = this.apiInfo.type
-        this.apiInfoJson.mockResponse = this.apiInfo.mockResponse
-        this.apiInfoJson.mockRequest = this.apiInfo.mockRequest
-        this.apiInfo.path = this.apiInfoJson.path
-        this.apiInfo.method = this.apiInfoJson.method
-        this.apiInfo.name = this.apiInfoJson.name
-      },
       /**
        * 删除api
        */
@@ -359,15 +288,14 @@ responses:
         this.$confirm(`确认删除${this.apiInfo.path}接口`, '提示', {
           type: 'warning'
         }).then(() => {
-          // todo 服务端登陆接口访问
           Server({
             url: 'api/delete',
             method: 'delete',
             data: {
-              apiId: this.apiInfo.id
+              apiId: this.apiInfo.id - 0
             }
           }).then((response) => {
-            this.$router.push({ path: '/dashboard/projects' })
+            this.$router.push({ path: '/project', query: { id: this.apiInfo.projectId }, hash: 'apis' })
           }).catch(() => {
             this.$message('删除失败')
           })
@@ -379,89 +307,36 @@ responses:
        * 申请发布项目
        */
       applyPublish: function () {
-        this.$prompt('输入备注', '申请发布', {
-          inputPattern: /.{0,30}/,
-          inputErrorMessage: '备注0到30个字'
-        }).then(({ value }) => {
-          Server({
-            url: 'api/requestRelease',
-            method: 'post',
-            data: {
-              apiId: this.apiInfo.id,
-              description: value
-            }
-          }).then((response) => {
-            this.apiInfo.status = 2
-            this.$message('申请成功')
-          }).catch(() => {
-            this.$message('发布失败')
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          })
-        })
       },
-
       /**
        * 发布项目
        */
       publish: function () {
-        this.$prompt('输入备注', '发布', {
-          inputPattern: /.{0,30}/,
-          inputErrorMessage: '备注0到30个字'
-        }).then(({ value }) => {
-          Server({
-            url: 'api/update',
-            data: {
-              apiId: this.apiInfo.id,
-              content: this.apiInfo.content,
-              remark: value,
-              name: this.apiInfo.name,
-              method: this.apiInfo.method,
-              publishStatus: '3',
-              path: this.apiInfo.path
-            },
-            method: 'put'
-          }).then((response) => {
-            this.$message('修改成功')
-          })
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          })
-        })
       },
-
       /**
        * 拷贝并创建
        */
       copyNew: function () {
-        this.addApi()
-      },
-      /**
-       * 编辑api Mock文档
-       */
-      editMock: function () {
-        this.openDialog({
-          name: 'DMock',
+        Server({
+          url: 'api/add',
           data: {
-            title: '修改接口mock规则',
-            apiId: this.apiInfo.id
+            request: this.apiInfo.request,
+            response: this.apiInfo.response,
+            description: this.apiInfo.description,
+            method: this.apiInfo.method,
+            name: this.apiInfo.name + '_copy',
+            path: this.apiInfo.path + '_copy',
+            projectId: this.apiInfo.projectId
           },
-          methods: {}
+          method: 'post'
+        }).then((response) => {
+          var data = response.data.data
+          this.$router.replace({ path: '/api/new', query: { id: data.id } })
+          this.addApi(data.id)
+          this.$message('拷贝成功')
+        }).catch((e) => {
+          console.log(e)
         })
-      },
-      handleCommand (command) {
-        if (command == 'publish') {
-          if (this.apiInfo.role < 3) {
-            this.publish()
-          } else {
-            this.$message('需要管理员权限才能保存并发布。请申请发布等待管理员审核。')
-          }
-        }
       }
     }
   }

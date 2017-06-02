@@ -12,10 +12,8 @@
           </el-tabs>
         </div>
         <div class="controls">
-          <router-link tag="span" :to="{path:'/api/new',query:{pid:this.$route.query.id}}" v-if="activeName=='apis'">
-            <el-button type="primary" icon="search">添加接口</el-button>
-          </router-link>
-          <el-dropdown>
+          <el-button type="primary" @click="newApi" icon="search">添加接口</el-button>
+          <!--<el-dropdown>
             <el-button type="primary">
               <i class="el-icon-setting"></i>
             </el-button>
@@ -23,7 +21,7 @@
               <el-dropdown-item>设置</el-dropdown-item>
               <el-dropdown-item>删除</el-dropdown-item>
             </el-dropdown-menu>
-          </el-dropdown>
+          </el-dropdown>-->
         </div>
       </div>
     </div>
@@ -144,7 +142,26 @@
       }
     },
     methods: {
-
+      newApi: function () {
+        Server({
+          url: 'api/add',
+          data: {
+            request: '',
+            response: '',
+            description: '',
+            method: 'get',
+            name: 'hahahf' + Math.random(),
+            path: 'path',
+            projectId: this.$route.query.id - 0
+          },
+          method: 'post'
+        }).then((response) => {
+          var data = response.data.data
+          this.$router.push({ path: '/api/new', query: { id: data.id } })
+        }).catch((e) => {
+          console.log(e)
+        })
+      },
       tabHandleClick (tab) {
         this.activeName = tab.name
         switch (tab.name) {

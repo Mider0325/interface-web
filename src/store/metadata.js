@@ -56,6 +56,18 @@ const state = {
     }
   ],
   mockAdvice: [
+    { value: '@id', desc: '随机id' },
+    { value: '@increment', desc: '自增id' },
+    { value: '@image', desc: '' },
+    { value: '@email', desc: '' },
+    { value: '@title', desc: '标题' },
+    { value: '@word', desc: '单词' },
+    { value: '@cparagraph', desc: '中文段落' },
+    { value: '@csentence', desc: '中文句子' },
+    { value: '@url', desc: '' },
+    { value: '@pick', desc: '挑选数组中的一个' },
+    { value: '@now', desc: '' },
+
     { value: '@boolean', desc: '' },
     { value: '@natural', desc: '' },
     { value: '@integer', desc: '' },
@@ -66,8 +78,6 @@ const state = {
     { value: '@date', desc: '' },
     { value: '@time', desc: '' },
     { value: '@datetime', desc: '' },
-    { value: '@now', desc: '' },
-    { value: '@image', desc: '' },
     { value: '@dataImage', desc: '' },
     { value: '@color', desc: '' },
     { value: '@hex', desc: 'hex格式颜色' },
@@ -76,10 +86,6 @@ const state = {
     { value: '@hsl', desc: 'hsl格式颜色' },
     { value: '@paragraph', desc: '段落' },
     { value: '@sentence', desc: '句子' },
-    { value: '@word', desc: '单词' },
-    { value: '@title', desc: '标题' },
-    { value: '@cparagraph', desc: '中文段落' },
-    { value: '@csentence', desc: '中文句子' },
     { value: '@cword', desc: '' },
     { value: '@ctitle', desc: '' },
     { value: '@first', desc: '' },
@@ -88,11 +94,9 @@ const state = {
     { value: '@cfirst', desc: '' },
     { value: '@clast', desc: '' },
     { value: '@cname', desc: '' },
-    { value: '@url', desc: '' },
     { value: '@domain', desc: '域名' },
     { value: '@protocol', desc: '' },
     { value: '@tld', desc: '' },
-    { value: '@email', desc: '' },
     { value: '@ip', desc: '' },
     { value: '@region', desc: '地区' },
     { value: '@province', desc: '' },
@@ -102,11 +106,8 @@ const state = {
     { value: '@capitalize', desc: '' },
     { value: '@upper', desc: '' },
     { value: '@lower', desc: '' },
-    { value: '@pick', desc: '挑选数组中的一个' },
     { value: '@shuffle', desc: '' },
-    { value: '@guid', desc: '' },
-    { value: '@id', desc: '' },
-    { value: '@increment', desc: '自增id' }
+    { value: '@guid', desc: '32位唯一id' }
   ]
 }
 export default state

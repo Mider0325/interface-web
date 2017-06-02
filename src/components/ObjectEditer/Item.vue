@@ -9,7 +9,12 @@
          :key="key" v-for="(item,key) in data">
       <ul class="cb">
         <li class="name input">
-          <el-input type="text" class="noborder" v-model="item.name"></el-input>
+          <template v-if="editable">
+            <el-input type="text" class="noborder" v-model="item.name"></el-input>
+          </template>
+          <template v-else>
+            {{item.name}}
+          </template>
         </li>
         <li class="type">
           <!--<el-select class="noborder" v-model="item.type" placeholder="请选择">
@@ -17,47 +22,71 @@
                        :value="item"></el-option>
 
           </el-select>-->
-
-          <select class="select noborder" v-model="item.type">
-            <option :key="key" v-for="(item, key) in Metadata.paramsType" :value="item">{{item}}</option>
-          </select>
+          <template v-if="editable">
+            <select class="select noborder" v-model="item.type">
+              <option :key="key" v-for="(item, key) in paramsType" :value="item">{{item}}</option>
+            </select>
+          </template>
+          <template v-else>
+            <span class="editWarp">{{item.type}}</span>
+          </template>
         </li>
         <li class="mock input">
-          <el-autocomplete
-              class="noborder"
-              v-model="item.mock"
-              popper-class="my-autocomplete"
-              :fetch-suggestions="querySearch"
-              placeholder="输入"
-              custom-item="my-item-zh"
-              :trigger-on-focus="false"
-              @select="handleSelect"
-          ></el-autocomplete>
+          <template v-if="editable">
+
+            <el-autocomplete
+                class="noborder"
+                v-model="item.mock"
+                popper-class="my-autocomplete"
+                :fetch-suggestions="querySearch"
+                placeholder="输入"
+                custom-item="my-item-zh"
+                :trigger-on-focus="false"
+                @select="handleSelect"
+            ></el-autocomplete>
+          </template>
+          <template v-else>
+            <span class="editWarp">{{item.mock}}</span>
+          </template>
         </li>
         <li class="desc input">
-          <el-input type="textarea" resize="none" @focus="autoSelect" class="noborder" autosize
-                    v-model="item.description" placeholder="输入"></el-input>
+          <template v-if="editable">
+
+            <el-input type="textarea" resize="none" @focus="autoSelect" class="noborder" autosize
+                      v-model="item.description" placeholder="输入"></el-input>
+          </template>
+          <template v-else>
+            <span class="editWarp">{{item.description}}</span>
+          </template>
         </li>
         <li v-if="required" class="require">
-          <select class="select noborder" v-model="item.require">
-            <option label="true" value="true">true</option>
-            <option label="false" value="false">false</option>
-          </select>
+          <template v-if="editable">
+
+            <select class="select noborder" v-model="item.require">
+              <option label="true" value="true">true</option>
+              <option label="false" value="false">false</option>
+            </select>
+          </template>
+          <template v-else>
+            <span class="editWarp">{{item.require}}</span>
+          </template>
         </li>
         <li class="operate">
+          <template v-if="editable">
           <span @click="removeItem(item)">
               <i class="ifont icon-del"></i>
           </span>
+            <span v-if="canAdd(item)" @click="addItem(item,key)">
+                <i class="ifont icon-add"></i>
+          </span>
+          </template>
           <span v-if="item.child" @click="changeOpen(item)">
               <i :class="!item._close?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
-          </span>
-          <span v-if="canAdd(item)" @click="addItem(item,key)">
-                <i class="ifont icon-add"></i>
           </span>
         </li>
       </ul>
       <div v-if="item.child&&!item._close" class="sub div-editing-table">
-        <object-editer-item :required="required" :data="item.child"></object-editer-item>
+        <object-editer-item :editable="editable" :required="required" :data="item.child"></object-editer-item>
       </div>
     </div>
   </div>
@@ -69,6 +98,8 @@
     height 100%
     border none
 
+  .editWarp
+    margin 10px 10px 0
 </style>
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
@@ -105,10 +136,19 @@
         default: function () {
           return false
         }
+      },
+      editable: {
+        type: Boolean,
+        default: function () {
+          return true
+        }
       }
     },
     computed: mapState({
-      Metadata: state => state.Metadata
+      Metadata: state => state.Metadata,
+      paramsType: state => state.Metadata.paramsType.filter((value) => {
+        return true
+      })
     }),
     data: function () {
       return {}
@@ -149,11 +189,17 @@
         this.$set(item, '_close', flag)
       },
       removeItem: function (item) {
+        if (!this.editable) {
+          return
+        }
         var id = this.data.indexOf(item)
         this.data.splice(id, 1)
         console.log(id)
       },
       importJson: function (item) {
+        if (!this.editable) {
+          return
+        }
         this.openDialog({
           name: 'DImportJson',
           data: {
@@ -169,6 +215,9 @@
       },
 
       addItem: function (item) {
+        if (!this.editable) {
+          return
+        }
         if (!item.child) {
           this.$set(item, 'child', [])
         }
@@ -184,6 +233,9 @@
         }
       },
       parentAddItem: function (data, item) {
+        if (!this.editable) {
+          return
+        }
         data.push(Object.assign({}, item))
       }
     }

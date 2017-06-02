@@ -9,7 +9,7 @@
       </div>
       <hr>
       <div class="doc">
-        <doc-viewer :apiInfo="apiInfoJson"></doc-viewer>
+        <doc-viewer v-if="apiInfoJson" :apiInfo="apiInfoJson"></doc-viewer>
       </div>
     </div>
     <div slot="footer" class="dialog-footer">
@@ -34,16 +34,16 @@
 </style>
 <script type="text/ecmascript-6">
   import BaseDialog from 'src/extend/BaseDialog'
-  import jsYaml from 'js-yaml'
   import Server from 'src/extend/Server'
   import DocViewer from 'src/components/DocViewer'
+  import {apiToJson} from 'src/extend/Util'
 
   export default {
     mixins: [ BaseDialog ],
     name: 'DVerifie',
     data: function () {
       return {
-        apiInfoJson: {},
+        apiInfoJson: null,
         apiInfo: {}
       }
     },
@@ -64,7 +64,8 @@
         }).then((response) => {
           var data = response.data.data
           this.apiInfo = data
-          this.apiInfoJson = jsYaml.safeLoad(this.apiInfo.content) || {}
+          this.apiInfoJson = apiToJson(this.apiInfo)
+          console.log(this.apiInfoJson)
         }).catch((e) => {
 
         })

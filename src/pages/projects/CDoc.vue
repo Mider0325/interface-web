@@ -11,6 +11,12 @@
         <div class="project-home-desc">
           <p>{{project.description}}</p>
         </div>
+        <div class="project-home-url">
+          <el-input placeholder="请输入内容" :autofocus="true" :readonly="true" v-model="mockBaseUrl">
+            <template slot="prepend">接口mock地址</template>
+            <template class="copy" slot="append"><span class="copy">复制</span></template>
+          </el-input>
+        </div>
 
       </div>
     </div>
@@ -21,9 +27,7 @@
           <i class="ifont icon-empty"></i> <span>暂无文档信息，请先添加接口,然后发布</span>
         </div>
         <h3 class="blank-state-title">
-          <router-link tag="div" :to="{path:'/api/new',query:{pid:id}}">
-            <el-button type="primary">添加接口</el-button>
-          </router-link>
+          <el-button @click="newApi" type="primary">添加接口</el-button>
         </h3>
       </div>
     </div>
@@ -34,7 +38,7 @@
               style="width: 100%">
       <el-table-column type="expand">
         <template scope="props">
-          <doc-viewer v-if="props.row.content" :apiInfo="getApiInfo(props.row.content)"></doc-viewer>
+          <doc-viewer v-if="props.row.apiInfo" :apiInfo="props.row.apiInfo"></doc-viewer>
         </template>
       </el-table-column>
       <el-table-column
@@ -83,7 +87,7 @@
         <template scope="scope">
           <el-tag v-for="(tag, key) in scope.row.tags"
                   :key="key"
-                  :type='primary'
+                  :type="'primary'"
                   close-transition>{{tag.name}}
           </el-tag>
         </template>
@@ -97,13 +101,10 @@
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
-                  <router-link tag="span" to="api_new">拷贝路径</router-link>
+                  <div @click.stop="api_edit(scope.row)">编辑</div>
                 </el-dropdown-item>
-                <el-dropdown-item>
-                  <router-link tag="span" to="api_mock">MOCK数据</router-link>
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <router-link tag="span" to="api_diff">版本比对</router-link>
+                <el-dropdown-item command="">
+                  <div @click="api_mock(scope.row)">查看MOCK数据</div>
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
@@ -118,9 +119,11 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .project-home-panel
     margin-bottom 30px
+
   .blank-state-icon
     span
       font-size 24px
+
   .project-avatar
     width 80px
     height 80px
@@ -135,10 +138,11 @@
 <script type="text/ecmascript-6">
   import BasePage from 'src/extend/BasePage'
   import Server from 'src/extend/Server'
+  import Config from 'src/config'
   import DocViewer from 'src/components/DocViewer'
   import Clipboard from 'clipboard'
-  import jsYaml from 'js-yaml'
   import $ from 'jQuery'
+  import {apiToJson, jsonToMock} from 'src/extend/Util'
 
   export default{
     mixins: [ BasePage ],
@@ -151,6 +155,7 @@
     },
     data () {
       return {
+        mockBaseUrl: Config.host + 'mock/' + this.id + '/',
         info: {},
         tagTableFilters: [],
         role: 4,
@@ -159,12 +164,7 @@
       }
     },
     mounted: function () {
-      var me = this
-      new Clipboard('.btn', {
-        text: function () {
-          return me.project.description
-        }
-      })
+      this.initClipboard()
       this.loadApis()
       this.loadProject()
     },
@@ -174,19 +174,69 @@
       }
     },
     methods: {
+      api_edit: function (data) {
+        this.$router.push({
+          path: '/api/new',
+          query: {
+            id: data.fixedId
+          }
+        })
+      },
+      api_mock: function (data) {
+        Server({
+          url: 'api/getInterfaceInfo',
+          params: {
+            apiId: data.id,
+            type: 1
+          },
+          method: 'get'
+        }).then((response) => {
+          var data = response.data.data
+          data = apiToJson(data)
+          this.openDialog({
+            name: 'DShowJson',
+            data: {
+              title: 'mock数据显示',
+              info: JSON.stringify(jsonToMock(data.response), null, 4)
+            }
+          })
+        }).catch((e) => {
+          console.log(e)
+          this.$message('获取接口详情失败，重试')
+        })
+      },
+      newApi: function () {
+        Server({
+          url: 'api/add',
+          data: {
+            request: '',
+            response: '',
+            description: '',
+            method: 'get',
+            name: 'hahahf' + Math.random(),
+            path: 'path',
+            projectId: this.$route.query.id - 0
+          },
+          method: 'post'
+        }).then((response) => {
+          var data = response.data.data
+          this.$router.push({ path: '/api/new', query: { id: data.id } })
+        }).catch((e) => {
+          console.log(e)
+        })
+      },
+      initClipboard: function () {
+        var me = this
+        var clipboard = new Clipboard('.copy', {
+          text: function () {
+            return me.mockBaseUrl
+          }
+        })
+        clipboard.on('success', function () {
+          me.$message('复制成功')
+        })
+      },
       getApiInfo: function (data) {
-        var apiInfo = {}
-        try {
-          apiInfo = jsYaml.safeLoad(data)
-        } catch (e) {
-          apiInfo = {}
-        } finally {
-        }
-        apiInfo.id = this.info.id
-        apiInfo.type = this.info.type
-        apiInfo.mockRequest = this.info.mockRequest
-        apiInfo.mockResponse = this.info.mockResponse
-        return apiInfo
       },
       /**
        * 加载项目信息
@@ -211,8 +261,7 @@
             method: 'get'
           }).then((response) => {
             var data = response.data.data
-            this.info = data
-            this.$set(item, 'content', data.content)
+            this.$set(item, 'apiInfo', apiToJson(data))
             this.$nextTick(function () {
               $(window.document.body).scrollTo(`#doctableexpanded_${item.id}`, 200, {
                 offset: {

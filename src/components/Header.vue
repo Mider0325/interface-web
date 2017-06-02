@@ -10,13 +10,13 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="hidden-sm hidden-xs">
-              <div class="search search-form">
+              <!--<div class="search search-form">
                 <el-input
                     placeholder="搜索"
                     icon="search"
                     v-model="input2"
                     @click="handleIconClick"></el-input>
-              </div>
+              </div>-->
             </li>
             <li>
               <router-link title="New project" aria-label="New project" data-toggle="tooltip" data-placement="bottom"
