@@ -74,7 +74,7 @@ shift+right 向右移动光标
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
   import Item from './Item.vue'
-  import {jsonToMock, jsonDismantle} from 'src/extend/Util'
+  import {jsonToMock} from 'src/extend/Util'
   import {mapState} from 'vuex'
   import $ from 'jQuery'
   export default {
@@ -169,7 +169,7 @@ shift+right 向右移动光标
           },
           methods: {
             onImport: function (data) {
-              me.$emit('update:infos', jsonDismantle(data))
+              me.$emit('update:infos', data)
             }
           }
         })

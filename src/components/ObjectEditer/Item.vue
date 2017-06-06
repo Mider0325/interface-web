@@ -104,7 +104,6 @@
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
   import {mapState} from 'vuex'
-  import {jsonDismantle} from 'src/extend/Util'
   import $ from 'jQuery'
   import Vue from 'vue'
 
@@ -208,7 +207,7 @@
           methods: {
             onImport: function (data) {
               item.type = 'object'
-              item.child = jsonDismantle(data)
+              item.child = data
             }
           }
         })

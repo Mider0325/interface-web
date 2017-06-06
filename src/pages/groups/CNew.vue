@@ -54,6 +54,8 @@
     border-radius 50%
     overflow hidden
     margin 20px
+    background url("/src/assets/image/header/default.png")
+    background-size 100% 100%
     img
       width: 100%
       height 100%
@@ -67,7 +69,13 @@
     mixins: [ BasePage ],
     components: { Upload },
     name: 'groups_cnew',
-    props: { id: '' },
+    props: {
+      id: '',
+      onSuccess: {
+        type: Function,
+        default: function () {}
+      }
+    },
     data () {
       return {
         info: {},
@@ -114,11 +122,10 @@
                 data: req
               }).then((response) => {
                 this.$message('修改成功')
-                if (!this.id) {
-                  this.$router.push({ path: '/groups/members', query: { id: this.info.id } })
-                }
+                this.onSuccess(response.data.data)
               }).catch(() => {
-
+                this.$message('修改失败')
+                this.onSuccess()
               })
             } else {
               Server({
@@ -127,9 +134,10 @@
                 data: this.form
               }).then((response) => {
                 this.$message('添加成功')
-                this.$router.push({ path: '/dashboard/groups' })
+                this.onSuccess(response.data.data)
               }).catch(() => {
-
+                this.onSuccess()
+                this.$message('添加失败')
               })
             }
           } else {

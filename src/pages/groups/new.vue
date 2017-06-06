@@ -4,7 +4,7 @@
     </div>
     <div class="container-fluid container-limited ">
       <div class="content">
-        <c-new></c-new>
+        <c-new :on-success="addGroupSuccess"></c-new>
       </div>
     </div>
   </div>
@@ -55,6 +55,11 @@
     mounted: function () {
     },
     methods: {
+      addGroupSuccess: function (data) {
+        if (data) {
+          this.$router.push({ path: '/groups/index', query: { id: data.id } })
+        }
+      },
       onSubmit: function () {
 
       }

@@ -12,7 +12,7 @@
           </el-tabs>
         </div>
         <div class="controls">
-          <el-button type="primary" @click="newApi" icon="search">添加接口</el-button>
+          <el-button type="primary" @click="newApi" icon="plus">添加接口</el-button>
           <!--<el-dropdown>
             <el-button type="primary">
               <i class="el-icon-setting"></i>

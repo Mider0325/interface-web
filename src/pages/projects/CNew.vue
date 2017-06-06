@@ -44,6 +44,8 @@
                 <img :src="item.logo" class="group-img"></img>
               </el-option>
             </el-select>
+            <el-button type="text" @click="addGroup">添加组</el-button>
+
           </el-form-item>
           <el-form-item label="项目名称"
                         prop="name"
@@ -104,6 +106,8 @@
     border-radius 50%
     overflow hidden
     margin 20px
+    background url("/src/assets/image/header/default.png")
+    background-size 100% 100%
     img
       width: 100%
       height 100%
@@ -149,6 +153,20 @@ qa http://google.com`,
       this.getGrops()
     },
     methods: {
+      addGroup: function () {
+        this.openDialog({
+          name: 'DAddGroup',
+          data: {
+            title: '添加分组'
+          },
+          methods: {
+            onAdd: (data) => {
+              this.options.unshift(data)
+              this.form.groupId = data.id
+            }
+          }
+        })
+      },
       uploadEnd: function (url) {
         this.form.logo = url
       },

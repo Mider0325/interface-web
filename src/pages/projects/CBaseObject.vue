@@ -20,8 +20,8 @@
 
       </el-form>
     </div>
-    <el-menu class="slider" default-active="active">
-      <el-menu-item class="item" @click="addOne" index="add">
+    <el-menu class="slider" :default-active="activedIndex"  theme="dark">
+      <el-menu-item class="item" @click="addOne" index="_add">
         <i class="el-icon-plus"></i> 添加
       </el-menu-item>
       <el-menu-item class="item" @click="selectOne(item)" v-for="(item,index) in datas" :key="item.id"
@@ -66,7 +66,7 @@
     },
     data () {
       return {
-        active: '',
+        activedIndex: '',
         datas: [],
         oneData: {
           id: '',
@@ -144,7 +144,7 @@
       },
       selectOne: function (data) {
         this.oneData = data
-        this.active = data.name
+        this.activedIndex = data.name
         if (typeof data.content == 'string') {
           this.oneData.content = JSON.parse(data.content)
         }

@@ -33,20 +33,16 @@
           <h4>发送数据</h4>
           <div class="contentWarp">
             <el-tabs v-model="activeRequestName">
-              <el-tab-pane label="请求(query)" name="query"></el-tab-pane>
-              <el-tab-pane label="请求(body)" name="body"></el-tab-pane>
-              <el-tab-pane label="请求(path)" name="path"></el-tab-pane>
+              <el-tab-pane label="请求(query)" name="query">
+                <object-editer key="1" :required="true" :projectId="content.projectId" :infos.sync="content.request.query"></object-editer>
+              </el-tab-pane>
+              <el-tab-pane label="请求(body)" name="body">
+                <object-editer key="2" :required="true" :projectId="content.projectId" :infos.sync="content.request.body"></object-editer>
+              </el-tab-pane>
+              <el-tab-pane label="请求(path)" name="path">
+                <object-editer key="3" :projectId="content.projectId" :infos.sync="content.request.path"></object-editer>
+              </el-tab-pane>
             </el-tabs>
-            <div class="objectEditer" v-if="activeRequestName=='query'">
-              <!--对象编辑器-->
-              <object-editer key="1" :required="true" :projectId="content.projectId" :infos.sync="content.request.query"></object-editer>
-            </div>
-            <div class="objectEditer" v-if="activeRequestName=='body'">
-              <object-editer key="2" :required="true" :projectId="content.projectId" :infos.sync="content.request.body"></object-editer>
-            </div>
-            <div class="objectEditer" v-if="activeRequestName=='path'">
-              <object-editer key="3" :projectId="content.projectId" :infos.sync="content.request.path"></object-editer>
-            </div>
           </div>
         </div>
         <div class="response">

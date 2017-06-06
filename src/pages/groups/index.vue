@@ -103,7 +103,7 @@
               基本设置
             </div>
             <div class="panel-body">
-              <c-new :id="info.id"></c-new>
+              <c-new :on-success="addGroupSuccess" :id="info.id"></c-new>
             </div>
           </div>
           <div class="panel panel-danger">
@@ -147,7 +147,19 @@
       }
     },
     mounted: function () {
+      if (!window.location.hash) {
+        this.activeName = 'info'
+      } else {
+        var tab = window.location.hash.replace('#', '')
+        this.tabHandleClick({ name: tab })
+      }
       this.getDetail()
+    },
+    watch: {
+      '$route' (to, from) {
+        var tab = window.location.hash.replace('#', '')
+        this.tabHandleClick({ name: tab })
+      }
     },
     computed: {
       hasData: function () {
@@ -155,8 +167,25 @@
       }
     },
     methods: {
+      addGroupSuccess: function (data) {
+        if (data) {
+          this.$router.push({ path: '/dashboard/groups' })
+        }
+      },
       tabHandleClick (tab) {
         this.activeName = tab.name
+        switch (tab.name) {
+          case 'doc':
+            break
+          case 'member':
+
+            break
+          case 'apis':
+            break
+          case 'setting':
+            break
+        }
+        window.location.hash = '#' + tab.name
         if (tab.name == 'project') {
           this.getProjects()
         }
