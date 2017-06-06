@@ -13,7 +13,7 @@
             <el-tab-pane label="信 息" name="info"></el-tab-pane>
             <el-tab-pane v-if="info.id" label="成 员" name="member"></el-tab-pane>
             <el-tab-pane v-if="info.id" label="项 目" name="project"></el-tab-pane>
-            <el-tab-pane v-if="info.id" label="设 置" name="setting"></el-tab-pane>
+            <el-tab-pane v-if="info.id&&info.role<=1" label="设 置" name="setting"></el-tab-pane>
           </el-tabs>
         </div>
 

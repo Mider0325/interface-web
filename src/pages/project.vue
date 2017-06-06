@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="layout-nav">
+    <div v-if="project.id" class="layout-nav">
       <div class="container-fluid">
         <div class="nav-control scrolling-tabs-container">
           <el-tabs class="nav-links" v-model="activeName" @tab-click="tabHandleClick">
@@ -8,7 +8,7 @@
             <el-tab-pane label="接口" name="apis"></el-tab-pane>
             <el-tab-pane label="基础对象" name="object"></el-tab-pane>
             <el-tab-pane label="成员" name="member"></el-tab-pane>
-            <el-tab-pane label="设置" name="setting"></el-tab-pane>
+            <el-tab-pane v-if="project.role<=2" label="设置" name="setting"></el-tab-pane>
           </el-tabs>
         </div>
         <div class="controls">
@@ -27,12 +27,19 @@
     </div>
     <div class="content-wrapper page-with-layout-nav">
       <div class="container-fluid container-limited ">
-        <div class="content">
+        <div v-if="!project.id">
+          <div class="blank-state">
+            <div class="blank-state-icon">
+              <i class="ifont icon-empty"></i> <span>你无权访问该项目信息</span>
+            </div>
+          </div>
+        </div>
+        <div v-else class="content">
           <div v-if="activeName==='doc'">
-            <c-doc :id="this.$route.query.id+''"></c-doc>
+            <c-doc :id="project.id"></c-doc>
           </div>
           <div v-if="activeName==='member'">
-            <member></member>
+            <member :id="project.id"></member>
           </div>
           <div v-if="activeName==='object'">
             <div class="panel panel-default prepend-top-default">
@@ -40,12 +47,12 @@
                 添加/更新基础数据
               </div>
               <div>
-                <c-base-object :id="this.$route.query.id+''"></c-base-object>
+                <c-base-object :id="project.id"></c-base-object>
               </div>
             </div>
           </div>
           <div class="apis" v-if="activeName==='apis'">
-            <c-interface :id="this.$route.query.id+''"></c-interface>
+            <c-interface :id="project.id"></c-interface>
           </div>
           <div v-if="activeName==='setting'">
             <div class="panel panel-default prepend-top-default">
@@ -53,7 +60,7 @@
                 基本设置
               </div>
               <div class="panel-body">
-                <c-new :id="$route.query.id-0"></c-new>
+                <c-new :id="project.id-0"></c-new>
               </div>
             </div>
             <div class="panel panel-danger">
@@ -117,7 +124,6 @@
 
 <script type="text/ecmascript-6">
   import BasePage from 'src/extend/BasePage'
-  import data from 'src/assets/data/project'
   import Server from 'src/extend/Server'
   import Member from './projects/members.vue'
   import CNew from './projects/CNew.vue'
@@ -132,7 +138,7 @@
     data: function () {
       return {
         content: ``,
-        project: data,
+        project: {},
         activeName: 'doc'
       }
     },
@@ -143,6 +149,7 @@
         var tab = window.location.hash.replace('#', '')
         this.tabHandleClick({ name: tab })
       }
+      this.loadProject()
     },
     watch: {
       '$route' (to, from) {
@@ -151,6 +158,17 @@
       }
     },
     methods: {
+      loadProject: function () {
+        Server({
+          url: 'project/projectinfo',
+          method: 'get',
+          params: {
+            id: this.$route.query.id
+          }
+        }).then((response) => {
+          this.project = response.data.data
+        })
+      },
       newApi: function () {
         this.openDialog({
           name: 'DAddApi',
@@ -160,8 +178,7 @@
               projectId: this.$route.query.id
             }
           },
-          methods: {
-          }
+          methods: {}
         })
       },
       tabHandleClick (tab) {

@@ -64,12 +64,12 @@
               </ul>
             </div>
           </el-popover>
-          <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId}})"
+          <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId},hash:'doc'})"
                      size="small">
             文档列表
             <i class="el-icon-document"></i>
           </el-button>
-          <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId}})"
+          <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId},hash:'apis'})"
                      size="small">
             接口列表
             <i class="el-icon-document"></i>

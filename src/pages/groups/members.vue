@@ -1,6 +1,6 @@
 <template>
   <div class="content-wrapper page-with-layout-nav">
-    <div class="panel panel-default">
+    <div class="panel panel-default" v-if="info.role<=1">
       <div class="panel-heading">
         添加用户到组
       </div>
@@ -52,18 +52,27 @@
       <ul class="content-list">
         <li class="group_member js-toggle-container" :key="key" v-for="(item, key) in users">
           <div class="controls">
-            <el-dropdown @command="handleCommand">
-              <span class="el-dropdown-link">
-                {{item.role | groupRole}}<i class="el-icon-caret-bottom el-icon--right"></i>
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item :key="item.userId" v-for="e in Metadata.groupPower" trigger="click"
-                                  :command="e.value + ',' + item.userId">{{e.label}}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
-            <a class="btn btn-remove" data-remote="true" rel="nofollow" @click="remove(item)">{{(item.userId ===
-              userInfo.userId)?'离开':'移除'}}</a>
+            <template v-if="canLeave||item.userId != userInfo.userId">
+              <el-dropdown @command="handleCommand" v-if="info.role<=1">
+                <span class="el-dropdown-link">
+                  {{item.role | groupRole}} <i class="el-icon-caret-bottom el-icon--right"></i>
+                </span>
+                <el-dropdown-menu slot="dropdown">
+                  <el-dropdown-item :key="item.userId" v-for="e in Metadata.groupPower" trigger="click"
+                                    :command="e.value + ',' + item.userId">{{e.label}}
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </el-dropdown>
+              <template v-else>
+                {{item.role | groupRole}}
+              </template>
+            </template>
+            <template v-else>
+              {{item.role | groupRole}}
+            </template>
+            <a v-if="(item.userId === userInfo.userId)&&canLeave" class="btn btn-remove"
+               @click="remove(item,true)">离开</a>
+            <a v-if="item.userId != userInfo.userId&&info.role<=1" class="btn btn-remove" @click="remove(item)">移除</a>
           </div>
           <span class="list-item-name">
             <img class="avatar s40" alt="" :src="item.photo">
@@ -126,7 +135,17 @@
       }
     },
     computed: mapState({
-      Metadata: state => state.Metadata
+      Metadata: state => state.Metadata,
+      canLeave: function () {
+        var num = 0
+        this.users.forEach((value) => {
+          console.log(value.userId, this.userInfo.userId)
+          if (value.userId != this.userInfo.userId && value.role == 1) {
+            num++
+          }
+        })
+        return num > 0
+      }
     }),
     mounted: function () {
       this.req.groupId = this.$route.query.id
@@ -184,6 +203,7 @@
       },
       onSubmit () {
         this.req.role = this.value
+        this.req.groupId = this.req.groupId + ''
         Server({
           url: 'project/groupuser',
           method: 'post',
@@ -217,12 +237,12 @@
 
         })
       },
-      remove (item) {
+      remove (item, leave) {
         Server({
           url: 'project/groupuser',
           method: 'delete',
           data: {
-            groupId: this.req.groupId,
+            groupId: this.req.groupId + '',
             userId: item.userId
           }
         }).then((response) => {

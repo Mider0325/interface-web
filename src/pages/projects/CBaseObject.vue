@@ -12,7 +12,7 @@
         </el-form-item>
 
         <div class="form-group">
-          <object-editer key="10" :infos.sync="oneData.content"></object-editer>
+          <object-editer key="10" :projectId="id" :infos.sync="oneData.content"></object-editer>
         </div>
         <el-form-item>
           <el-button type="primary" @click="updata">更新</el-button>

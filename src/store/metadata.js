@@ -52,7 +52,7 @@ const state = {
     },
     {
       value: '3',
-      label: '游客'
+      label: '开发人'
     }
   ],
   mockAdvice: [

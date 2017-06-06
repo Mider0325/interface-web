@@ -94,6 +94,12 @@ shift+right 向右移动光标
           return false
         }
       },
+      projectId: {
+        type: [ String, Number ],
+        default: function () {
+          return ''
+        }
+      },
       editable: {
         type: Boolean,
         default: function () {
@@ -150,8 +156,7 @@ shift+right 向右移动光标
             title: 'mock数据显示',
             info: JSON.stringify(jsonToMock(me.info), null, 4)
           },
-          methods: {
-          }
+          methods: {}
         })
       },
       importJson: function () {
@@ -159,7 +164,8 @@ shift+right 向右移动光标
         this.openDialog({
           name: 'DImportJson',
           data: {
-            title: '导入数据'
+            title: '导入数据',
+            projectId: this.projectId
           },
           methods: {
             onImport: function (data) {

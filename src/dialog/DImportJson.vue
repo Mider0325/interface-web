@@ -2,15 +2,26 @@
   <el-dialog :title="title" v-model="Visible" @close="close">
     <el-tabs v-model="activeName" @tab-click="handleClick">
       <el-tab-pane label="JSON导入" name="json"></el-tab-pane>
-      <el-tab-pane label="基础对象导入" name="data"></el-tab-pane>
+      <el-tab-pane label="JavaBean导入" name="java"></el-tab-pane>
+      <el-tab-pane v-if="projectId" label="基础对象导入" name="data"></el-tab-pane>
     </el-tabs>
     <div v-if="activeName=='json'" class="mockContent">
       <code-viewer :contents="'{}'" :options="{}"
                    :ctype="'json'" :on-change="change"></code-viewer>
     </div>
+    <div v-if="activeName=='java'" class="mockContent">
+      <code-viewer :contents="'{}'" :options="{}"
+                   :ctype="'java'" :on-change="javaChange"></code-viewer>
+    </div>
     <div v-if="activeName=='data'" class="mockContent">
       TODO
     </div>
+
+    <div>
+      <h4>预览</h4>
+      <object-editer class="objectEditer" key="4" :infos.sync="content.response"></object-editer>
+    </div>
+
     <div class="footer">
       <el-button v-if="!error" type="primary" @click="importJson">导入</el-button>
     </div>
@@ -36,16 +47,17 @@
       return {
         activeName: 'json',
         info: {},
-        baseDatas:[],
+        baseDatas: [],
+        projectId: '',
         error: false
       }
     },
     components: { CodeViewer },
     computed: {},
     methods: {
-      handleClick(tab, event) {
-        console.log(tab, event);
-        if(tab.name=='data'){
+      handleClick (tab, event) {
+        console.log(tab, event)
+        if (tab.name == 'data') {
           this.loadData()
         }
       },
@@ -54,13 +66,24 @@
           url: 'api/getDatas',
           method: 'get',
           params: {
-            projectId: this.id
+            projectId: this.projectId
           }
         }).then((response) => {
           this.baseDatas = response.data.data.datas
         })
       },
       change: function (info) {
+        this.error = false
+        var data = {}
+        try {
+          data = JSON.parse(info)
+        } catch (e) {
+          this.error = true
+          data = {}
+        }
+        this.info = data
+      },
+      javaChange: function (info) {
         this.error = false
         var data = {}
         try {

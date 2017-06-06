@@ -9,7 +9,7 @@
 let BaseConfig = {  // 开发模式配置
   mockhost: 'http://rap.taobao.org/mockjsdata/12245/',
   // host: 'http://192.168.199.131:7001/api/',
-  host: 'http://192.168.203.25:7001/api/',
+  host: 'http://192.168.203.24:7001/api/',
   // host: 'http://127.0.0.1:7001/api/',
   qiniu: 'eUBuuV5OWrIA-Xr-BDJZvRwgMLYTq-RAAOYSE5y6',
   debug: true,

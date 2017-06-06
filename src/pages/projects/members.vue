@@ -9,7 +9,7 @@
     <div class="container-fluid container-limited ">
       <div class="content">
         <div class="project-members-page prepend-top-default">
-          <div class="panel panel-default">
+          <div class="panel panel-default" v-if="role<=2">
             <div class="panel-heading">
               添加用户到项目
             </div>
@@ -32,7 +32,7 @@
                 <el-form-item label="权限">
                   <el-select v-model="value" placeholder="请选择">
                     <el-option
-                        v-for="(item, key) in Metadata.projectPower"
+                        v-for="(item, key) in projectPower"
                         :key="key"
                         :label="item.label"
                         :value="item.value">
@@ -54,18 +54,25 @@
             <ul class="content-list">
               <li class="group_member js-toggle-container" :key="key" v-for="(item, key) in pusers">
                 <div class="controls">
-                  <el-dropdown @command="handleCommand">
-                    <span class="el-dropdown-link">
+                    <el-dropdown @command="handleCommand" v-if="role<=2">
+                      <span class="el-dropdown-link">
                       {{item.role|projectRole}}<i class="el-icon-caret-bottom el-icon--right"></i>
-                    </span>
-                    <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item :key="item.userId" v-for="e in Metadata.projectPower" trigger="click"
-                                        :command="e.value + ',' + item.userId">{{e.label}}
-                      </el-dropdown-item>
-                    </el-dropdown-menu>
-                  </el-dropdown>
-                  <a class="btn btn-remove" data-remote="true" rel="nofollow" @click="remove(item)">{{(item.userId ===
-                    userInfo.userId)?'离开':'移除'}}</a>
+                      </span>
+                      <el-dropdown-menu slot="dropdown">
+                        <el-dropdown-item :key="item.userId" v-for="e in projectPower" trigger="click"
+                                          :command="e.value + ',' + item.userId">{{e.label}}
+                        </el-dropdown-item>
+                      </el-dropdown-menu>
+                    </el-dropdown>
+                    <template v-else>
+                      {{item.role | groupRole}}
+                    </template>
+
+                  <a v-if="(item.userId === userInfo.userId)" class="btn btn-remove"
+                     @click="remove(item,true)">离开</a>
+                  <a v-if="item.userId != userInfo.userId&&info.role<=2" class="btn btn-remove"
+                     @click="remove(item)">移除</a>
+
                 </div>
                 <span class="list-item-name">
                   <img class="avatar s40" alt="" :src="item.photo">
@@ -94,6 +101,7 @@
                   </strong>
                   <span class="label label-success" v-if="item.userId === userInfo.userId">当前用户</span>
                   <div class="cgray">{{item.email}}</div>
+                  <div class="cgray">{{item.role|projectRole}}</div>
                 </span>
               </li>
             </ul>
@@ -134,6 +142,11 @@
     mixins: [ BasePage ],
     components: {},
     name: 'projects_members',
+    props: {
+      id: { // 项目id
+        type: String
+      }
+    },
     data () {
       return {
         info: {},
@@ -154,11 +167,33 @@
       }
     },
     mounted: function () {
-      this.req.projectId = this.$route.query.id
+      this.req.projectId = this.id
       this.loadData()
     },
     computed: mapState({
-      Metadata: state => state.Metadata
+      Metadata: state => state.Metadata,
+      projectPower: function (state) {
+        return state.Metadata.projectPower.filter((value) => {
+          return value.value != 1
+        })
+      },
+      role: function () {
+        var role = 100
+        this.pusers.forEach((value) => {
+          if (value.userId == this.userInfo.userId) {
+            role = Math.min(role, value.role)
+          }
+        })
+        this.gusers.forEach((value) => {
+          if (value.userId == this.userInfo.userId) {
+            role = Math.min(role, value.role)
+          }
+        })
+        return role
+      },
+      canLeave: function () {
+        return true
+      }
     }),
     methods: {
       querySearchAsync (queryString, cb) {

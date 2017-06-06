@@ -39,20 +39,20 @@
             </el-tabs>
             <div class="objectEditer" v-if="activeRequestName=='query'">
               <!--对象编辑器-->
-              <object-editer key="1" :required="true" :infos.sync="content.request.query"></object-editer>
+              <object-editer key="1" :required="true" :projectId="content.projectId" :infos.sync="content.request.query"></object-editer>
             </div>
             <div class="objectEditer" v-if="activeRequestName=='body'">
-              <object-editer key="2" :required="true" :infos.sync="content.request.body"></object-editer>
+              <object-editer key="2" :required="true" :projectId="content.projectId" :infos.sync="content.request.body"></object-editer>
             </div>
             <div class="objectEditer" v-if="activeRequestName=='path'">
-              <object-editer key="3" :infos.sync="content.request.path"></object-editer>
+              <object-editer key="3" :projectId="content.projectId" :infos.sync="content.request.path"></object-editer>
             </div>
           </div>
         </div>
         <div class="response">
           <h4>响应数据</h4>
           <div class="contentWarp">
-            <object-editer class="objectEditer" key="4" :infos.sync="content.response"></object-editer>
+            <object-editer class="objectEditer" key="4" :projectId="content.projectId" :infos.sync="content.response"></object-editer>
           </div>
         </div>
 
