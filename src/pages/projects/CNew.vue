@@ -49,16 +49,20 @@
           </el-form-item>
           <el-form-item label="项目名称"
                         prop="name"
-                        :rules="[{ required: true,message: '输入1-10位项目名', trigger: 'blur'}]"
+                        :rules="[
+                        { required: true,message: '输入1-10位项目名', trigger: 'blur'},
+                        { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
+                        ]"
           >
-            <el-input placeholder="项目名称" v-model="form.name">
+            <el-input placeholder="项目名称"  :maxlength="15" v-model="form.name">
             </el-input>
           </el-form-item>
           <el-form-item label="描述"
                         prop="description"
-                        :rules="[{ required: true,message: '输入描述', trigger: 'blur'}]"
+                        :rules="[{ required: true,message: '输入描述', trigger: 'blur'},
+                                { min: 1, max: 50, message: '长度在 1 到 50 个字符', trigger: 'blur' }]"
           >
-            <el-input type="textarea" v-model="form.description"></el-input>
+            <el-input type="textarea"  :maxlength="50" v-model="form.description"></el-input>
           </el-form-item>
           <el-form-item label="环境">
             <el-input type="textarea" :autosize="{ minRows: 3, maxRows: 5}" :placeholder="evnPlaceholder"

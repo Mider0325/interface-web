@@ -64,9 +64,9 @@
           </ul>
         </div>
         <h1 class="title"><a href=""></a></h1>
-        <div class="header-logo">
+        <router-link :to="{path:'/home'}" class="header-logo">
           <img src="../assets/image/logo.png" alt="logo">
-        </div>
+        </router-link>
       </div>
     </div>
   </header>

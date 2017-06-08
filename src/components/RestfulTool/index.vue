@@ -65,13 +65,12 @@
 
             <span class="el-dropdown-link">
             {{requestBodyType.toUpperCase()}}<i class="el-icon-caret-bottom el-icon--right"></i>
-          </span>
+            </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="Text">Text</el-dropdown-item>
               <el-dropdown-item command="Text(text/plain)">Text(text/plain)</el-dropdown-item>
               <el-dropdown-item command="JSON(application/json)">JSON(application/json)</el-dropdown-item>
-              <el-dropdown-item command="javascript(application/javascript)">javascript(application/javascript)
-              </el-dropdown-item>
+              <el-dropdown-item command="javascript(application/javascript)">javascript(application/javascript)</el-dropdown-item>
               <el-dropdown-item command="XML(application/xml)">XML(application/xml)</el-dropdown-item>
               <el-dropdown-item command="XML(text/xml)">XML(text/xml)</el-dropdown-item>
               <el-dropdown-item command="HTML(text/html)">HTML(text/html)</el-dropdown-item>
@@ -117,12 +116,12 @@
         </el-tabs>
         <div class="tabContent" v-if="responseTabName=='Body'">
           <div class="nav">
-            <el-radio-group size="small" v-model="responseBodyViewType">
+            <el-radio-group class="elradios" size="small" v-model="responseBodyViewType">
               <el-radio-button label="Pretty">Pretty</el-radio-button>
               <el-radio-button label="Raw">Raw</el-radio-button>
               <el-radio-button label="Preview">Preview</el-radio-button>
             </el-radio-group>
-            <el-dropdown size="small" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
+            <el-dropdown class="responeType" size="small" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
                          @command="responseBodyViewTypeSelect">
               {{responseBodyType.toUpperCase()}}
               <el-dropdown-menu slot="dropdown">
@@ -173,6 +172,10 @@
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .tool
+    background-color: #f1f1f1;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
     width: 100%
     .path
       display flex
@@ -209,6 +212,10 @@
         border 1px solid #ddd
       .tabContent
         padding 0 20px
+      .elradios
+        vertical-align top
+      .responeType
+        position relative
       .nav
         margin 5px 0
         .tip
@@ -256,7 +263,6 @@
   import {mapState} from 'vuex'
   import {jsonToMock} from 'src/extend/Util'
 
-  var URL = window.url
   export default {
     mixins: [ BaseComponent ],
     name: 'RestfulTool_index',
@@ -286,9 +292,9 @@
         requestBodyViewType: 'raw',
         requestTabName: 'Authorization',
         requestLoading: false,
-        requestBodyCopy: '',
         requestBodyType: 'text',
         requestBodyType_view: 'text',
+        requestBodyCopy: '',
         requestInfo: {
           path: '',
           formDataBody: {},
@@ -296,6 +302,7 @@
           binaryBody: undefined,
           domain: 'good',
           method: 'post',
+          header: {},
           request: {
             body: '',
             path: {},
@@ -317,7 +324,6 @@
         responseBodyType: 'json',
         pathParamsVisable: false,
         responseCookies: [],
-        url: 'http://dwz.ymm56.com/dwz-web/dwz/generate',  // 初始化项目的基础url
         showBody: true // 是否显示body区域
       }
     },
@@ -328,15 +334,7 @@
       info: function (newVal) {
         this.dealRequestMock()
       },
-      url: function (newVal, oldVal) {
-        // url 变化 设置 提取query
-        var url = URL.parse(newVal)
-        if (typeof url.get == 'object') {
-          this.requestInfo.request.query = url.get
-        }
-        console.log(url)
-      },
-      method: function (newVal) {
+      'requestInfo.method': function (newVal) {
         this.showBody = ![ 'get', 'copy', 'head', 'purge', 'unlock' ].includes(newVal)
         if (!this.showBody && this.requestTabName == 'Body') {
           this.requestTabName = 'Authorization'
@@ -382,7 +380,7 @@
         }
       },
       requestBodyInfoChange: function (data) {
-        this.requestInfo.request.body = data
+        this.requestBodyCopy = data
       },
       requestBodyViewTypeSelect: function (command) {
         this.requestBodyType = command
@@ -409,15 +407,20 @@
         apiInfo = apiInfo || {}
         apiInfo.request = apiInfo.request || {}
         apiInfo.request.body = apiInfo.request.body || jsonToMock(this.info.request.body)
-        this.requestBodyCopy = apiInfo.request.body
+        try {
+          this.requestBodyCopy = JSON.stringify(apiInfo.request.body)
+        } catch (e) {
+          this.requestBodyCopy == ''
+        }
         apiInfo.request.path = apiInfo.request.path || jsonToMock(this.info.request.path)
         apiInfo.request.query = apiInfo.request.query || jsonToMock(this.info.request.query)
         apiInfo.path = apiInfo.path || this.info.path
+        apiInfo.header = apiInfo.header || {}
         apiInfo.domain = apiInfo.domain || ''
         if (this.info.projectId) {
           this.loadProject(this.info.projectId)
         }
-        this.requestInfo = apiInfo
+        this.requestInfo = Object.assign(this.requestInfo, apiInfo)
       },
       /**
        * 加载项目信息
@@ -504,6 +507,8 @@
             data = qs.stringify(this.requestInfo.request.query)
           } else if (this.requestBodyViewType == 'binary') {
             data = this.binaryBody
+          } else if (this.requestBodyViewType == 'raw') {
+            data = this.requestBodyCopy
           } else {
             data = this.requestInfo.request.query
           }

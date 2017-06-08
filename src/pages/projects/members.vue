@@ -17,20 +17,27 @@
               <p class="light">
                 下面列举的是可以访问项目的所有用户
               </p>
-              <el-form ref="form" :model="form" label-width="80px">
+              <el-form label-width="80px">
 
                 <el-form-item label="账号">
-                  <el-autocomplete
-                      v-model="form.name"
-                      :fetch-suggestions="querySearchAsync"
-                      custom-item="my-item-zh"
-                      placeholder="请输入内容"
-                      @select="handleSelect"
-                      style="min-width: 300px;"
-                  ></el-autocomplete>
+                  <el-select
+                      v-model="req.userId"
+                      multiple
+                      filterable
+                      remote
+                      placeholder="请输入关键词"
+                      :remote-method="querySearchAsync"
+                  >
+                    <el-option
+                        v-for="item in searchUsers"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                    </el-option>
+                  </el-select>
                 </el-form-item>
                 <el-form-item label="权限">
-                  <el-select v-model="value" placeholder="请选择">
+                  <el-select v-model="req.role" placeholder="请选择">
                     <el-option
                         v-for="(item, key) in projectPower"
                         :key="key"
@@ -40,7 +47,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item>
-                  <el-button type="primary" @click="onSubmit">添加用户到组</el-button>
+                  <el-button type="primary" :disabled="(!req.role||!hasAddUser)" @click="onSubmit">添加用户到项目</el-button>
                 </el-form-item>
               </el-form>
             </div>
@@ -54,19 +61,19 @@
             <ul class="content-list">
               <li class="group_member js-toggle-container" :key="key" v-for="(item, key) in pusers">
                 <div class="controls">
-                    <el-dropdown @command="handleCommand" v-if="role<=2">
+                  <el-dropdown @command="handleCommand" v-if="role<=2">
                       <span class="el-dropdown-link">
                       {{item.role|projectRole}}<i class="el-icon-caret-bottom el-icon--right"></i>
                       </span>
-                      <el-dropdown-menu slot="dropdown">
-                        <el-dropdown-item :key="item.userId" v-for="e in projectPower" trigger="click"
-                                          :command="e.value + ',' + item.userId">{{e.label}}
-                        </el-dropdown-item>
-                      </el-dropdown-menu>
-                    </el-dropdown>
-                    <template v-else>
-                      {{item.role | groupRole}}
-                    </template>
+                    <el-dropdown-menu slot="dropdown">
+                      <el-dropdown-item :key="item.userId" v-for="e in projectPower" trigger="click"
+                                        :command="e.value + ',' + item.userId">{{e.label}}
+                      </el-dropdown-item>
+                    </el-dropdown-menu>
+                  </el-dropdown>
+                  <template v-else>
+                    {{item.role | groupRole}}
+                  </template>
 
                   <a v-if="(item.userId === userInfo.userId)" class="btn btn-remove"
                      @click="remove(item,true)">离开</a>
@@ -149,13 +156,9 @@
     },
     data () {
       return {
+        searchUsers: [],
+        // 分组信息
         info: {},
-        userQueryList: [],
-        form: {
-          name: '',
-          projectId: '',
-          description: ''
-        },
         req: {
           projectId: '',
           role: '',
@@ -176,6 +179,13 @@
         return state.Metadata.projectPower.filter((value) => {
           return value.value != 1
         })
+      },
+      hasAddUser: function () {
+        if (this.req.userId.length > 0) {
+          return true
+        } else {
+          return false
+        }
       },
       role: function () {
         var role = 100
@@ -206,7 +216,7 @@
           params: { key: queryString }
         }).then((response) => {
           var results = this.pretreatmentList(response.data.data)
-          cb(results)
+          this.searchUsers = results
         }).catch(() => {
 
         })
@@ -258,10 +268,6 @@
           })
         })
       },
-      handleSelect (item) {
-        window.console.log(item)
-        this.req.userId = item.id
-      },
       handleCommand (command) {
         var role = command.split(',')[ 0 ]
         var userId = command.split(',')[ 1 ]
@@ -281,7 +287,6 @@
         })
       },
       onSubmit: function () {
-        this.req.role = this.value
         Server({
           url: 'project/projectuser',
           method: 'post',

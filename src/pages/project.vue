@@ -4,8 +4,8 @@
       <div class="container-fluid">
         <div class="nav-control scrolling-tabs-container">
           <el-tabs class="nav-links" v-model="activeName" @tab-click="tabHandleClick">
-            <el-tab-pane label="文档" name="doc"></el-tab-pane>
-            <el-tab-pane label="接口" name="apis"></el-tab-pane>
+            <el-tab-pane label="接口" name="doc"></el-tab-pane>
+            <el-tab-pane label="草稿" name="apis"></el-tab-pane>
             <el-tab-pane label="基础对象" name="object"></el-tab-pane>
             <el-tab-pane label="成员" name="member"></el-tab-pane>
             <el-tab-pane v-if="project.role<=2" label="设置" name="setting"></el-tab-pane>

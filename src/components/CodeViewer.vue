@@ -51,7 +51,7 @@
     watch: {
       contents: function (newVal) {
         if (newVal != this.$options.editor.getValue()) {
-          this.$options.editor.setValue(newVal) // editor初始化
+          this.$options.editor.setValue(newVal || '') // editor初始化
         }
       },
       ctype: function (val, old) {
@@ -78,7 +78,7 @@
         this.onChange(content)
       },
       changeContent: function () {
-        this.$options.editor.setValue(this.contents)
+        this.$options.editor.setValue(this.contents || '')
       }
     }
   }

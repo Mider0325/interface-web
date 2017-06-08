@@ -1,7 +1,7 @@
 <template>
   <el-dialog :title="title" v-model="Visible" @close="close">
     <div class="mockContent">
-      <code-viewer :contents="info" :options="{}"
+      <code-viewer :contents="info" :options="{readOnly:true}"
                    :ctype="'json'"></code-viewer>
     </div>
   </el-dialog>

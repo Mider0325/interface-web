@@ -1,6 +1,13 @@
 <template>
   <div class="editWarp">
-    <div class="editStructure" v-show="model=='editStructure'">
+
+    <div class="editStructure" v-if="content.id">
+
+      <el-alert v-if="content.status==2"
+                title="注意该接口处于审核中状态。修改不会被保存。"
+                :closable="false"
+                type="warning">
+      </el-alert>
       <el-form ref="form" :model="content" label-width="80px">
         <div class="base">
           <h4>基础信息</h4>
@@ -24,7 +31,6 @@
               </el-form-item>
             </el-col>
           </el-row>
-
           <el-form-item label="描述">
             <el-input type="textarea" v-model="content.description"></el-input>
           </el-form-item>
@@ -53,22 +59,27 @@
         </div>
 
       </el-form>
-      <div class="bottom">
+
+      <div class="layout-nav bottom" v-if="content.status==1">
+        <div class="tip">
+          提示：如果该接口所在项目你有管理员权限，你可以直接保存并发布接口，否则只能保存接口，需要发布的话，需要申请发布。申请后等管理员审核。
+        </div>
         <el-button v-if="content.status==1" @click="applyPublish" type="warning" size="small">
           <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
             <span>申请发布 <i class="ifont icon-menu"></i></span>
           </el-tooltip>
         </el-button>
+
         <el-dropdown v-if="content.status==1" split-button size="small" type="primary" @command="handleCommand"
                      @click="upDateApi">
           保存
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item command="publish">保存并发布</el-dropdown-item>
+            <el-dropdown-item :disabled="content.role>2" command="publish">保存并发布 <span v-if="content.role>2">(需要管理员权限)</span> </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
       </div>
+
     </div>
-    <div class="editText" v-show="model=='editText'"></div>
   </div>
 </template>
 
@@ -78,10 +89,21 @@
     height 100%
     margin auto
     padding 20px
+    .tip
+      float left
+      font-size 10px
+      margin-left 220px
+      width 400px
     .bottom
+      width 100%
       position: fixed
       bottom 0px
+      left 0
+      padding 10px
+      text-align right
       border-top 1px solid #ddd
+    .response
+      margin-bottom 50px
 </style>
 
 <script type="text/ecmascript-6">
@@ -98,7 +120,6 @@
     props: { contents: {} },
     data () {
       return {
-        model: 'editStructure',
         activeRequestName: 'query',
         content: apiToJson(this.contents)
       }

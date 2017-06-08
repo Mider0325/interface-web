@@ -16,8 +16,7 @@
         <li class="type">类型</li>
         <li class="mock">
           mock
-          <router-link tag="i" :to="{path:'/help/doc',query:{path:'help/mockjs.html'},hash:'DPD'}"
-                       href="/help/doc?path=help%2Fmockjs.html#DPD" class="el-icon-warning"></router-link>
+          <a target="_blank" href="/help/doc?path=help%2Fmockjs.html#DPD" class="el-icon-warning"></a>
         </li>
         <li class="desc">
           描述

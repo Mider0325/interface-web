@@ -106,9 +106,11 @@ exports.jsonDismantle = function (data) {
       obj.name = key
       // 判断设置类型
       let value = data[ key ]
+      obj.mock = (typeof value == 'number') ? value + '' : value
       if (value) {
         obj.type = typeof value
         if (typeof value === 'object') {
+          obj.mock = ''
           obj.type = 'object'
           if (value instanceof Array) {
             obj.type = 'array'

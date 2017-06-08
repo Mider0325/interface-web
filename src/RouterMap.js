@@ -35,6 +35,10 @@ var map = {
     {
       path: '/:name',
       component: PageRouter
+    },
+    {
+      path: '/',
+      redirect: '/home'
     }
   ]
 }

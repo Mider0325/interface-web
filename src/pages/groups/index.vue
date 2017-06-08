@@ -19,6 +19,8 @@
 
         <div v-if="activeName=='info'" class="group-members-page prepend-top-default">
           <div class="panel panel-default prepend-top-default">
+
+
             <div class="panel-heading">
               基本信息
             </div>
@@ -51,6 +53,11 @@
               </el-form>
             </div>
           </div>
+          <el-alert class="tipWarp"
+                    title="项目组描述"
+                    type="info">
+            <div v-html="groupMd"></div>
+          </el-alert>
         </div>
         <div v-if="activeName=='member'" class="group-members-page prepend-top-default">
           <members v-if="info.id" :id="info.id"></members>
@@ -134,6 +141,8 @@
   import Server from 'src/extend/Server'
   import Members from './members.vue'
   import CNew from './CNew.vue'
+  var groupMd = require('src/assets/tip/help/group.md')
+
   export default{
     mixins: [ BasePage ],
     components: { Members, CNew },
@@ -143,7 +152,8 @@
         // 一个典型列表数据格式
         info: {},
         projects: [],
-        activeName: 'info'
+        activeName: 'info',
+        groupMd: groupMd
       }
     },
     mounted: function () {

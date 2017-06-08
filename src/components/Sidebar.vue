@@ -40,7 +40,7 @@ TODO
       </li>-->
       <li class="">
         <router-link to="/dashboard/groups" title="Groups"><span>
-我的分组
+分组
 </span>
         </router-link>
       <li class="">

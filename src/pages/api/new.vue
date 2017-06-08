@@ -66,12 +66,12 @@
           </el-popover>
           <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId},hash:'doc'})"
                      size="small">
-            文档列表
+            接口
             <i class="el-icon-document"></i>
           </el-button>
           <el-button type="primary" @click="$router.push({path:'/project',query:{id:apiInfo.projectId},hash:'apis'})"
                      size="small">
-            接口列表
+            草稿
             <i class="el-icon-document"></i>
           </el-button>
           <el-button v-popover:setting type="primary" size="small">
@@ -81,22 +81,24 @@
       </div>
     </div>
     <div class="content-wrapper page-with-layout-nav" :style="{height: (appInfo.size.height-50-58) + 'px'}">
-      <div style="width: 100%">
-        <el-alert v-if="apiInfo.status==2"
-                  title="注意该接口处于审核中状态。修改不会被保存。"
-                  type="warning">
-        </el-alert>
 
-        <div class="content">
+      <div style="width: 100%">
+        <div v-if="!apiInfo.id">
+          <div class="blank-state">
+            <div class="blank-state-icon">
+              <i class="ifont icon-empty"></i> <span>接口不存在了</span>
+            </div>
+          </div>
+        </div>
+        <div v-else class="content">
           <div class="editor">
             <c-new :contents="apiInfo"></c-new>
           </div>
-
         </div>
-
       </div>
     </div>
   </div>
+
 </template>
 
 <style lang="styl" rel="stylesheet/stylus" type="text/css">

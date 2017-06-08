@@ -9,20 +9,28 @@
           该组的用户能访问该组的所有项目
         </p>
         <div class="new-group-member-holder">
-          <el-form ref="form" :model="form" label-width="80px">
+          <el-form label-width="80px">
 
             <el-form-item label="账号">
-              <el-autocomplete
-                  v-model="form.name"
-                  :fetch-suggestions="querySearchAsync"
-                  custom-item="my-item-zh"
-                  placeholder="请输入内容"
-                  @select="handleSelect"
-                  style="min-width: 300px;"
-              ></el-autocomplete>
+              <el-select
+                  v-model="req.userId"
+                  multiple
+                  filterable
+                  remote
+                  placeholder="请输入关键词"
+                  :remote-method="querySearchAsync"
+              >
+                <el-option
+                    v-for="item in searchUsers"
+                    :key="item.id"
+                    :label="item.name"
+                    :value="item.id">
+                </el-option>
+              </el-select>
+
             </el-form-item>
             <el-form-item label="权限">
-              <el-select v-model="value" placeholder="请选择">
+              <el-select v-model="req.role" placeholder="请选择">
                 <el-option
                     v-for="(item,key) in Metadata.groupPower"
                     :key="key"
@@ -32,7 +40,7 @@
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="onSubmit">添加用户到组</el-button>
+              <el-button type="primary" :disabled="(!req.role||!hasAddUser)" @click="onSubmit">添加用户到组</el-button>
             </el-form-item>
 
           </el-form>
@@ -119,18 +127,14 @@
     data () {
       return {
         // 一个典型列表数据格式
+        searchUsers: [],
+        // 分组信息
         info: {},
-        form: {
-          name: '',
-          groupId: '',
-          description: ''
-        },
         req: {
           groupId: '',
           role: '',
-          userId: ''
+          userId: []
         },
-        value: '',
         users: []
       }
     },
@@ -145,6 +149,13 @@
           }
         })
         return num > 0
+      },
+      hasAddUser: function () {
+        if (this.req.userId.length > 0) {
+          return true
+        } else {
+          return false
+        }
       }
     }),
     mounted: function () {
@@ -160,7 +171,9 @@
             params: { key: (queryString) }
           }).then((response) => {
             var results = this.pretreatmentList(response.data.data)
-            cb(results)
+            this.searchUsers = results.filter((value) => {
+              return value.id != this.userInfo.userId
+            })
           }).catch(() => {
 
           })
@@ -202,7 +215,6 @@
         })
       },
       onSubmit () {
-        this.req.role = this.value
         this.req.groupId = this.req.groupId + ''
         Server({
           url: 'project/groupuser',
@@ -214,10 +226,6 @@
         }).catch(() => {
 
         })
-      },
-      handleSelect (item) {
-        window.console.log(item)
-        this.req.userId = item.id
       },
       handleCommand (command) {
         var role = command.split(',')[ 0 ]

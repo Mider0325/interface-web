@@ -26,7 +26,7 @@ const state = {
   projectPower: [
     {
       value: '1',
-      label: '创建者'
+      label: '所有者'
     },
     {
       value: '2',
@@ -44,7 +44,7 @@ const state = {
   groupPower: [
     {
       value: '1',
-      label: '创建者'
+      label: '所有者'
     },
     {
       value: '2',

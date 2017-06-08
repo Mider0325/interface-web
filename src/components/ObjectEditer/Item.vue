@@ -10,7 +10,8 @@
       <ul class="cb">
         <li class="name input">
           <template v-if="editable">
-            <el-input type="text" class="noborder" v-model="item.name"></el-input>
+            <el-input type="text" :minlength="1" :maxlength="25" placeholder="标准变量命名" @input="onNameChange(item)"
+                      :class="item._error" class="noborder" v-model="item.name"></el-input>
           </template>
           <template v-else>
             {{item.name}}
@@ -33,7 +34,6 @@
         </li>
         <li class="mock input">
           <template v-if="editable">
-
             <el-autocomplete
                 class="noborder"
                 v-model="item.mock"
@@ -52,7 +52,8 @@
         <li class="desc input">
           <template v-if="editable">
 
-            <el-input type="textarea" resize="none" @focus="autoSelect" class="noborder" autosize
+            <el-input type="textarea" :minlength="1" :maxlength="50" resize="none" @focus="autoSelect" class="noborder"
+                      autosize
                       v-model="item.description" placeholder="输入"></el-input>
           </template>
           <template v-else>
@@ -160,6 +161,8 @@
       })
     },
     methods: {
+      onNameChange: function (item) {
+      },
       canAdd: function (item) {
         var flag = false
         if (item.type.indexOf('object') != -1) {

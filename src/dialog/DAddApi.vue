@@ -7,12 +7,12 @@
           <el-row type="flex" :gutter="0">
             <el-col :span="6">
               <el-form-item label="名称">
-                <el-input v-model="form.name"></el-input>
+                <el-input :minlength="1" :maxlength="15" v-model="form.name"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
               <el-form-item label="路径">
-                <el-input v-model="form.path"></el-input>
+                <el-input :minlength="1" :maxlength="40" v-model="form.path"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -26,7 +26,7 @@
           </el-row>
 
           <el-form-item label="描述">
-            <el-input type="textarea" v-model="form.description"></el-input>
+            <el-input type="textarea" :minlength="1" :maxlength="50" v-model="form.description"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -80,9 +80,11 @@
     },
     methods: {
       newApi: function () {
+        var data = Object.assign({}, this.form)
+        data.projectId = data.projectId - 0
         Server({
           url: 'api/add',
-          data: this.form,
+          data: data,
           method: 'post'
         }).then((response) => {
           var data = response.data.data

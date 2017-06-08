@@ -8,76 +8,72 @@
         </div>
       </div>
     </header>
-
-
     <div class="container navless-container">
       <div class="content">
         <div class="row">
           <div class="col-sm-5 pull-right">
             <div>
-              <el-tabs v-model="activeName" @tab-click="handleClick">
-                <el-tab-pane label="登 陆" name="first"></el-tab-pane>
-                <el-tab-pane label="注 册" name="second"></el-tab-pane>
+              <el-tabs type="border-card" v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="登 陆" name="first">
+                  <div class="login-heading">
+                    <h3>已经有用户? 登陆</h3>
+                  </div>
+                  <div class="login-body">
+                    <el-form ref="loginForm" :model="loginForm" :rules="registerrule" label-width="80px">
+                      <el-form-item label="账 号" prop="account">
+                        <el-input placeholder="邮箱" type="text" auto-complete="on" id="username" name="username"
+                                  v-model="loginForm.account">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="密 码" prop="password">
+                        <el-input placeholder="密 码" type="password" auto-complete="on" v-model="loginForm.password">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="验证码" prop="kaptcha">
+                        <el-input placeholder="验证码" style="width:80px" v-model="loginForm.kaptcha">
+                        </el-input>
+                        <img @click="changeKaptcha" :src="kaptchaImg" style="width: 100px">
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" :loading="loading" @click="loginSubmit">登 陆</el-button>
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                </el-tab-pane>
+                <el-tab-pane label="注 册" name="second">
+                  <div class="login-heading">
+                    <h3>没有用户? 创建新用户</h3>
+                  </div>
+                  <div class="login-body">
+                    <el-form ref="registerForm" :model="registerForm" :rules="registerrule" label-width="120px">
+                      <el-form-item label="姓 名" prop="name">
+                        <el-input placeholder="姓 名" v-model="registerForm.name">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="邮 箱" prop="email">
+                        <el-input placeholder="邮 箱" v-model="registerForm.email">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="密 码" prop="password">
+                        <el-input placeholder="密 码" type="password" v-model="registerForm.password">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="确认密码" prop="password2">
+                        <el-input placeholder="确认密码" type="password" v-model="registerForm.password2">
+                        </el-input>
+                      </el-form-item>
+                      <el-form-item label="验证码" prop="kaptcha">
+                        <el-input placeholder="验证码" style="width:80px" v-model="registerForm.kaptcha">
+                        </el-input>
+                        <img @click="changeKaptcha" :src="kaptchaImg" style="width: 100px">
+                      </el-form-item>
+                      <el-form-item>
+                        <el-button type="primary" @click="registerSubmit">注 册</el-button>
+                      </el-form-item>
+                    </el-form>
+                  </div>
+                </el-tab-pane>
               </el-tabs>
-              <div v-show="activeName==='first'" class="login-box">
-                <div class="login-heading">
-                  <h3>已经有用户? 登陆</h3>
-                </div>
-                <div class="login-body">
-                  <el-form ref="loginForm" :model="loginForm" :rules="registerrule" label-width="80px">
-                    <el-form-item label="账 号" prop="account">
-                      <el-input placeholder="邮箱" type="text" auto-complete="on" id="username" name="username"
-                                v-model="loginForm.account">
-                      </el-input>
-                    </el-form-item>
-                    <el-form-item label="密 码" prop="password">
-                      <el-input placeholder="密 码" type="password" auto-complete="on" v-model="loginForm.password">
-                      </el-input>
-                    </el-form-item>
-                    <el-form-item label="验证码" prop="kaptcha">
-                      <el-input placeholder="验证码" style="width:80px" v-model="loginForm.kaptcha">
-                      </el-input>
-                      <img @click="changeKaptcha" :src="kaptchaImg" style="width: 100px">
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button type="primary" :loading="loading" @click="loginSubmit">登 陆</el-button>
-                    </el-form-item>
-                  </el-form>
-                </div>
-              </div>
-              <div v-show="activeName==='second'" class="login-box">
-                <div class="login-heading">
-                  <h3>没有用户? 创建新用户</h3>
-                </div>
-                <div class="login-body">
-                  <el-form ref="registerForm" :model="registerForm" :rules="registerrule" label-width="120px">
-                    <el-form-item label="姓 名" prop="name">
-                      <el-input placeholder="姓 名" v-model="registerForm.name">
-                      </el-input>
-                    </el-form-item>
-                    <el-form-item label="邮 箱" prop="email">
-                      <el-input placeholder="邮 箱" v-model="registerForm.email">
-                      </el-input>
-                    </el-form-item>
-                    <el-form-item label="密 码" prop="password">
-                      <el-input placeholder="密 码" type="password" v-model="registerForm.password">
-                      </el-input>
-                    </el-form-item>
-                    <el-form-item label="确认密码" prop="password2">
-                      <el-input placeholder="确认密码" type="password" v-model="registerForm.password2">
-                      </el-input>
-                    </el-form-item>
-                    <el-form-item label="验证码" prop="kaptcha">
-                      <el-input placeholder="验证码" style="width:80px" v-model="registerForm.kaptcha">
-                      </el-input>
-                      <img @click="changeKaptcha" :src="kaptchaImg" style="width: 100px">
-                    </el-form-item>
-                    <el-form-item>
-                      <el-button type="primary" @click="registerSubmit">注 册</el-button>
-                    </el-form-item>
-                  </el-form>
-                </div>
-              </div>
             </div>
 
           </div>
@@ -91,6 +87,7 @@
             </p>
           </div>
         </div>
+
       </div>
     </div>
     <hr>
@@ -101,13 +98,14 @@
     </div>
 
 
+
   </div>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" type="text/css">
+  @import "assets/style/app.styl";
   .logoText
     text-shadow: 0 6px 1px rgba(0, 0, 0, 0.2);
     font-family: 'Lobster', cursive;
-
   .center-logo
     img
       width 40px
@@ -143,15 +141,15 @@
           ],
           name: [
             { required: true, message: '输入用户名', trigger: 'blur' },
-            { min: 2, max: 32, message: '长度在 3 到 32 个字符', trigger: 'blur' }
+            { min: 3, max: 20, message: '长度在 3 到 32 个字符', trigger: 'blur' }
           ],
           account: [
             { required: true, message: '请输入账号', trigger: 'blur' },
-            { min: 6, max: 50, message: '长度在 6 到 50 个字符', trigger: 'blur' }
+            { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '输入密码', trigger: 'blur' },
-            { min: 3, max: 15, message: '3-15位大小写字母和._-组成的名称', trigger: 'blur' }
+            { min: 6, max: 20, message: '6-20位大小写字母和._-组成的名称', trigger: 'blur' }
           ],
           password2: [
             { validator: validatePass2, trigger: 'blur' }

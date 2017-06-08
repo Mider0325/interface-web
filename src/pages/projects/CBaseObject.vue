@@ -1,26 +1,36 @@
 <template>
-  <div class="page-with-layout-nav" :style="{height: (appInfo.size.height-50-58) + 'px'}">
+  <div class="page-with-layout-nav">
 
     <div class="content">
-      <el-form ref="form" :model="oneData" label-width="40px">
+      <div v-if="hasBase==0">
+        <div class="blank-state">
+          <div class="blank-state-icon">
+            <i class="ifont icon-empty"></i> <span>暂无基础数据</span>
+          </div>
+          <h3 class="blank-state-title">
+            <el-button @click="addOne" type="primary">添加基础数据</el-button>
+          </h3>
+        </div>
+      </div>
+      <el-form ref="form" v-else :model="oneData" label-width="40px">
         <el-form-item label="名称">
-          <el-input placeholder="名称" v-model="oneData.name">
+          <el-input :minlength="1" :maxlength="15" placeholder="1-15位标准变量名称" v-model="oneData.name">
           </el-input>
         </el-form-item>
         <el-form-item label="描述">
-          <el-input type="textarea" v-model="oneData.remark"></el-input>
+          <el-input type="textarea" :minlength="1" :maxlength="50" v-model="oneData.remark"></el-input>
         </el-form-item>
 
         <div class="form-group">
           <object-editer key="10" :projectId="id" :infos.sync="oneData.content"></object-editer>
         </div>
         <el-form-item>
-          <el-button type="primary" @click="updata">更新</el-button>
+          <el-button type="primary" @click="updata">保存并更新</el-button>
         </el-form-item>
-
       </el-form>
+
     </div>
-    <el-menu class="slider" :default-active="activedIndex"  theme="dark">
+    <el-menu v-if="hasBase!=0" class="slider" :default-active="activedIndex" theme="dark">
       <el-menu-item class="item" @click="addOne" index="_add">
         <i class="el-icon-plus"></i> 添加
       </el-menu-item>
@@ -47,6 +57,7 @@
     .content
       padding 10px
       flex 1
+      overflow auto
 </style>
 
 <script type="text/ecmascript-6">
@@ -70,8 +81,8 @@
         datas: [],
         oneData: {
           id: '',
-          name: 'ffds',
-          remark: 'fdsa',
+          name: '',
+          remark: '',
           content: []
         }
       }
@@ -81,7 +92,10 @@
     },
     computed: mapState({
       appInfo: state => state.app,
-      Metadata: state => state.Metadata
+      Metadata: state => state.Metadata,
+      hasBase: function () {
+        return this.datas.length
+      }
     }),
     methods: {
       loadData () {
@@ -116,9 +130,9 @@
       addOne () {
         var data = {
           content: '[]',
-          name: 'newObject',
+          name: 'newObject' + parseInt(Math.random() * 100),
           projectId: this.id - 0,
-          remark: '新内容'
+          remark: ''
         }
         Server({
           url: 'api/addData',

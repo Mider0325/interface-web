@@ -156,12 +156,13 @@
             projectId: this.$route.query.id
           }
         }).then((response) => {
-          var data = response.data.data
-          data.forEach(function (value) {
-            value.text = value.name
-            value.value = value.id
+          var data = response.data.data.tags
+          this.tagTableFilters = data.map((value) => {
+            return {
+              text: value.name,
+              value: value.id
+            }
           })
-          this.tagTableFilters = data
         }).catch(() => {
 
         })
@@ -216,12 +217,12 @@
           }
         })
       },
-      filterStatus: function () {
-
+      filterStatus: function (value, row) {
+        return row.status == value
       },
       filterTag (value, row) {
         var flag = false
-        row.tags.forEach(function (val) {
+        row.tags && row.tags.forEach(function (val) {
           if (val.id == value) {
             flag = true
           }

@@ -42,7 +42,7 @@
           <p class="blank-state-text">
             你可以免费创建
             <strong>20</strong>
-            个项目.
+            个项目.(当然是骗你的)
           </p>
           <router-link class="btn btn-new" to="/projects/new">新建项目
           </router-link>

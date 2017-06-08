@@ -1,5 +1,6 @@
 <template>
   <div class="content">
+
     <div class="project-home-panel text-center">
       <div class="container-fluid container-limited">
         <div class="project-avatar">
@@ -13,7 +14,18 @@
         </div>
         <div class="project-home-url">
           <el-input placeholder="请输入内容" :autofocus="true" :readonly="true" v-model="mockBaseUrl">
-            <template slot="prepend">接口mock地址</template>
+            <template slot="prepend">
+              接口mock基础地址
+              <el-tooltip effect="light">
+                <div slot="content">
+                  通过基础地址+接口path可以获取到mock数据
+                  <div>
+                    例如:{{mockBaseUrl}}<span style="color: red">users/info</span>
+                  </div>
+                </div>
+                <i class="header-icon el-icon-information"></i>
+              </el-tooltip>
+            </template>
             <template class="copy" slot="append"><span class="copy">复制</span></template>
           </el-input>
         </div>
@@ -24,12 +36,17 @@
     <div v-if="!hasData">
       <div class="blank-state">
         <div class="blank-state-icon">
-          <i class="ifont icon-empty"></i> <span>暂无文档信息，请先添加接口,然后发布</span>
+          <i class="ifont icon-empty"></i> <span>暂无接口信息，请先添加接口,然后发布</span>
         </div>
         <h3 class="blank-state-title">
           <el-button @click="newApi" type="primary">添加接口</el-button>
         </h3>
       </div>
+      <el-alert class="tipWarp"
+                title="项目介绍"
+                type="info">
+        <div v-html="projectMd"></div>
+      </el-alert>
     </div>
     <el-table v-else
               @expand="handleChange"
@@ -143,6 +160,7 @@
   import Clipboard from 'clipboard'
   import $ from 'jQuery'
   import {apiToJson, jsonToMock} from 'src/extend/Util'
+  var projectMd = require('src/assets/tip/help/project.md')
 
   export default{
     mixins: [ BasePage ],
@@ -160,7 +178,8 @@
         tagTableFilters: [],
         role: 4,
         apiList: [],
-        project: {}
+        project: {},
+        projectMd: projectMd
       }
     },
     mounted: function () {
@@ -214,8 +233,7 @@
               projectId: this.$route.query.id
             }
           },
-          methods: {
-          }
+          methods: {}
         })
       },
       initClipboard: function () {
@@ -275,7 +293,7 @@
             projectId: this.$route.query.id
           }
         }).then((response) => {
-          var data = response.data.data
+          var data = response.data.data.tags
           data.forEach(function (value) {
             value.text = value.name
             value.value = value.id
@@ -308,7 +326,7 @@
       },
       filterTag (value, row) {
         var flag = false
-        row.tags.forEach(function (val) {
+        row.tags && row.tags.forEach(function (val) {
           if (val.id == value) {
             flag = true
           }

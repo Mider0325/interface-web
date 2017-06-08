@@ -134,11 +134,11 @@
         rules: {
           name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+            { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
           ],
           account: [
             { required: true, message: '请输入账户名称', trigger: 'blur' },
-            { min: 3, max: 15, message: '3-15位大小写字母和._-组成的名称', trigger: 'blur' }
+            { min: 5, max: 20, message: '5-20位大小写字母和._-组成的名称', trigger: 'blur' }
           ],
           email: [
             { required: true, message: '请输入邮箱地址', trigger: 'blur' },
@@ -149,11 +149,11 @@
           ],
           password: [
             { required: true, message: '输入密码', trigger: 'blur' },
-            { min: 3, max: 15, message: '3-15位大小写字母和._-组成的名称', trigger: 'blur' }
+            { min: 6, max: 20, message: '6-20位大小写字母和._-组成的名称', trigger: 'blur' }
           ],
           targetPassword: [
             { required: true, message: '输入密码', trigger: 'blur' },
-            { min: 3, max: 15, message: '3-15位大小写字母和._-组成的名称', trigger: 'blur' }
+            { min: 6, max: 20, message: '6-20位大小写字母和._-组成的名称', trigger: 'blur' }
           ],
           targetPassword2: [
             { validator: targetPassword2, trigger: 'blur' }

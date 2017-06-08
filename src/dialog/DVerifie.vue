@@ -43,6 +43,7 @@
     name: 'DVerifie',
     data: function () {
       return {
+        size: 'large',
         apiInfoJson: null,
         apiInfo: {}
       }
