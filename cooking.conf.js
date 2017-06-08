@@ -52,7 +52,7 @@ cooking.set({
   postcss: [
     // require('...')
   ],
-  publicPath: './',
+  publicPath: '/',
   assetsPath: 'static',
   urlLoaderLimit: 10000,
   extractCSS: false,

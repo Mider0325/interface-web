@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrapper page-with-layout-nav">
+  <div class="">
 
 
     <div class="flash-container flash-container-page">

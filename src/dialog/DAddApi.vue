@@ -5,17 +5,20 @@
         <div class="base">
           <h4>基础信息</h4>
           <el-row type="flex" :gutter="0">
-            <el-col :span="6">
+            <el-col :span="24">
               <el-form-item label="名称">
-                <el-input :minlength="1" :maxlength="15" v-model="form.name"></el-input>
+                <el-input :minlength="1" placeholder="例如:用户信息" :maxlength="15" v-model="form.name"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="10">
+            </el-col>
+          </el-row>
+          <el-row type="flex" :gutter="0">
+            <el-col :span="17">
               <el-form-item label="路径">
-                <el-input :minlength="1" :maxlength="40" v-model="form.path"></el-input>
+                <el-input :minlength="1" :maxlength="40" placeholder="例如：user/info"  v-model="form.path"></el-input>
               </el-form-item>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="7">
               <el-form-item label="方法">
                 <el-select v-model="form.method" placeholder="选择类型">
                   <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label"
@@ -26,7 +29,7 @@
           </el-row>
 
           <el-form-item label="描述">
-            <el-input type="textarea" :minlength="1" :maxlength="50" v-model="form.description"></el-input>
+            <el-input type="textarea" placeholder="该接口的简要描述1-50个字"  :minlength="1" :maxlength="50" v-model="form.description"></el-input>
           </el-form-item>
         </div>
       </el-form>

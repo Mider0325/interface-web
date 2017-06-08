@@ -7,17 +7,17 @@
         <div class="top-area">
           <el-tabs class="nav-links" :active-name="activeName" @tab-click="tabHandleClick">
             <el-tab-pane label="我的参与的项目" name="me"></el-tab-pane>
-            <el-tab-pane label="关注项目" name="star"></el-tab-pane>
-          </el-tabs>
+           <!-- <el-tab-pane label="关注项目" name="star"></el-tab-pane>
+         --> </el-tabs>
           <div class="nav-controls">
-
+<!--
             <div class="dropdown inline">
               <el-input
                   size="large"
                   placeholder="搜索"
                   v-model="searchText">
               </el-input>
-            </div>
+            </div>-->
 
             <router-link class="btn btn-new" to="/projects/new">创建项目</router-link>
           </div>

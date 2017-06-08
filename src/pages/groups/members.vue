@@ -1,5 +1,5 @@
 <template>
-  <div class="content-wrapper page-with-layout-nav">
+  <div class="">
     <div class="panel panel-default" v-if="info.role<=1">
       <div class="panel-heading">
         添加用户到组

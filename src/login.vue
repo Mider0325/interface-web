@@ -46,12 +46,12 @@
                   </div>
                   <div class="login-body">
                     <el-form ref="registerForm" :model="registerForm" :rules="registerrule" label-width="120px">
-                      <el-form-item label="姓 名" prop="name">
-                        <el-input placeholder="姓 名" v-model="registerForm.name">
+                      <el-form-item label="邮 箱" prop="email">
+                        <el-input placeholder="邮 箱" @blur="emailBlur" v-model="registerForm.email">
                         </el-input>
                       </el-form-item>
-                      <el-form-item label="邮 箱" prop="email">
-                        <el-input placeholder="邮 箱" v-model="registerForm.email">
+                      <el-form-item label="姓 名" prop="name">
+                        <el-input placeholder="姓 名" v-model="registerForm.name">
                         </el-input>
                       </el-form-item>
                       <el-form-item label="密 码" prop="password">
@@ -98,7 +98,6 @@
     </div>
 
 
-
   </div>
 </template>
 <style lang="styl" rel="stylesheet/stylus" type="text/css">
@@ -106,6 +105,7 @@
   .logoText
     text-shadow: 0 6px 1px rgba(0, 0, 0, 0.2);
     font-family: 'Lobster', cursive;
+
   .center-logo
     img
       width 40px
@@ -295,6 +295,10 @@
           }
         })
         return false
+      },
+      emailBlur: function () {
+        var name = this.registerForm.email.split('@')
+        this.registerForm.name = name[ 0 ]
       },
       /**
        * 注册内容提交

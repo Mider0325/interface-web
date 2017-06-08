@@ -30,7 +30,7 @@
                   <div class="headIcon">
                     <img :src="form.photo">
                   </div>
-                  <upload :on-success="uploadEnd"></upload>
+                  <a href="https://en.gravatar.com/emails/">前往gravatar编辑头像</a>
                 </el-form-item>
                 <el-form-item label="邮 箱">
                   <el-input placeholder="邮箱" :disabled="true" v-model="userInfo.email">
@@ -114,6 +114,7 @@
   import Upload from 'src/components/Upload'
   import Server from 'src/extend/Server'
   var SHA256 = require('crypto-js/sha256')
+  var MD5 = require('crypto-js/md5')
 
   export default{
     mixins: [ BasePage ],
@@ -174,9 +175,9 @@
     },
     mounted: function () {
       // this.activeName = this.$route.params.data
-      this.form.photo = this.userInfo.photo
       this.form.name = this.userInfo.name
       this.form.telephone = this.userInfo.telephone
+      this.form.photo = this.userInfo.photo || `https://s.gravatar.com/avatar/${MD5(this.userInfo.email)}`
     },
     methods: {
       uploadEnd: function (url) {

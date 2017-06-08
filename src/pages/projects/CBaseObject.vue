@@ -3,6 +3,11 @@
 
     <div class="content">
       <div v-if="hasBase==0">
+        <el-alert class="tipWarp"
+                  title="基础对象介绍"
+                  type="info">
+          <div v-html="baseObject"></div>
+        </el-alert>
         <div class="blank-state">
           <div class="blank-state-icon">
             <i class="ifont icon-empty"></i> <span>暂无基础数据</span>
@@ -65,6 +70,7 @@
   import Server from 'src/extend/Server'
   import {mapState} from 'vuex'
   import ObjectEditer from 'src/components/ObjectEditer/index.vue'
+  var baseObject = require('src/assets/tip/help/baseObject.md')
 
   export default{
     mixins: [ BasePage ],
@@ -79,6 +85,7 @@
       return {
         activedIndex: '',
         datas: [],
+        baseObject: baseObject,
         oneData: {
           id: '',
           name: '',
