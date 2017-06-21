@@ -13,7 +13,7 @@
                        :ctype="'json'" :on-change="change"></code-viewer>
         </div>
         <div v-if="activeName=='java'" class="mockContent">
-          <code-viewer :contents="'{}'" :options="{}"
+          <code-viewer :contents="''" :options="{}"
                        :ctype="'java'" :on-change="javaChange"></code-viewer>
         </div>
         <div v-if="activeName=='data'" class="mockContent">
@@ -72,6 +72,7 @@
   import Server from 'src/extend/Server'
   import {jsonDismantle} from 'src/extend/Util'
   import ObjectEditer from 'src/components/ObjectEditer/index.vue'
+  import {analyze} from 'interface-import-javabean'
 
   export default {
     mixins: [ BaseDialog ],
@@ -119,16 +120,7 @@
         this.preData = jsonDismantle(data)
       },
       javaChange: function (info) {
-        this.error = false
-        var data = {}
-        try {
-          data = JSON.parse(info)
-        } catch (e) {
-          this.error = true
-          data = {}
-        }
-        this.info = data
-        this.preData = jsonDismantle(data)
+        this.preData = analyze(info)
       },
       baseDataSelect: function (data) {
         var content = JSON.parse(data.content)

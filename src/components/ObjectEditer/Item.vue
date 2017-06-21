@@ -40,7 +40,7 @@
                 popper-class="my-autocomplete"
                 :fetch-suggestions="querySearch"
                 placeholder="输入"
-                custom-item="my-item-zh"
+                custom-item="my-mock-item"
                 :trigger-on-focus="false"
                 @select="handleSelect"
             ></el-autocomplete>
@@ -108,7 +108,7 @@
   import $ from 'jQuery'
   import Vue from 'vue'
 
-  Vue.component('my-item-zh', {
+  Vue.component('my-mock-item', {
     functional: true,
     render: function (h, ctx) {
       var item = ctx.props.item

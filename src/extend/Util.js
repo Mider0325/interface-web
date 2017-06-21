@@ -114,6 +114,8 @@ exports.jsonDismantle = function (data) {
           obj.type = 'object'
           if (value instanceof Array) {
             obj.type = 'array'
+            // 如果是数组，初始化数组数量
+            obj.mock = value.length
             value = value[ 0 ]
             let arryType = typeof value
             if (value instanceof Array) {

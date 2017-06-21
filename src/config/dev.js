@@ -1,6 +1,6 @@
 let BaseConfig = {  // 开发模式配置
   debug: true,
   develop: false,
-  host: 'http://192.168.199.131:8001/api/'
+  host: 'http://apidoc.ymmoa.com/api/'
 }
 export default BaseConfig

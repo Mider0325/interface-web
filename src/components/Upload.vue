@@ -5,7 +5,7 @@
       <el-progress class="progress1" :width="40" v-if="percentage>0" type="circle"
                    :percentage="percentage"></el-progress>
     </div>
-    <div>只能上传jpg/png文件，且不超过{{uploadSize}}</div>
+    <div>只能上传jpg/png文件正方形图片，且不超过{{uploadSize}}</div>
   </div>
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
@@ -22,7 +22,7 @@
     name: 'Upload',
     data: function () {
       return {
-        uploadSize: '1000kb',
+        uploadSize: '300kb',
         percentage: 0,
         upstatus: 0 // 0:未上传   1:上传中
       }
@@ -41,7 +41,7 @@
       this.uploader = Qiniu.uploader({
         runtimes: 'html5,flash,html4',    // 上传模式,依次退化
         browse_button: me.$el.getElementsByClassName('select')[ 0 ],       // 上传选择的点选按钮，**必需**
-        uptoken_url: Config.host + '../upload/init',            // Ajax请求upToken的Url，**强烈建议设置**（服务端提供）
+        uptoken_url: Config.host + '/upload/init',            // Ajax请求upToken的Url，**强烈建议设置**（服务端提供）
         //  uptoken : '', // 若未指定uptoken_url,则必须指定 uptoken ,uptoken由其他程序生成
         unique_names: true, //  默认 false，key为文件名。若开启该选项，SDK为自动生成上传成功后的key（文件名）。
         // save_key: 'app',   //  默认 false。若在服务端生成uptoken的上传策略中指定了 `sava_key`，则开启，SDK会忽略对key的处理

@@ -17,7 +17,7 @@
     <script src="//cdn.bootcss.com/ace/1.2.6/ext-language_tools.js"></script>
     <script src="//cdn.bootcss.com/ace/1.2.6/ext-beautify.js"></script>
     <% if (process.env.NODE_ENV === 'production') { %>
-        <script src="//cdn.bootcss.com/vue/2.3.2/vue.runtime.min.js"></script>
+        <script src="//cdn.bootcss.com/vue/2.3.3/vue.runtime.min.js"></script>
         <script src="//cdn.bootcss.com/vue-router/2.0.1/vue-router.min.js"></script>
         <script src="//cdn.bootcss.com/vuex/2.1.1/vuex.min.js"></script>
     <% } %>

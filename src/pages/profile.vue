@@ -30,7 +30,9 @@
                   <div class="headIcon">
                     <img :src="form.photo">
                   </div>
-                  <a href="https://en.gravatar.com/emails/">前往gravatar编辑头像</a>
+                  <upload :on-success="uploadEnd"></upload>
+                 <!-- <a href="https://en.gravatar.com/emails/">前往gravatar编辑头像</a>
+-->
                 </el-form-item>
                 <el-form-item label="邮 箱">
                   <el-input placeholder="邮箱" :disabled="true" v-model="userInfo.email">
@@ -135,7 +137,7 @@
         rules: {
           name: [
             { required: true, message: '请输入活动名称', trigger: 'blur' },
-            { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+            { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
           ],
           account: [
             { required: true, message: '请输入账户名称', trigger: 'blur' },

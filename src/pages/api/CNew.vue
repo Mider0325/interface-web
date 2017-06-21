@@ -182,6 +182,7 @@
           }).then((response) => {
             this.content.status = 2
             this.$message('申请成功')
+            this.$router.push({ path: '/project', query: { id: this.content.projectId }, hash: 'apis' })
           }).catch(() => {
             this.$message('发布失败')
           })
@@ -215,6 +216,7 @@
             method: 'put'
           }).then((response) => {
             this.$message('修改成功')
+            this.$router.push({ path: '/project', query: { id: this.content.projectId }, hash: 'doc' })
           })
         }).catch(() => {
           this.$message({

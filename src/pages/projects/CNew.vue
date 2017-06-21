@@ -69,9 +69,9 @@
                       v-model="form.environment"></el-input>
             <div class="desc">
               <div>例子如下。环境名称+空格+地址</div>
-              <div>开发环境 http://www.baidu.com</div>
-              <div>测试环境 http://google.com</div>
-              <div>线上环境 http://google.com</div>
+              <div>开发环境 http://www.baidu.com/</div>
+              <div>测试环境 http://google.com/</div>
+              <div>线上环境 http://google.com/</div>
             </div>
           </el-form-item>
 
@@ -139,8 +139,8 @@
         loading: false,
         options: [],
         value: '',
-        evnPlaceholder: `dev http://www.baidu.com
-qa http://google.com`,
+        evnPlaceholder: `dev http://www.baidu.com/
+qa http://google.com/`,
         form: {
           environment: '',
           logo: '',

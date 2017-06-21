@@ -47,7 +47,7 @@
                   <div class="login-body">
                     <el-form ref="registerForm" :model="registerForm" :rules="registerrule" label-width="120px">
                       <el-form-item label="邮 箱" prop="email">
-                        <el-input placeholder="邮 箱" @blur="emailBlur" v-model="registerForm.email">
+                        <el-input placeholder="推荐使用公司邮箱" @blur="emailBlur" v-model="registerForm.email">
                         </el-input>
                       </el-form-item>
                       <el-form-item label="姓 名" prop="name">
@@ -68,7 +68,7 @@
                         <img @click="changeKaptcha" :src="kaptchaImg" style="width: 100px">
                       </el-form-item>
                       <el-form-item>
-                        <el-button type="primary" @click="registerSubmit">注 册</el-button>
+                        <el-button type="primary" :loading="loading" @click="registerSubmit">注 册</el-button>
                       </el-form-item>
                     </el-form>
                   </div>
@@ -81,9 +81,15 @@
             <h1 class="logoText">
               Go InterFace
             </h1>
-            <h3>接口定义神器</h3>
+            <h3>接口文档管理工具</h3>
             <p>
-              高效开发
+            <ul>
+              <li>接口文档书写</li>
+              <li>客服端mock数据</li>
+              <li>服务端接口测试</li>
+              <li>修改通知</li>
+              <li>文档版本对比</li>
+            </ul>
             </p>
           </div>
         </div>
@@ -141,11 +147,11 @@
           ],
           name: [
             { required: true, message: '输入用户名', trigger: 'blur' },
-            { min: 3, max: 20, message: '长度在 3 到 32 个字符', trigger: 'blur' }
+            { min: 2, max: 15, message: '长度在 2 到 15 个字符', trigger: 'blur' }
           ],
           account: [
             { required: true, message: '请输入账号', trigger: 'blur' },
-            { min: 5, max: 20, message: '长度在 5 到 20 个字符', trigger: 'blur' }
+            { min: 5, max: 50, message: '长度在 5 到 50 个字符', trigger: 'blur' }
           ],
           password: [
             { required: true, message: '输入密码', trigger: 'blur' },

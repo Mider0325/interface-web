@@ -15,12 +15,12 @@ const state = {
     'array(array)'
   ],
   methods: [
+    { value: 'get', label: 'GET' },
     { value: 'post', label: 'POST' },
     { value: 'put', label: 'PUT' },
-    { value: 'head', label: 'HEAD' },
     { value: 'delete', label: 'DELETE' },
     { value: 'patch', label: 'PATCH' },
-    { value: 'get', label: 'GET' },
+    { value: 'head', label: 'HEAD' },
     { value: 'options', label: 'OPTIONS' }
   ],
   projectPower: [
