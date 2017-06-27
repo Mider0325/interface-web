@@ -39,14 +39,47 @@
           <h4>发送数据</h4>
           <div class="contentWarp">
             <el-tabs v-model="activeRequestName">
-              <el-tab-pane label="请求(query)" name="query">
-                <object-editer key="1" :required="true" :projectId="content.projectId" :infos.sync="content.request.query"></object-editer>
+              <el-tab-pane name="body">
+
+                <span slot="label">
+                  请求(body)
+                  <el-tooltip effect="light">
+                  <div slot="content">
+                    <div class="tipcontent" v-html="tips.body"></div>
+                  </div>
+                  <i class="header-icon el-icon-information"></i>
+                </el-tooltip>
+                </span>
+                <object-editer key="2" :required="true" :projectId="content.projectId"
+                               :infos.sync="content.request.body"></object-editer>
               </el-tab-pane>
-              <el-tab-pane label="请求(body)" name="body">
-                <object-editer key="2" :required="true" :projectId="content.projectId" :infos.sync="content.request.body"></object-editer>
+              <el-tab-pane name="query">
+                <span slot="label">
+                  请求(query)
+                  <el-tooltip effect="light">
+                    <div slot="content">
+                      <div class="tipcontent" v-html="tips.query"></div>
+                    </div>
+                    <i class="header-icon el-icon-information"></i>
+                  </el-tooltip>
+                </span>
+
+
+                <object-editer key="1" :required="true" :projectId="content.projectId"
+                               :infos.sync="content.request.query"></object-editer>
               </el-tab-pane>
-              <el-tab-pane label="请求(path)" name="path">
-                <object-editer key="3" :projectId="content.projectId" :infos.sync="content.request.path"></object-editer>
+              <el-tab-pane name="path">
+                <span slot="label">
+                  请求(path)
+                  <el-tooltip effect="light">
+                  <div slot="content">
+                    <div class="tipcontent" v-html="tips.path"></div>
+                  </div>
+                  <i class="header-icon el-icon-information"></i>
+                </el-tooltip>
+                </span>
+                <object-editer key="3" :projectId="content.projectId"
+                               :infos.sync="content.request.path"></object-editer>
               </el-tab-pane>
             </el-tabs>
           </div>
@@ -54,7 +87,8 @@
         <div class="response">
           <h4>响应数据</h4>
           <div class="contentWarp">
-            <object-editer class="objectEditer" key="4" :projectId="content.projectId" :infos.sync="content.response"></object-editer>
+            <object-editer class="objectEditer" key="4" :projectId="content.projectId"
+                           :infos.sync="content.response"></object-editer>
           </div>
         </div>
 
@@ -64,19 +98,29 @@
         <div class="tip">
           提示：如果该接口所在项目你有管理员权限，你可以直接保存并发布接口，否则只能保存接口，需要发布的话，需要申请发布。申请后等管理员审核。
         </div>
-        <el-button v-if="content.status==1" @click="applyPublish" type="warning" size="small">
+        <el-button v-if="content.role>2" @click="applyPublish" type="warning" size="small">
           <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
             <span>申请发布 <i class="ifont icon-menu"></i></span>
           </el-tooltip>
         </el-button>
 
-        <el-dropdown v-if="content.status==1" split-button size="small" type="primary" @command="handleCommand"
+        <el-dropdown v-if="content.role>2" split-button size="small" type="primary" @command="handleCommand"
                      @click="upDateApi">
           保存
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :disabled="content.role>2" command="publish">保存并发布 <span v-if="content.role>2">(需要管理员权限)</span> </el-dropdown-item>
+            <el-dropdown-item :disabled="true" command="publish">保存并发布 <span>(需要管理员权限)</span></el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
+
+        <el-dropdown v-if="content.role<=2" split-button size="small" type="primary" @command="handleCommand"
+                     @click="publish">
+          保存并发布
+          <el-dropdown-menu slot="dropdown">
+            <el-dropdown-item command="upDateApi">保存</el-dropdown-item>
+          </el-dropdown-menu>
+        </el-dropdown>
+
+
       </div>
 
     </div>
@@ -112,7 +156,9 @@
   import {apiToJson} from 'src/extend/Util'
   import {mapState} from 'vuex'
   import Server from 'src/extend/Server'
-
+  var body = require('src/assets/tip/requestparams/body.md')
+  var query = require('src/assets/tip/requestparams/query.md')
+  var path = require('src/assets/tip/requestparams/path.md')
   export default{
     mixins: [ BasePage ],
     components: { ObjectEditer },
@@ -120,8 +166,13 @@
     props: { contents: {} },
     data () {
       return {
-        activeRequestName: 'query',
-        content: apiToJson(this.contents)
+        activeRequestName: 'body',
+        content: apiToJson(this.contents),
+        tips: {
+          body: body,
+          path: path,
+          query: query
+        }
       }
     },
     watch: {
@@ -232,6 +283,8 @@
           } else {
             this.$message('需要管理员权限才能保存并发布。请申请发布等待管理员审核。')
           }
+        } else if (command == 'upDateApi') {
+          this.upDateApi()
         }
       }
     }

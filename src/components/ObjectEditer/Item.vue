@@ -74,14 +74,14 @@
         </li>
         <li class="operate">
           <template v-if="editable">
-          <span @click="removeItem(item)">
+          <span class="item" @click="removeItem(item)">
               <i class="ifont icon-del"></i>
           </span>
-            <span v-if="canAdd(item)" @click="addItem(item,key)">
+            <span class="item" v-if="canAdd(item)" @click="addItem(item,key)">
                 <i class="ifont icon-add"></i>
           </span>
           </template>
-          <span v-if="item.child" @click="changeOpen(item)">
+          <span class="item" v-if="item.child&&item.child.length>0" @click="changeOpen(item)">
               <i :class="!item._close?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
           </span>
         </li>

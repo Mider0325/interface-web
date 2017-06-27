@@ -4,7 +4,8 @@
     <div class="project-home-panel text-center">
       <div class="container-fluid container-limited">
         <div class="project-avatar">
-          <img :src="project.logo" alt="">
+          <img v-if="project.logo" :src="project.logo" >
+          <img v-else src="../../assets/image/project/cover-other.jpg" >
         </div>
         <h1 class="project-title">
           {{project.projectName}}
@@ -49,14 +50,19 @@
       </el-alert>
     </div>
     <el-table v-else
-              @expand="handleChange"
               :data="apiList"
               border
+              @row-click="selectOneRow"
+              highlight-current-row
               style="width: 100%">
-      <el-table-column type="expand">
+     <!-- <el-table-column type="expand">
         <template scope="props">
           <doc-viewer v-if="props.row.apiInfo" :apiInfo="props.row.apiInfo"></doc-viewer>
         </template>
+      </el-table-column>-->
+      <el-table-column
+          type="index"
+          width="50">
       </el-table-column>
       <el-table-column
           label="更新时间"
@@ -136,7 +142,9 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .project-home-panel
     margin-bottom 30px
-
+  .project-home-url
+    width 500px
+    margin auto
   .blank-state-icon
     span
       font-size 24px
@@ -323,6 +331,28 @@
       },
       tableRowClassName (row, index) {
         return row.method
+      },
+      selectOneRow: function (item, event, column) {
+        Server({
+          url: 'api/getInterfaceInfo',
+          params: {
+            apiId: item.id,
+            type: 1
+          },
+          method: 'get'
+        }).then((response) => {
+          var data = response.data.data
+          this.$set(item, 'apiInfo', apiToJson(data))
+          this.openDialog({
+            name: 'DShowDoc',
+            data: {
+              title: 'mock数据显示',
+              apiInfo: item.apiInfo
+            }
+          })
+        }).catch((e) => {
+
+        })
       },
       filterTag (value, row) {
         var flag = false

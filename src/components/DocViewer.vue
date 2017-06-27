@@ -3,8 +3,9 @@
     <div class="operations">
       <div class="operation">
         <header>
-          <a class="focus-editor" tooltip-trigger="mouseenter"> </a>
+          <h4>基本信息</h4>
           <div class="http-method">
+            <div>{{apiInfo.name}}</div>
             <div :class="[apiInfo.method]" class="method">{{apiInfo.method}}</div>
             {{apiInfo.path}}
           </div>
@@ -64,11 +65,17 @@
         <div>
           <restful-tool :info="apiInfo" v-if="openTry"></restful-tool>
         </div>
+
+
       </div>
     </div>
   </div>
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+  h4
+    position relative
+    left -10px
+
   .path
     list-style: none;
     .operations
@@ -125,6 +132,7 @@
     },
     data: function () {
       return {
+        activeNames: [ '1' ],
         activeRequestName: 'query',
         openTry: false
       }
@@ -143,9 +151,7 @@
     watch: {},
     mounted () {
     },
-    methods: {
-
-    }
+    methods: {}
   }
 </script>
 

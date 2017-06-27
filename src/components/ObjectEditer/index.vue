@@ -2,9 +2,10 @@
   <div class="ObjectEditer">
 
     <div style="margin: 0px 0 10px 0">
-      <el-button v-if="empty(info)" size="small" @click="showMock" type="primary" icon="document">mock</el-button>
+      <el-button v-if="empty(info)" size="small" @click="showMock" type="primary"><i class="ifont icon-mock"></i>mock</el-button>
       <template v-if="editable">
-        <el-button size="small" @click="importJson" type="primary" icon="upload">导入数据</el-button>
+        <el-button size="small" @click="importJson" type="primary"> <i class="ifont icon-import"></i>导入数据</el-button>
+        <el-button size="small" @click="exportdata" type="primary"><i class="ifont icon-export"></i>导出据到</el-button>
         <el-button size="small" @click="addItem(info)" type="primary" icon="plus">添加列</el-button>
       </template>
     </div>
@@ -173,7 +174,18 @@ shift+right 向右移动光标
           }
         })
       },
-
+      exportdata: function () {
+        console.log(this.projectId)
+        this.openDialog({
+          name: 'DExportdata',
+          data: {
+            title: '导出到基础数据',
+            projectId: this.projectId,
+            preData: this.info
+          },
+          methods: {}
+        })
+      },
       addItem: function (item) {
         item.push({
           name: '',

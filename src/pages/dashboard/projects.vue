@@ -39,7 +39,9 @@
             </div>
             <router-link v-else v-for="(item, index) in myProjects" :key="item.id" class="card"
                          :to="{path:'/project',query:{id:item.id}}" tag="div">
-              <img :src="item.logo" class="image">
+
+              <img v-if="item.logo" :src="item.logo" class="image">
+              <img v-else src="../../assets/image/project/cover-other.jpg" class="image">
               <div class="cardContent">
                 <div class="title">
                   <router-link tag="span" :to="{path:'/groups/index',query:{id:item.groupId}}" class="namespace-name">
@@ -113,7 +115,7 @@
     float left
     margin 20px
     width 260px
-    height 160px
+    height 130px
     border 1px solid #dddddd
     border-radius 5px
     overflow hidden
