@@ -21,8 +21,7 @@
         <ul v-if="activeName==='all'" class="content-list">
           <li v-for="item in allGroup" class="group-row">
             <img class="avatar s40 hidden-xs"
-                 :src="item.logo"
-                 alt="">
+                 :src="item.logo|defaultGroup">
             <div class="title">
               <router-link class="group-name" :to="{path:'/groups/index',query:{id:item.id}}">
                 {{item.name}}

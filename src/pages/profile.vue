@@ -28,7 +28,7 @@
               <el-form ref="baseForm" :model="form" :rules="rules" label-width="80px">
                 <el-form-item label="头 像">
                   <div class="headIcon">
-                    <img :src="form.photo">
+                    <img :src="form.photo|defaultHeader">
                   </div>
                   <upload :on-success="uploadEnd"></upload>
                  <!-- <a href="https://en.gravatar.com/emails/">前往gravatar编辑头像</a>

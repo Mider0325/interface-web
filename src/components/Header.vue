@@ -57,7 +57,7 @@
               </el-popover>
               <a v-popover:user-tip class="header-user-dropdown-toggle" data-toggle="dropdown">
                 <img width="26" height="26" class="header-user-avatar"
-                     :src="userInfo.photo">
+                     :src="userInfo.photo|defaultHeader">
                 <span class="caret"></span>
               </a>
             </li>
@@ -115,7 +115,7 @@
           url: 'notice/getMessageNums',
           method: 'get'
         }).then((response) => {
-          // this.$store.dispatch('updataMessageNum', response.data.data)
+          this.$store.dispatch('updataMessageNum', response.data.data)
           setTimeout(() => {
             this.getMessageNum()
           }, 10000)

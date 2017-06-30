@@ -82,7 +82,7 @@
 
                 </div>
                 <span class="list-item-name">
-                  <img class="avatar s40" alt="" :src="item.photo">
+                  <img class="avatar s40" alt="" :src="item.photo|defaultHeader">
                   <strong>
                     <router-link :to="{path:'/user',query:{id:item.userId}}">{{item.name}}</router-link>
                   </strong>
@@ -102,7 +102,7 @@
             <ul class="content-list">
               <li class="group_member js-toggle-container" :key="item.userId" v-for="(item, key) in gusers">
                 <span class="list-item-name">
-                  <img class="avatar s40" alt="" :src="item.photo">
+                  <img class="avatar s40" alt="" :src="item.photo|defaultHeader">
                   <strong>
                     <router-link :to="{path:'/user',query:{id:item.userId}}">{{item.name}}</router-link>
                   </strong>

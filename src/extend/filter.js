@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import Metadata from '../store/metadata'
+var defaultHeaderIcon = require('../assets/image/header/default.png')
+var defaultProjectIcon = require('../assets/image/project/cover-other.jpg')
+var defaultGroupIcon = require('../assets/image/group/default.png')
 /**
  * 时间格式化
  */
@@ -89,4 +92,24 @@ Vue.filter('projectRole', function (value) {
   }
   return ''
 })
-
+/**
+ * 默认头像
+ */
+Vue.filter('defaultHeader', function (value) {
+  value = value || defaultHeaderIcon
+  return value
+})
+/**
+ * 默认项目图片
+ */
+Vue.filter('defaultProject', function (value) {
+  value = value || defaultProjectIcon
+  return value
+})
+/**
+ * 默认分组图片
+ */
+Vue.filter('defaultGroup', function (value) {
+  value = value || defaultGroupIcon
+  return value
+})

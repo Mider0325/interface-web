@@ -29,7 +29,7 @@
         <el-form ref="form" :model="form" label-width="80px">
           <el-form-item label="图标">
             <div class="headIcon">
-              <img :src="form.logo">
+              <img :src="form.logo|defaultProject">
             </div>
             <upload :on-success="uploadEnd"></upload>
           </el-form-item>

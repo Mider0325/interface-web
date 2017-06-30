@@ -73,6 +73,8 @@
     position relative
     .event-item-timestamp
       line-height 90px
+      position: absolute;
+      right: 0
     .readyStatus
       position absolute
       right 0
@@ -165,7 +167,7 @@
           method: 'get'
         }).then((response) => {
           this.loading = false
-          this.list = [] || this.list.concat(response.data.data)
+          this.list = this.list.concat(response.data.data)
         }).catch(() => {
           this.loading = false
         })

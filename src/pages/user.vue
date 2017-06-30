@@ -14,7 +14,7 @@
             </div>
             <div class="avatar-holder">
               <img class="avatar s90" alt=""
-                   :src="info.photo">
+                   :src="info.photo|defaultHeader">
             </div>
             <div class="cover-title">
               {{info.name}}

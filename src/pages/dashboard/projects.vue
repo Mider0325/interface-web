@@ -40,8 +40,7 @@
             <router-link v-else v-for="(item, index) in myProjects" :key="item.id" class="card"
                          :to="{path:'/project',query:{id:item.id}}" tag="div">
 
-              <img v-if="item.logo" :src="item.logo" class="image">
-              <img v-else src="../../assets/image/project/cover-other.jpg" class="image">
+              <img :src="item.logo|defaultProject" class="image">
               <div class="cardContent">
                 <div class="title">
                   <router-link tag="span" :to="{path:'/groups/index',query:{id:item.groupId}}" class="namespace-name">

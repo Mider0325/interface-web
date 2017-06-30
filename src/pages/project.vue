@@ -8,7 +8,7 @@
             <el-tab-pane label="草稿" name="apis"></el-tab-pane>
             <el-tab-pane label="基础对象" name="object"></el-tab-pane>
             <el-tab-pane label="成员" name="member"></el-tab-pane>
-            <el-tab-pane v-if="project.role<=2" label="设置" name="setting"></el-tab-pane>
+            <el-tab-pane v-if="project.role<=1" label="设置" name="setting"></el-tab-pane>
           </el-tabs>
         </div>
         <div class="controls">

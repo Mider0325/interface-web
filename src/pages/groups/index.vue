@@ -35,7 +35,7 @@
               <el-form v-else ref="form" :model="info" label-width="80px">
                 <el-form-item label="图标">
                   <div class="headIcon">
-                    <img :src="info.logo">
+                    <img :src="info.logo|defaultGroup">
                   </div>
                 </el-form-item>
 
@@ -83,7 +83,7 @@
                 <div class="project">
                   <div class="dash-project-avatar">
                     <div class="avatar project-avatar s40 identicon">
-                      <img class="avatar project-avatar s40" :src="item.logo">
+                      <img class="avatar project-avatar s40" :src="item.logo|defaultProject">
                     </div>
                   </div>
                   <span class="project-full-name">

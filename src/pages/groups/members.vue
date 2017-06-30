@@ -83,7 +83,7 @@
             <a v-if="item.userId != userInfo.userId&&info.role<=1" class="btn btn-remove" @click="remove(item)">移除</a>
           </div>
           <span class="list-item-name">
-            <img class="avatar s40" alt="" :src="item.photo">
+            <img class="avatar s40" alt="" :src="item.photo|defaultHeader">
             <strong>
               <router-link :to="{path:'/user',query:{id:item.userId}}">{{item.name}}</router-link>
             </strong>

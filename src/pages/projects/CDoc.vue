@@ -4,8 +4,7 @@
     <div class="project-home-panel text-center">
       <div class="container-fluid container-limited">
         <div class="project-avatar">
-          <img v-if="project.logo" :src="project.logo" >
-          <img v-else src="../../assets/image/project/cover-other.jpg" >
+          <img :src="project.logo|defaultProject" >
         </div>
         <h1 class="project-title">
           {{project.projectName}}

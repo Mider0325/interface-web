@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" size="large" v-model="Visible" @close="close">
+  <el-dialog :title="title" size="full" v-model="Visible" @close="close">
     <div class="content">
       <doc-viewer v-if="apiInfo" :apiInfo="apiInfo"></doc-viewer>
     </div>

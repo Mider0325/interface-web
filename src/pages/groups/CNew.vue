@@ -4,7 +4,7 @@
     <el-form ref="form" :model="form" label-width="80px">
       <el-form-item label="图标">
         <div class="headIcon">
-          <img :src="form.logo">
+          <img :src="form.logo|defaultGroup">
         </div>
         <upload :on-success="uploadEnd"></upload>
         <div class="el-upload__tip" slot="tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -57,7 +57,6 @@
     border-radius 50%
     overflow hidden
     margin 20px
-    background url("/src/assets/image/header/default.png")
     background-size 100% 100%
     img
       width: 100%
