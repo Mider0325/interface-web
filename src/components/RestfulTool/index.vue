@@ -344,7 +344,7 @@
     mounted () {
       this.instance = axios.create({
         baseURL: '',
-        timeout: 1000,
+        timeout: 40000,
         headers: {}
       })
       this.dealRequestMock()

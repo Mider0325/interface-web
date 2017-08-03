@@ -21,8 +21,8 @@
 
             <div v-if="hasPath||hasQuery||hasBody" class="apiInfo">
               <el-tabs v-model="activeRequestName">
-                <el-tab-pane label="请求(query)" v-if="hasQuery" name="query"></el-tab-pane>
                 <el-tab-pane label="请求(body)" v-if="hasBody" name="body"></el-tab-pane>
+                <el-tab-pane label="请求(query)" v-if="hasQuery" name="query"></el-tab-pane>
                 <el-tab-pane label="请求(path)" v-if="hasPath" name="path"></el-tab-pane>
               </el-tabs>
               <div class="objectEditer" v-if="activeRequestName=='query'">
@@ -100,6 +100,7 @@
             top: 10px;
             color: #ffffff;
         .content
+          max-width 1200px;
           padding: 10px;
           display block
           .apiInfo
@@ -133,7 +134,7 @@
     data: function () {
       return {
         activeNames: [ '1' ],
-        activeRequestName: 'query',
+        activeRequestName: 'body',
         openTry: false
       }
     },
@@ -150,6 +151,18 @@
     },
     watch: {},
     mounted () {
+      if (this.hasBody) {
+        this.activeRequestName = 'body'
+        return
+      }
+      if (this.hasQuery) {
+        this.activeRequestName = 'query'
+        return
+      }
+      if (this.hasPath) {
+        this.activeRequestName = 'path'
+        return
+      }
     },
     methods: {}
   }

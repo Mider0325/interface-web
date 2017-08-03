@@ -1,8 +1,6 @@
 <template>
   <div class="dialogs">
-    <transition name="el-zoom-in-top">
-       <component v-for="item in dialogs" :key="item.name" :is="item.name"></component>
-    </transition>
+     <component v-for="item in dialogs" :key="item.name" :is="item.name"></component>
   </div>
 </template>
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">

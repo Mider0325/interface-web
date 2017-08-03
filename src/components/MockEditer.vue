@@ -96,7 +96,6 @@
     data: function () {
       return {
         errorList: [],
-//        defArr : ['definitions', 'path', 'description', 'parameters', 'type'],  // 定义trimDef方法的清理目标
         defArr: [],
         jsonOutput: '', // mocked data json
         mockOutput: '' // mocked schema obj

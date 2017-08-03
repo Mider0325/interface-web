@@ -208,6 +208,15 @@
       })
       // this.checkLogin()
       this.changeKaptcha()
+      var user = window.localStorage.getItem('loginuser') || '{}'
+      var userInfo = {}
+      try {
+        userInfo = JSON.parse(user)
+      } catch (e) {
+        userInfo = {}
+      }
+      this.loginForm.account = userInfo.account
+      this.loginForm.password = userInfo.password
     },
     methods: {
       checkLogin: function () {
@@ -289,6 +298,10 @@
               needLoading: true,
               method: 'post'
             }).then((response) => {
+              window.localStorage.setItem('loginuser', JSON.stringify({
+                account: this.loginForm.account,
+                password: this.loginForm.password
+              }))
               this.loginSuccess(response.data)
               console.log('sucee')
             }).catch((e) => {

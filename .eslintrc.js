@@ -11,6 +11,7 @@ module.exports = {
   ],
   // add your custom rules here
   'rules': {
+    "no-multi-spaces": 0,
     "no-eval": 0,
     "no-new": 0,
     // allow paren-less arrow functions

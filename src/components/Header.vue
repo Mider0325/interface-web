@@ -111,11 +111,12 @@
     },
     methods: {
       getMessageNum: function () {
+        this.$store.dispatch('updataMessageNum', { total: 0 })
         Server({
           url: 'notice/getMessageNums',
           method: 'get'
         }).then((response) => {
-          this.$store.dispatch('updataMessageNum', response.data.data)
+          this.$store.dispatch('updataMessageNum', response.data.data || {})
           setTimeout(() => {
             this.getMessageNum()
           }, 10000)

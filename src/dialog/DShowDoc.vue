@@ -1,5 +1,5 @@
 <template>
-  <el-dialog :title="title" size="full" v-model="Visible" @close="close">
+  <el-dialog :title="title" size="large" v-model="Visible" @close="close">
     <div class="content">
       <doc-viewer v-if="apiInfo" :apiInfo="apiInfo"></doc-viewer>
     </div>
@@ -10,6 +10,7 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .content
     overflow: auto
+    height 600px
 </style>
 <script type="text/ecmascript-6">
   import BaseDialog from 'src/extend/BaseDialog'

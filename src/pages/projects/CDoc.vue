@@ -165,7 +165,6 @@
   import Config from 'src/config'
   import DocViewer from 'src/components/DocViewer'
   import Clipboard from 'clipboard'
-  import $ from 'jQuery'
   import {apiToJson, jsonToMock} from 'src/extend/Util'
   var projectMd = require('src/assets/tip/help/project.md')
 
@@ -280,13 +279,6 @@
           }).then((response) => {
             var data = response.data.data
             this.$set(item, 'apiInfo', apiToJson(data))
-            this.$nextTick(function () {
-              $(window.document.body).scrollTo(`#doctableexpanded_${item.id}`, 200, {
-                offset: {
-                  top: -20
-                }
-              })
-            })
           }).catch((e) => {
 
           })
