@@ -3231,6 +3231,10 @@ tiny-emitter@^1.0.0:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/tiny-emitter/download/tiny-emitter-1.2.0.tgz#6dc845052cb08ebefc1874723b58f24a648c3b6f"
 
+title-notify@^1.0.13:
+  version "1.0.13"
+  resolved "http://192.168.199.131:4873/title-notify/-/title-notify-1.0.13.tgz#072dfd120aa88f0cde45696c92db389625694032"
+
 trim-newlines@^1.0.0:
   version "1.0.0"
   resolved "http://registry.npm.taobao.org/trim-newlines/download/trim-newlines-1.0.0.tgz#5887966bb582a4503a41eb524f7d35011815a613"

@@ -154,6 +154,11 @@
       return {}
     },
     watch: {},
+    beforeCreated: function () {
+      this.data.forEach((value) => {
+        value.mock = value.mock + ''
+      })
+    },
     mounted () {
       this.$nextTick(function () {
         var input = $(this.$el).find('input')[ 0 ]

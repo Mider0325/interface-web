@@ -91,6 +91,7 @@
   import BaseComponent from 'src/extend/BaseComponent'
   import Server from '../extend/Server'
   import {mapState} from 'vuex'
+  import Notify from 'title-notify'
   export default {
     mixins: [ BaseComponent ],
     name: 'Header',
@@ -117,11 +118,45 @@
           method: 'get'
         }).then((response) => {
           this.$store.dispatch('updataMessageNum', response.data.data || {})
+          this.notify(response.data.data.api)
           setTimeout(() => {
             this.getMessageNum()
           }, 10000)
         }).catch(() => {
         })
+      },
+      notify: function (data) {
+        if (!data) {
+          return
+        }
+        if (window.localStorage.getItem('apimessnum') == data) {
+          return
+        }
+        window.localStorage.setItem('apimessnum', data)
+        var notify = new Notify({
+          message: '有消息了。', // 标题
+          effect: 'flash', //  flash | scroll 闪烁还是滚动
+          openurl: '/dashboard/activity', //  点击弹窗打开连接地址
+          onclick: function () { // 点击弹出的窗之行事件
+            console.log('---')
+          },
+          // 标题闪烁，或者滚动速度
+          interval: 1000,
+          // 可选，默认绿底白字的  Favicon
+          updateFavicon: {
+            //  favicon 字体颜色
+            textColor: '#fff',
+            // 背景颜色，设置背景颜色透明，将值设置为“transparent”
+            backgroundColor: '#1970a9'
+          },
+          // 可选chrome浏览器通知，默认不填写就是下面的内容
+          notification: {
+            title: 'goInterface 通知！', // 设置标题
+            icon: '', // 设置图标 icon 默认为 Favicon
+            body: '接口又改了'// 设置消息内容
+          }
+        })
+        notify.setFavicon(data).notify({}).player()
       },
       toggle: function () {
         var isOpen = !this.theme.isOpen

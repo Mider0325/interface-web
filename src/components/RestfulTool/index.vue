@@ -67,10 +67,11 @@
             {{requestBodyType.toUpperCase()}}<i class="el-icon-caret-bottom el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
+              <el-dropdown-item command="JSON(application/json)">JSON(application/json)</el-dropdown-item>
               <el-dropdown-item command="Text">Text</el-dropdown-item>
               <el-dropdown-item command="Text(text/plain)">Text(text/plain)</el-dropdown-item>
-              <el-dropdown-item command="JSON(application/json)">JSON(application/json)</el-dropdown-item>
-              <el-dropdown-item command="javascript(application/javascript)">javascript(application/javascript)</el-dropdown-item>
+              <el-dropdown-item command="javascript(application/javascript)">javascript(application/javascript)
+              </el-dropdown-item>
               <el-dropdown-item command="XML(application/xml)">XML(application/xml)</el-dropdown-item>
               <el-dropdown-item command="XML(text/xml)">XML(text/xml)</el-dropdown-item>
               <el-dropdown-item command="HTML(text/html)">HTML(text/html)</el-dropdown-item>
@@ -121,7 +122,8 @@
               <el-radio-button label="Raw">Raw</el-radio-button>
               <el-radio-button label="Preview">Preview</el-radio-button>
             </el-radio-group>
-            <el-dropdown class="responeType" size="small" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
+            <el-dropdown class="responeType" size="small" v-if="responseBodyViewType=='Pretty'" split-button
+                         type="primary"
                          @command="responseBodyViewTypeSelect">
               {{responseBodyType.toUpperCase()}}
               <el-dropdown-menu slot="dropdown">
@@ -292,8 +294,8 @@
         requestBodyViewType: 'raw',
         requestTabName: 'Authorization',
         requestLoading: false,
-        requestBodyType: 'text',
-        requestBodyType_view: 'text',
+        requestBodyType: 'JSON(application/json)',
+        requestBodyType_view: 'json',
         requestBodyCopy: '',
         requestInfo: {
           path: '',
@@ -348,7 +350,8 @@
         headers: {}
       })
       this.dealRequestMock()
-
+      // 初始化默认body类型
+      this.requestBodyViewTypeSelect('JSON(application/json)')
       window.document.addEventListener('result1.success', (response) => {
         this.sendSuccess(response.detail)
       })
@@ -520,6 +523,11 @@
        * 保存mock数据
        */
       save: function () {
+        if (this.requestBodyType.toUpperCase() == 'JSON(APPLICATION/JSON)') {
+          this.requestInfo.request.body = JSON.parse(this.requestBodyCopy)
+        } else {
+          this.requestInfo.request.body = this.requestBodyCopy
+        }
         Server({
           url: 'mock/addMock',
           data: {

@@ -224,24 +224,44 @@
           inputErrorMessage: '备注0到30个字'
         }).then(({ value }) => {
           Server({
-            url: 'api/requestRelease',
-            method: 'post',
+            url: 'api/update',
             data: {
               apiId: this.content.id + '',
-              description: value
-            }
+              request: JSON.stringify(this.content.request),
+              response: JSON.stringify(this.content.response),
+              description: this.content.description,
+              name: this.content.name,
+              method: this.content.method,
+              publishStatus: '1',
+              path: this.content.path
+            },
+            method: 'put'
           }).then((response) => {
-            this.content.status = 2
-            this.$message('申请成功')
-            this.$router.push({ path: '/project', query: { id: this.content.projectId }, hash: 'apis' })
-          }).catch(() => {
-            this.$message('发布失败')
+            this._apublish(value)
+          }).catch((e) => {
+
           })
         }).catch(() => {
           this.$message({
             type: 'info',
             message: '取消输入'
           })
+        })
+      },
+      _apublish: function (value) {
+        Server({
+          url: 'api/requestRelease',
+          method: 'post',
+          data: {
+            apiId: this.content.id + '',
+            description: value
+          }
+        }).then((response) => {
+          this.content.status = 2
+          this.$message('申请成功')
+          this.$router.push({ path: '/project', query: { id: this.content.projectId }, hash: 'apis' })
+        }).catch(() => {
+          this.$message('发布失败')
         })
       },
       /**

@@ -4,7 +4,7 @@
     <div class="project-home-panel text-center">
       <div class="container-fluid container-limited">
         <div class="project-avatar">
-          <img :src="project.logo|defaultProject" >
+          <img :src="project.logo|defaultProject">
         </div>
         <h1 class="project-title">
           {{project.projectName}}
@@ -54,14 +54,13 @@
               @row-click="selectOneRow"
               highlight-current-row
               style="width: 100%">
-     <!-- <el-table-column type="expand">
-        <template scope="props">
-          <doc-viewer v-if="props.row.apiInfo" :apiInfo="props.row.apiInfo"></doc-viewer>
-        </template>
-      </el-table-column>-->
+      <!-- <el-table-column type="expand">
+         <template scope="props">
+           <doc-viewer v-if="props.row.apiInfo" :apiInfo="props.row.apiInfo"></doc-viewer>
+         </template>
+       </el-table-column>-->
       <el-table-column
-          type="index"
-          width="50">
+          type="index">
       </el-table-column>
       <el-table-column
           label="更新时间"
@@ -101,9 +100,55 @@
         </template>
       </el-table-column>
       <el-table-column
+          sortable
+          prop="endStatus"
+          :width="100"
+          label="服务端"
+      >
+        <template scope="scope">
+          <div @click.stop>
+            <el-switch
+                :key="1"
+                :width="80"
+                v-model.number="scope.row.endStatus"
+                on-text="可联调"
+                off-text="开发中"
+                :off-value="1"
+                :on-value="2"
+                @change="statusChange(scope.row,1)"
+                on-color="#13ce66"
+                off-color="#ff4949">
+            </el-switch>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+          sortable
+          prop="frontStatus"
+          :width="100"
+          label="客户端"
+      >
+        <template scope="scope">
+          <div @click.stop>
+            <el-switch
+                :key="2"
+                :width="80"
+                v-model.number="scope.row.frontStatus"
+                on-text="已联调"
+                off-text="未联调"
+                :off-value="1"
+                :on-value="2"
+                @change="statusChange(scope.row,2)"
+                on-color="#13ce66"
+                off-color="#ff4949">
+            </el-switch>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
           prop="tag"
           label="标签"
-          width="100"
+          :width="100"
           :filters="tagTableFilters"
           :filter-method="filterTag">
         <template scope="scope">
@@ -128,6 +173,9 @@
                 <el-dropdown-item command="">
                   <div @click="api_mock(scope.row)">查看MOCK数据</div>
                 </el-dropdown-item>
+                <el-dropdown-item command="">
+                  <div @click="diff_ver(scope.row)">查看历史版本</div>
+                </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>
           </div>
@@ -141,9 +189,11 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .project-home-panel
     margin-bottom 30px
+
   .project-home-url
     width 500px
     margin auto
+
   .blank-state-icon
     span
       font-size 24px
@@ -199,6 +249,15 @@
       }
     },
     methods: {
+      diff_ver: function (data) {
+        this.openDialog({
+          name: 'DDiffShowDoc',
+          data: {
+            title: '历史版本比对',
+            info: data
+          }
+        })
+      },
       api_edit: function (data) {
         this.$router.push({
           path: '/api/new',
@@ -228,6 +287,31 @@
         }).catch((e) => {
           console.log(e)
           this.$message('获取接口详情失败，重试')
+        })
+      },
+      statusChange: function (data, type) {
+        var keys = {
+          '1': 'endStatus',
+          '2': 'frontStatus'
+        }
+        var status = data[ keys[ type + '' ] ]
+        if (status == 1) {
+          status = 2
+        } else if (status == 2) {
+          status = 1
+        }
+        Server({
+          url: 'api/updateHistoryStatus',
+          data: {
+            id: data.id,
+            type: type,
+            status: status
+          },
+          method: 'post'
+        }).then((response) => {
+          data[ keys[ type + '' ] ] = status
+        }).catch((e) => {
+
         })
       },
       newApi: function () {

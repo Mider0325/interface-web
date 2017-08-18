@@ -56,6 +56,17 @@ exports.jsonToMock = function (data) {
     for (var key in data) {
       let value = data[ key ]
       info[ value.name ] = value.mock
+      if (value.type == 'number') {
+        if ((value.mock - 0) == value.mock) {
+          info[ value.name ] = value.mock - 0
+        }
+      } else if (value.type == 'boolean') {
+        if (value.mock == 'true') {
+          info[ value.name ] = true
+        } else if (value.mock == 'false') {
+          info[ value.name ] = false
+        }
+      }
       // 数组处理
       if (value.type == 'object') {
         info[ value.name + value.mock ] = {}
