@@ -411,7 +411,7 @@
         apiInfo.request = apiInfo.request || {}
         apiInfo.request.body = apiInfo.request.body || jsonToMock(this.info.request.body)
         try {
-          this.requestBodyCopy = JSON.stringify(apiInfo.request.body)
+          this.requestBodyCopy = JSON.stringify(apiInfo.request.body, null, 4)
         } catch (e) {
           this.requestBodyCopy == ''
         }

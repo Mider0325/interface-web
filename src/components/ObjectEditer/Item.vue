@@ -7,7 +7,7 @@
          @keydown.ctrl.187.stop="changeOpen(item)"
          @keydown.ctrl.73.stop="importJson(item)"
          :key="key" v-for="(item,key) in data">
-      <ul class="cb">
+      <ul class="cb" :class="[item._meta?item._meta.type:'']">
         <li class="name input">
           <template v-if="editable">
             <el-input type="text" :minlength="1" :maxlength="25" placeholder="标准变量命名" @input="onNameChange(item)"
@@ -84,6 +84,7 @@
           <span class="item" v-if="item.child&&item.child.length>0" @click="changeOpen(item)">
               <i :class="!item._close?'el-icon-caret-top':'el-icon-caret-bottom'"></i>
           </span>
+          <i v-if="item._meta" @click="tipInfo(item._meta)" class="el-icon-warning"></i>
         </li>
       </ul>
       <div v-if="item.child&&!item._close" class="sub div-editing-table">
@@ -99,6 +100,15 @@
     height 100%
     border none
 
+  .updata
+    background-color #4a8bee
+    color #fff
+  .add
+    background-color green
+    color #fff
+  .delete
+    background-color red
+    color #fff
   .editWarp
     margin 10px 10px 0
 </style>
@@ -166,6 +176,9 @@
       })
     },
     methods: {
+      tipInfo: function (data) {
+        this.$alert(JSON.stringify(data, null, 2))
+      },
       onNameChange: function (item) {
       },
       canAdd: function (item) {
