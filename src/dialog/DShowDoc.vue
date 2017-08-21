@@ -1,6 +1,6 @@
 <template>
-  <el-dialog :title="title" size="large" v-model="Visible" @close="close">
-    <div class="content">
+  <el-dialog :title="title" size="full" v-model="Visible" @close="close">
+    <div class="content" :style="{height: (appInfo.size.height-100) + 'px'}">
       <doc-viewer v-if="apiInfo" :apiInfo="apiInfo"></doc-viewer>
     </div>
     <div slot="footer" class="dialog-footer">
@@ -10,7 +10,9 @@
 <style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
   .content
     overflow: auto
-    height 600px
+    margin auto
+    min-height 600px
+    max-width 1200px
 </style>
 <script type="text/ecmascript-6">
   import BaseDialog from 'src/extend/BaseDialog'
@@ -27,6 +29,7 @@
       }
     },
     computed: mapState({
+      appInfo: state => state.app,
       Metadata: state => state.Metadata
     }),
     mounted: function () {
