@@ -25,6 +25,7 @@
         发送
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="saveandsend">保存并发送</el-dropdown-item>
+          <el-dropdown-item command="batchSend">并发访问</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
     </div>
@@ -453,6 +454,8 @@
         if (command == 'saveandsend') {
           this.send()
           this.save()
+        } else if (command == 'batchSend') {
+          this.batchSend()
         }
       },
       dealResponse: function (data) {
@@ -574,6 +577,23 @@
         }
         console.log(response.response)
         this.requestLoading = false
+      },
+      batchSend: function () {
+        this.$prompt('输入并发次数', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          inputPattern: /[1-9][0-9]*/,
+          inputErrorMessage: '输入数字'
+        }).then(({ value }) => {
+          for (var i = 0; i < value - 0; i++) {
+            this.send()
+          }
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '取消输入'
+          })
+        })
       },
       /**
        * 发送请求测试
