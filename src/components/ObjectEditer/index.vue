@@ -58,7 +58,7 @@ shift+right 向右移动光标
 
   </div>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .ObjectEditer
     width 100%
     .nameWarp

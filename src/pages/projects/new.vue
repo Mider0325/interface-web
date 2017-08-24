@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .headIcon
     width 150px
     height 150px

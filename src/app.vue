@@ -11,7 +11,7 @@
   </div>
 
 </template>
-<style lang="styl" rel="stylesheet/stylus" type="text/css">
+<style lang="styl" rel="stylesheet/stylus" type="text/stylus">
   @import "assets/style/app.styl";
   .sizeContent
     position: fixed

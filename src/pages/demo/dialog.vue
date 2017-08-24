@@ -17,7 +17,7 @@
   </div>
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .desc {
     color: #4a4f52;
     margin: 30px;

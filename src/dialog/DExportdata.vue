@@ -22,7 +22,7 @@
     </div>
   </el-dialog>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .importwarp
     .preview
       min-width 600px

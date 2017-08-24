@@ -47,7 +47,7 @@
   </div>
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .page-with-layout-nav
     width 100%
     display flex

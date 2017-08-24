@@ -33,7 +33,7 @@
 
     <!--请求路径参数信息-->
     <div class="pathParams" v-if="pathParamsVisable">
-      <object-edit :info="requestInfo.request.query" :on-change="requestQueryChange"></object-edit>
+      <object-edit key="query" :info="requestInfo.request.query" :on-change="requestQueryChange"></object-edit>
     </div>
     <!--请求路径参数信息-->
 
@@ -44,6 +44,7 @@
         <el-tab-pane label="Authorization" name="Authorization"></el-tab-pane>
         <el-tab-pane label="Header" name="Header"></el-tab-pane>
         <el-tab-pane label="Body" name="Body" :disabled="!showBody"></el-tab-pane>
+        <el-tab-pane label="Path" name="Path" :disabled="!showPath"></el-tab-pane>
       </el-tabs>
       <!-- tab切换标头-->
       <!--tab内容-->
@@ -51,7 +52,7 @@
         暂未开放
       </div>
       <div class="tabContent" v-if="requestTabName=='Header'">
-        <object-edit :info="requestInfo.header" :on-change="requestHeaderChange"></object-edit>
+        <object-edit key="header" :info="requestInfo.header" :on-change="requestHeaderChange"></object-edit>
       </div>
       <div class="tabContent" v-if="requestTabName=='Body'">
         <div class="nav">
@@ -81,18 +82,18 @@
         </div>
         <div class="body">
           <div class="raw" v-if="requestBodyViewType=='raw'">
-            <code-viewer :ctype="requestBodyType_view"
+            <code-viewer key="raw" :ctype="requestBodyType_view"
                          :options="{theme:''}"
                          :on-change="requestBodyInfoChange"
                          :contents="requestBodyCopy"></code-viewer>
           </div>
           <div v-if="requestBodyViewType=='formdata'">
-            <object-edit :info="requestInfo.formDataBody" :param-type='true'
-                         :on-change="requestQueryChange"></object-edit>
+            <object-edit key="formdata" :info="requestInfo.formDataBody" :param-type='true'
+                         :on-change="requestFormDataBodyChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='xwwwformurlencoded'">
-            <object-edit :info="requestInfo.formDataBody"
-                         :on-change="requestQueryChange"></object-edit>
+            <object-edit key="xwwwformurlencoded" :info="requestInfo.urlencodedBody"
+                         :on-change="requestUrlEncodedBodyChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='binary'">
             <br>
@@ -102,6 +103,10 @@
             <br>
           </div>
         </div>
+      </div>
+
+      <div class="tabContent" v-if="requestTabName=='Path'">
+        <object-edit key="requestPath" :info="requestInfo.request.path" :on-change="requestPathChange"></object-edit>
       </div>
       <!--tab内容-->
     </div>
@@ -139,7 +144,7 @@
           </div>
           <div class="body">
             <div v-if="responseBodyViewType=='Pretty'">
-              <code-viewer :ctype="responseBodyType"
+              <code-viewer key="pretty" :ctype="responseBodyType"
                            :options="{theme:''}"
                            :contents="responseInfo.responseText"></code-viewer>
             </div>
@@ -166,14 +171,16 @@
         </div>
       </div>
       <div class="errorWarp" v-else>
+        {{completionurl}}
         {{responseInfo.message}}
       </div>
+      <div class="completionurl" v-if="completionurl">访问地址:{{completionurl}}</div>
     </div>
     <!-- 请求结果 end-->
 
   </div>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .tool
     background-color: #f1f1f1;
     padding: 10px;
@@ -207,6 +214,8 @@
     .pathParams
       margin 10px 0
     .responseWarp
+      .completionurl
+        color orange
       .errorWarp
         margin-top: 20px;
         padding 20px
@@ -327,6 +336,8 @@
         responseBodyType: 'json',
         pathParamsVisable: false,
         responseCookies: [],
+        completionurl: '',
+        showPath: false, // 显示path编辑区
         showBody: true // 是否显示body区域
       }
     },
@@ -424,6 +435,16 @@
         if (this.info.projectId) {
           this.loadProject(this.info.projectId)
         }
+        if ((/\/:\w+/gi).test(apiInfo.path)) {
+          var arr = apiInfo.path.match(/(:\w+)/gi)
+          arr.forEach((value) => {
+            var key = value.replace(':', '')
+            if (!apiInfo.request.path[ key ]) {
+              apiInfo.request.path[ key ] = ''
+            }
+          })
+          this.showPath = true
+        }
         this.requestInfo = Object.assign(this.requestInfo, apiInfo)
       },
       /**
@@ -441,8 +462,17 @@
       requestHeaderChange: function (data) {
         this.requestInfo.header = data
       },
+      requestPathChange: function (data) {
+        this.requestInfo.request.path = data
+      },
       requestQueryChange: function (data) {
         this.requestInfo.request.query = data
+      },
+      requestFormDataBodyChange: function (data) {
+        this.requestInfo.formDataBody = data
+      },
+      requestUrlEncodedBodyChange: function (data) {
+        this.requestInfo.urlencodedBody = data
       },
       requestTabClick: function () {
       },
@@ -505,12 +535,12 @@
         if (this.showBody) {
           if (this.requestBodyViewType == 'formdata') {
             var fd = new window.FormData()
-            for (var key in this.requestInfo.request.query) {
-              fd.append(key, this.requestInfo.request.query[ key ])
+            for (var key in this.requestInfo.formDataBody) {
+              fd.append(key, this.requestInfo.formDataBody[ key ])
             }
             data = fd
           } else if (this.requestBodyViewType == 'xwwwformurlencoded') {
-            data = qs.stringify(this.requestInfo.request.query)
+            data = qs.stringify(this.requestInfo.urlencodedBody)
           } else if (this.requestBodyViewType == 'binary') {
             data = this.binaryBody
           } else if (this.requestBodyViewType == 'raw') {
@@ -544,18 +574,17 @@
         })
       },
       getSendUrl: function () {
-        var url = this.requestInfo.domain + this.requestInfo.path
-        /*
-         var queryString = []
-         if (Object.keys(query).lenght > 0) {
-         for (var key in query) {
-         queryString.push(key + '=' + query[ key ])
-         }
-         queryString = queryString.join('&')
-         } else {
-         queryString = ''
-         }
-         */
+        var domain = this.requestInfo.domain
+        var path = this.requestInfo.path
+        var pathObj = this.requestInfo.request.path
+        for (let key in pathObj) {
+          path = path.replace(':' + key, pathObj[ key ])
+        }
+        if (!domain) {
+          this.$message('请设置环境信息')
+        }
+        var url = domain + path
+        this.completionurl = url
         return url
       },
       sendSuccess: function (response) {
@@ -564,7 +593,6 @@
         this.requestLoading = false
       },
       sendError: function (response) {
-        console.log(response)
         if (response.code) {
           this.responseInfo.message = response.message
           this.responseInfo.error = true
@@ -602,13 +630,16 @@
         this.requestLoading = true
         this.responseInfo.error = false
         var data = this.dealParams()
-
+        var params = this.requestInfo.request.query
+        if (this.requestInfo.method.toUpperCase() == 'GET' && this.requestBodyViewType == 'xwwwformurlencoded') {
+          params = this.requestInfo.urlencodedBody
+        }
         var info = {
           baseURL: this.getSendUrl(),
           url: '',
           data: data,
           method: this.requestInfo.method,
-          params: this.requestInfo.request.query,
+          params: params,
           headers: this.requestInfo.header
         }
         if (document.body.getAttribute('data-interface-version') > '0') {

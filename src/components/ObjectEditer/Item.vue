@@ -94,7 +94,7 @@
   </div>
 
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .select
     width 100%
     height 100%
@@ -115,7 +115,6 @@
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
   import {mapState} from 'vuex'
-  import $ from 'jQuery'
   import Vue from 'vue'
 
   Vue.component('my-mock-item', {
@@ -170,10 +169,6 @@
       })
     },
     mounted () {
-      this.$nextTick(function () {
-        var input = $(this.$el).find('input')[ 0 ]
-        input && input.focus()
-      })
     },
     methods: {
       tipInfo: function (data) {

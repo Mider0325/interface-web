@@ -14,7 +14,7 @@
 
 
 </template>
-<style lang="styl" rel="stylesheet/stylus" type="text/css">
+<style lang="styl" rel="stylesheet/stylus" type="text/stylus">
   .hideHeader
     > .el-tabs__header
       display none

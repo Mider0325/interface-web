@@ -8,7 +8,7 @@
     <div>只能上传jpg/png文件正方形图片，且不超过{{uploadSize}}</div>
   </div>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .progress1
     position: absolute;
     bottom: -0px;

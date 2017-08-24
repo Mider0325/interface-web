@@ -10,7 +10,7 @@
 
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/css">
+<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
   .my-autocomplete {
     li {
       line-height: normal;
