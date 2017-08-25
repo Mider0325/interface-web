@@ -110,7 +110,10 @@
     background-color red
     color #fff
   .editWarp
-    margin 10px 10px 0
+    margin: 10px 10px 0;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    display: block;
 </style>
 <script type="text/ecmascript-6">
   import BaseComponent from 'src/extend/BaseComponent'
