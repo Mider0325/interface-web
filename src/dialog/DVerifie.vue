@@ -56,8 +56,6 @@
   import Server from 'src/extend/Server'
   import DocViewer from 'src/components/DocViewer'
   import { apiToJson, diffObject } from 'src/extend/Util'
-  import ElCol from 'element-ui/packages/col/src/col'
-
   export default {
     mixins: [BaseDialog],
     name: 'DVerifie',
@@ -76,8 +74,8 @@
       }
     },
     components: {
-      ElCol,
-      DocViewer},
+      DocViewer
+    },
     computed: {},
     mounted: function () {
       this.getVersions()

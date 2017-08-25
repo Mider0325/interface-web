@@ -115,9 +115,9 @@ arrify@^1.0.0:
   version "1.0.1"
   resolved "http://registry.npm.taobao.org/arrify/download/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
 
-async-validator@^1.6.9:
+async-validator@1.6.9:
   version "1.6.9"
-  resolved "http://registry.npm.taobao.org/async-validator/download/async-validator-1.6.9.tgz#a8309daa8b83421cdbd4628e026d6abb25192d34"
+  resolved "http://192.168.199.131:4873/async-validator/-/async-validator-1.6.9.tgz#a8309daa8b83421cdbd4628e026d6abb25192d34"
 
 async@~0.2.6:
   version "0.2.10"
@@ -642,11 +642,11 @@ element-theme@^0.7.1:
     run-sequence "^1.2.2"
     through2 "^2.0.3"
 
-element-ui@^1.3.5:
-  version "1.3.5"
-  resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-1.3.5.tgz#b2bae0bd09cff986ead0d1b12c5541eba7802823"
+element-ui@^1.4.2:
+  version "1.4.2"
+  resolved "http://192.168.199.131:4873/element-ui/-/element-ui-1.4.2.tgz#26046a7c0e1229987dd87b9e5ec860f6cbe1e6b0"
   dependencies:
-    async-validator "^1.6.9"
+    async-validator "1.6.9"
     babel-helper-vue-jsx-merge-props "^2.0.0"
     deepmerge "^1.2.0"
     throttle-debounce "^1.0.1"
