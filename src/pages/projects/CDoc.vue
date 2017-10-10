@@ -295,11 +295,6 @@
           '2': 'frontStatus'
         }
         var status = data[ keys[ type + '' ] ]
-        if (status == 1) {
-          status = 2
-        } else if (status == 2) {
-          status = 1
-        }
         Server({
           url: 'api/updateHistoryStatus',
           data: {

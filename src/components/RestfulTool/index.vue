@@ -272,13 +272,13 @@
   import Server from 'src/extend/Server'
   import axios from 'axios'
   import qs from 'qs'
-  import {mapState} from 'vuex'
-  import {jsonToMock} from 'src/extend/Util'
+  import { mapState } from 'vuex'
+  import { jsonToMock } from 'src/extend/Util'
 
   export default {
-    mixins: [ BaseComponent ],
+    mixins: [BaseComponent],
     name: 'RestfulTool_index',
-    components: { ObjectEdit, CodeViewer },
+    components: {ObjectEdit, CodeViewer},
     props: {
       info: {
         type: Object,
@@ -349,7 +349,7 @@
         this.dealRequestMock()
       },
       'requestInfo.method': function (newVal) {
-        this.showBody = ![ 'get', 'copy', 'head', 'purge', 'unlock' ].includes(newVal)
+        this.showBody = !['get', 'copy', 'head', 'purge', 'unlock'].includes(newVal)
         if (!this.showBody && this.requestTabName == 'Body') {
           this.requestTabName = 'Authorization'
         }
@@ -380,8 +380,8 @@
           list = this.projectInfo.environment.split('\n')
           list.forEach((value) => {
             restaurants.push({
-              value: value.split(' ')[ 1 ],
-              desc: value.split(' ')[ 0 ]
+              value: value.split(' ')[1],
+              desc: value.split(' ')[0]
             })
           })
         }
@@ -401,12 +401,12 @@
         this.requestBodyType = command
         var header = command.match(/\(.*\)/gi)
         if (header) {
-          header = header[ 0 ]
+          header = header[0]
           this.requestBodyType_view = command.replace(header, '').toLocaleLowerCase()
-          this.requestInfo.header[ 'Content-Type' ] = header.replace(/[(]|[)]/gi, '')
+          this.requestInfo.header['Content-Type'] = header.replace(/[(]|[)]/gi, '')
         } else {
           this.requestBodyType_view = command.toLocaleLowerCase()
-          delete this.requestInfo.header[ 'Content-Type' ]
+          delete this.requestInfo.header['Content-Type']
         }
       },
       dealRequestMock: function () {
@@ -439,8 +439,8 @@
           var arr = apiInfo.path.match(/(:\w+)/gi)
           arr.forEach((value) => {
             var key = value.replace(':', '')
-            if (!apiInfo.request.path[ key ]) {
-              apiInfo.request.path[ key ] = ''
+            if (!apiInfo.request.path[key]) {
+              apiInfo.request.path[key] = ''
             }
           })
           this.showPath = true
@@ -454,7 +454,7 @@
         Server({
           url: 'project/projectinfo',
           method: 'get',
-          params: { id: id }
+          params: {id: id}
         }).then((response) => {
           this.projectInfo = response.data.data
         })
@@ -501,14 +501,14 @@
           }
         }
         // deal data to url by blob
-        var blob = new window.Blob([ data.request.responseText ], { type: 'text/html' })
+        var blob = new window.Blob([data.request.responseText], {type: 'text/html'})
         var url = window.URL.createObjectURL(blob)
         this.responseBlobUrl = url
 
         // deal cookies
         var me = this
         me.responseCookies = []
-        var setcookie = data.headers[ 'set-cookie' ]
+        var setcookie = data.headers['set-cookie']
         if (setcookie) {
           setcookie.forEach(
             function (cookiestr) {
@@ -521,7 +521,7 @@
       },
       binaryChange: function (e) {
         var me = this
-        var file = e.target.files[ 0 ]
+        var file = e.target.files[0]
         var reader = new window.FileReader()
         // 将文件以二进制形式读取
         reader.readAsArrayBuffer(file)
@@ -536,7 +536,7 @@
           if (this.requestBodyViewType == 'formdata') {
             var fd = new window.FormData()
             for (var key in this.requestInfo.formDataBody) {
-              fd.append(key, this.requestInfo.formDataBody[ key ])
+              fd.append(key, this.requestInfo.formDataBody[key])
             }
             data = fd
           } else if (this.requestBodyViewType == 'xwwwformurlencoded') {
@@ -578,7 +578,7 @@
         var path = this.requestInfo.path
         var pathObj = this.requestInfo.request.path
         for (let key in pathObj) {
-          path = path.replace(':' + key, pathObj[ key ])
+          path = path.replace(':' + key, pathObj[key])
         }
         if (!domain) {
           this.$message('请设置环境信息')
@@ -612,7 +612,7 @@
           cancelButtonText: '取消',
           inputPattern: /[1-9][0-9]*/,
           inputErrorMessage: '输入数字'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           for (var i = 0; i < value - 0; i++) {
             this.send()
           }
@@ -635,15 +635,15 @@
           params = this.requestInfo.urlencodedBody
         }
         var info = {
-          baseURL: this.getSendUrl(),
-          url: '',
+          baseURL: '',
+          url: this.getSendUrl(),
           data: data,
           method: this.requestInfo.method,
           params: params,
           headers: this.requestInfo.header
         }
         if (document.body.getAttribute('data-interface-version') > '0') {
-          window.document.dispatchEvent(new window.CustomEvent('request', { detail: info }))
+          window.document.dispatchEvent(new window.CustomEvent('request', {detail: info}))
         } else {
           this.instance(info).then((response) => {
             this.sendSuccess((response))
