@@ -25,7 +25,7 @@
     </div>
   </div>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
   .parametersContent
     .el-tooltip
       display inline-block

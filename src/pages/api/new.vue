@@ -101,7 +101,7 @@
 
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" type="text/stylus">
   .page
     overflow hidden
     display box

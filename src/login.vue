@@ -106,7 +106,7 @@
 
   </div>
 </template>
-<style lang="styl" rel="stylesheet/stylus" type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" type="text/stylus">
   @import "assets/style/app.styl";
   .logoText
     text-shadow: 0 6px 1px rgba(0, 0, 0, 0.2);

@@ -3053,7 +3053,7 @@ Mock.mock(<span class="hljs-string">'@increment(1000)'</span>)</code></pre>
   </div>
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" type="text/stylus">
 
 </style>
 

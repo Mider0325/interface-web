@@ -9,7 +9,7 @@
     </div>
   </li>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
   .select2-result
     background-color #ffffff
 </style>

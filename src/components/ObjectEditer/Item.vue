@@ -94,7 +94,7 @@
   </div>
 
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
   .select
     width 100%
     height 100%

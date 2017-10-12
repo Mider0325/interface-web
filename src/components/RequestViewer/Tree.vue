@@ -4,7 +4,7 @@
       :model="treeData">
   </tree-item>
 </template>
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
   .item {
     cursor: pointer;
   }

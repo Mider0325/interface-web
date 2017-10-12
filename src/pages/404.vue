@@ -10,7 +10,7 @@
   </div>
 </template>
 
-<style lang="styl" rel="stylesheet/stylus" scoped type="text/stylus">
+<style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
   .error-page {
     width: 600px;
     margin: 20px auto 0
