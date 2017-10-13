@@ -41,7 +41,7 @@
                   :label="item.name"
                   :value="item.id">
                 <span style="float: left">{{ item.name }}</span>
-                <img :src="item.logo" class="group-img"></img>
+                <img :src="item.logo|defaultGroup" class="group-img"></img>
               </el-option>
             </el-select>
             <el-button type="text" @click="addGroup">添加组</el-button>

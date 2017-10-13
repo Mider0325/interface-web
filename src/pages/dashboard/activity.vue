@@ -40,7 +40,7 @@
               </div>
               <router-link
                   :to="{path:'/user',query:{id:item.userId}}">
-                <img class="avatar has-tooltip  s40" :src="item.userPhoto">
+                <img class="avatar has-tooltip  s40" :src="item.userPhoto|defaultHeader">
               </router-link>
               <div class="event-title">
                 <span class="author_name"><router-link

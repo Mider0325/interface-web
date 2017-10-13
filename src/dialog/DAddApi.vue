@@ -15,21 +15,20 @@
           <el-row type="flex" :gutter="0">
             <el-col :span="17">
               <el-form-item label="路径">
-                <el-input :minlength="1" :maxlength="40" placeholder="例如：user/info"  v-model="form.path"></el-input>
+                <el-input :minlength="1" :maxlength="40" placeholder="例如：user/info" v-model="form.path"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7">
               <el-form-item label="方法">
                 <el-select v-model="form.method" placeholder="选择类型">
-                  <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label"
-                             :value="item.value"></el-option>
+                  <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
           </el-row>
 
           <el-form-item label="描述">
-            <el-input type="textarea" placeholder="该接口的简要描述1-50个字"  :minlength="1" :maxlength="50" v-model="form.description"></el-input>
+            <el-input type="textarea" placeholder="该接口的简要描述1-50个字" :minlength="1" :maxlength="50" v-model="form.description"></el-input>
           </el-form-item>
         </div>
       </el-form>
@@ -41,63 +40,76 @@
   </el-dialog>
 </template>
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
-  .content
-    .info
-      position relative
-      .desc
-        padding 10px
-      .time
-        position absolute
-        bottom -15px
-        right 0
-    .doc
-      max-height 500px
-      overflow: auto
-</style>
-<script type="text/ecmascript-6">
-  import BaseDialog from 'src/extend/BaseDialog'
-  import Server from 'src/extend/Server'
-  import {mapState} from 'vuex'
+.content {
+  .info {
+    position: relative;
 
-  export default {
-    mixins: [ BaseDialog ],
-    name: 'DAddApi',
-    data: function () {
-      return {
-        form: {
-          request: '',
-          response: '',
-          description: '',
-          method: 'get',
-          name: '',
-          path: '',
-          projectId: ''
-        }
-      }
-    },
-    computed: mapState({
-      Metadata: state => state.Metadata
-    }),
-    components: {},
-    mounted: function () {
-    },
-    methods: {
-      newApi: function () {
-        var data = Object.assign({}, this.form)
-        data.projectId = data.projectId - 0
-        Server({
-          url: 'api/add',
-          data: data,
-          method: 'post'
-        }).then((response) => {
-          var data = response.data.data
-          this.$router.push({ path: '/api/new', query: { id: data.id } })
-          this.close()
-        }).catch((e) => {
-          console.log(e)
-        })
-      }
+    .desc {
+      padding: 10px;
+    }
+
+    .time {
+      position: absolute;
+      bottom: -15px;
+      right: 0;
     }
   }
+
+  .doc {
+    max-height: 500px;
+    overflow: auto;
+  }
+}
+</style>
+<script type="text/ecmascript-6">
+import BaseDialog from 'src/extend/BaseDialog'
+import Server from 'src/extend/Server'
+import { mapState } from 'vuex'
+
+export default {
+  mixins: [BaseDialog],
+  name: 'DAddApi',
+  data: function () {
+    return {
+      form: {
+        request: '',
+        response: '',
+        description: '',
+        method: 'get',
+        name: '',
+        path: '',
+        projectId: ''
+      }
+    }
+  },
+  computed: mapState({
+    Metadata: state => state.Metadata
+  }),
+  watch: {
+    'form.path': function (newValue, oldValue) {
+      this.form.path = newValue.replace(/^\//, '')
+    }
+  },
+  components: {},
+  mounted: function () {
+  },
+  methods: {
+    newApi: function () {
+      var data = Object.assign({}, this.form)
+      data.projectId = data.projectId - 0
+      Server({
+        url: 'api/add',
+        data: data,
+        method: 'post'
+      }).then((response) => {
+        var data = response.data.data
+        this.$router.push({ path: '/api/new', query: { id: data.id } })
+        this.close()
+      }).catch((e) => {
+        console.log(e)
+      })
+    }
+  }
+}
 </script>
 

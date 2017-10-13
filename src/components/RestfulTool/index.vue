@@ -4,24 +4,16 @@
     <div class="path">
       <div class="input" :gutter="20">
         <el-select class="el-my-select" v-model="requestInfo.method">
-          <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label"
-                     :value="item.value"></el-option>
+          <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label" :value="item.value"></el-option>
         </el-select>
-        <el-autocomplete
-            class="noborder inline-input evn"
-            @focus="pathParamsVisable=false"
-            v-model="requestInfo.domain"
-            :fetch-suggestions="queryEvnPath"
-            placeholder="环境"
-        >
+        <el-autocomplete class="noborder inline-input evn" @focus="pathParamsVisable=false" v-model="requestInfo.domain" :fetch-suggestions="queryEvnPath" placeholder="环境">
         </el-autocomplete>
         <!--  <div class="inline-input division">/</div>
-        -->
+          -->
         <el-input class="noborder inline-input path" placeholder="路径" v-model="requestInfo.path"></el-input>
         <el-button class="params" type="primary" @click="pathParamsVisable = !pathParamsVisable">参数</el-button>
       </div>
-      <el-dropdown class="send" @click="send" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
-                   @command="sendTypeSelect">
+      <el-dropdown class="send" @click="send" v-if="responseBodyViewType=='Pretty'" split-button type="primary" @command="sendTypeSelect">
         发送
         <el-dropdown-menu slot="dropdown">
           <el-dropdown-item command="saveandsend">保存并发送</el-dropdown-item>
@@ -62,11 +54,11 @@
             <el-radio label="raw">raw</el-radio>
             <el-radio label="binary">binary</el-radio>
           </el-radio-group>
-          <el-dropdown size="small" class="bodyType" v-if="requestBodyViewType=='raw'" type="primary"
-                       @command="requestBodyViewTypeSelect">
+          <el-dropdown size="small" class="bodyType" v-if="requestBodyViewType=='raw'" type="primary" @command="requestBodyViewTypeSelect">
 
             <span class="el-dropdown-link">
-            {{requestBodyType.toUpperCase()}}<i class="el-icon-caret-bottom el-icon--right"></i>
+              {{requestBodyType.toUpperCase()}}
+              <i class="el-icon-caret-bottom el-icon--right"></i>
             </span>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item command="JSON(application/json)">JSON(application/json)</el-dropdown-item>
@@ -82,18 +74,13 @@
         </div>
         <div class="body">
           <div class="raw" v-if="requestBodyViewType=='raw'">
-            <code-viewer key="raw" :ctype="requestBodyType_view"
-                         :options="{theme:''}"
-                         :on-change="requestBodyInfoChange"
-                         :contents="requestBodyCopy"></code-viewer>
+            <code-viewer key="raw" :ctype="requestBodyType_view" :options="{theme:''}" :on-change="requestBodyInfoChange" :contents="requestBodyCopy"></code-viewer>
           </div>
           <div v-if="requestBodyViewType=='formdata'">
-            <object-edit key="formdata" :info="requestInfo.formDataBody" :param-type='true'
-                         :on-change="requestFormDataBodyChange"></object-edit>
+            <object-edit key="formdata" :info="requestInfo.formDataBody" :param-type='true' :on-change="requestFormDataBodyChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='xwwwformurlencoded'">
-            <object-edit key="xwwwformurlencoded" :info="requestInfo.urlencodedBody"
-                         :on-change="requestUrlEncodedBodyChange"></object-edit>
+            <object-edit key="xwwwformurlencoded" :info="requestInfo.urlencodedBody" :on-change="requestUrlEncodedBodyChange"></object-edit>
           </div>
           <div v-if="requestBodyViewType=='binary'">
             <br>
@@ -113,8 +100,7 @@
     <!-- 请求参数 end-->
 
     <!-- 请求结果 -->
-    <div class="responseWarp" element-loading-text="拼命加载中"
-         v-loading="requestLoading">
+    <div class="responseWarp" element-loading-text="拼命加载中" v-loading="requestLoading">
       <div v-if="!responseInfo.error">
         <el-tabs v-model="responseTabName" @tab-click="responseTabClick">
           <el-tab-pane label="Body" name="Body"></el-tab-pane>
@@ -128,9 +114,7 @@
               <el-radio-button label="Raw">Raw</el-radio-button>
               <el-radio-button label="Preview">Preview</el-radio-button>
             </el-radio-group>
-            <el-dropdown class="responeType" size="small" v-if="responseBodyViewType=='Pretty'" split-button
-                         type="primary"
-                         @command="responseBodyViewTypeSelect">
+            <el-dropdown class="responeType" size="small" v-if="responseBodyViewType=='Pretty'" split-button type="primary" @command="responseBodyViewTypeSelect">
               {{responseBodyType.toUpperCase()}}
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="json">JSON</el-dropdown-item>
@@ -139,14 +123,13 @@
               </el-dropdown-menu>
             </el-dropdown>
             <div v-if="responseInfo.status" class="tip">
-              状态码: <span>{{responseInfo.status}}</span>
+              状态码:
+              <span>{{responseInfo.status}}</span>
             </div>
           </div>
           <div class="body">
             <div v-if="responseBodyViewType=='Pretty'">
-              <code-viewer key="pretty" :ctype="responseBodyType"
-                           :options="{theme:''}"
-                           :contents="responseInfo.responseText"></code-viewer>
+              <code-viewer key="pretty" :ctype="responseBodyType" :options="{theme:''}" :contents="responseInfo.responseText"></code-viewer>
             </div>
             <div v-if="responseBodyViewType=='Raw'">
               {{responseInfo.responseText}}
@@ -171,8 +154,7 @@
         </div>
       </div>
       <div class="errorWarp" v-else>
-        {{completionurl}}
-        {{responseInfo.message}}
+        {{completionurl}} {{responseInfo.message}}
       </div>
       <div class="completionurl" v-if="completionurl">访问地址:{{completionurl}}</div>
     </div>
@@ -181,478 +163,532 @@
   </div>
 </template>
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
-  .tool
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-    width: 100%
-    .path
-      display flex
-      .input
-        -webkit-flex 1
-        display: flex;
-        .inline-input
-          display block
-          width auto
-        .evn
-          -webkit-flex 1
-          border-bottom 1px solid #ddd
-          min-width 100px
-        .division
-          padding: 8px 0px;
-          font-size: 15px;
-          line-height: 20px;
-        .path
-          margin-right 10px
-          -webkit-flex 1
-          border-bottom 1px solid #ddd
-        .el-my-select
-          width 130px
-      .send
-        margin 0 0 0 30px
-    .pathParams
-      margin 10px 0
-    .responseWarp
-      .completionurl
-        color orange
-      .errorWarp
-        margin-top: 20px;
-        padding 20px
-        border-radius 5px
-        overflow scroll
-        border 1px solid #ddd
-      .tabContent
-        padding 0 20px
-      .elradios
-        vertical-align top
-      .responeType
-        position relative
-      .nav
-        margin 5px 0
-        .tip
-          float right
-          line-height: 30px;
-          > span
-            color orange
-            margin 0 3px
-      .body
-        > div
-          height 400px
-          border-radius 5px
-          overflow scroll
-          border 1px solid #ddd
-      .headers
-        span
-          margin 5px 10px
-        .hkey
-          font-weight bold
-    .requestWarp
-      .tabContent
-        padding 0 20px
-      .nav
-        margin 5px 0
-      .bodyType
-        margin 0 20px
-        color orange
-      .body
-        .raw
-          height 200px
-          border-radius 5px
-          overflow scroll
-          border 1px solid #ddd
-</style>
-<script type="text/ecmascript-6">
-  /*
-   * 模拟接口请求内容组件，负者对接口访问，获取返回数据，进行数据比对，得出一定的建议给到用户。
-   * */
-  import BaseComponent from 'src/extend/BaseComponent'
-  import ObjectEdit from './ObjectEdit.vue'
-  import CodeViewer from 'src/components/CodeViewer.vue'
-  import Server from 'src/extend/Server'
-  import axios from 'axios'
-  import qs from 'qs'
-  import { mapState } from 'vuex'
-  import { jsonToMock } from 'src/extend/Util'
+.tool {
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+  width: 100%;
 
-  export default {
-    mixins: [BaseComponent],
-    name: 'RestfulTool_index',
-    components: {ObjectEdit, CodeViewer},
-    props: {
-      info: {
-        type: Object,
-        default: function () {
-          return {
-            path: '',
-            name: '',
-            method: '',
-            description: '',
-            request: {
-              path: [],
-              query: [],
-              body: []
-            },
-            resopnse: {}
-          }
-        }
-      }
-    },
-    data: function () {
-      return {
-        projectInfo: {},
-        requestBodyViewType: 'raw',
-        requestTabName: 'Authorization',
-        requestLoading: false,
-        requestBodyType: 'JSON(application/json)',
-        requestBodyType_view: 'json',
-        requestBodyCopy: '',
-        requestInfo: {
-          path: '',
-          formDataBody: {},
-          urlencodedBody: {},
-          binaryBody: undefined,
-          domain: 'good',
-          method: 'post',
-          header: {},
-          request: {
-            body: '',
-            path: {},
-            query: {},
-            header: {}
-          }
-        },
-        responseInfo: {
-          error: false,
-          message: '',
-          status: '',
-          responseText: '',
-          responseType: '',
-          headers: {}
-        },
-        responseBlobUrl: '',
-        responseBodyViewType: 'Pretty',
-        responseTabName: 'Body',
-        responseBodyType: 'json',
-        pathParamsVisable: false,
-        responseCookies: [],
-        completionurl: '',
-        showPath: false, // 显示path编辑区
-        showBody: true // 是否显示body区域
-      }
-    },
-    computed: mapState({
-      Metadata: state => state.Metadata
-    }),
-    watch: {
-      info: function (newVal) {
-        this.dealRequestMock()
-      },
-      'requestInfo.method': function (newVal) {
-        this.showBody = !['get', 'copy', 'head', 'purge', 'unlock'].includes(newVal)
-        if (!this.showBody && this.requestTabName == 'Body') {
-          this.requestTabName = 'Authorization'
-        }
-      }
-    },
-    mounted () {
-      this.instance = axios.create({
-        baseURL: '',
-        timeout: 40000,
-        headers: {}
-      })
-      this.dealRequestMock()
-      // 初始化默认body类型
-      this.requestBodyViewTypeSelect('JSON(application/json)')
-      window.document.addEventListener('result1.success', (response) => {
-        this.sendSuccess(response.detail)
-      })
-      window.document.addEventListener('result1.error', (response) => {
-        this.sendError(response.detail)
-      })
-    },
-    methods: {
-      queryEvnPath: function (queryString, cb) {
-        console.log(this.projectInfo.environment)
-        var restaurants = []
-        var list = []
-        if (this.projectInfo.environment) {
-          list = this.projectInfo.environment.split('\n')
-          list.forEach((value) => {
-            restaurants.push({
-              value: value.split(' ')[1],
-              desc: value.split(' ')[0]
-            })
-          })
-        }
-        var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
-        // 调用 callback 返回建议列表的数据
-        cb(results)
-      },
-      createFilter (queryString) {
-        return (restaurant) => {
-          return (restaurant.value.indexOf(queryString.toLowerCase()) === 0)
-        }
-      },
-      requestBodyInfoChange: function (data) {
-        this.requestBodyCopy = data
-      },
-      requestBodyViewTypeSelect: function (command) {
-        this.requestBodyType = command
-        var header = command.match(/\(.*\)/gi)
-        if (header) {
-          header = header[0]
-          this.requestBodyType_view = command.replace(header, '').toLocaleLowerCase()
-          this.requestInfo.header['Content-Type'] = header.replace(/[(]|[)]/gi, '')
-        } else {
-          this.requestBodyType_view = command.toLocaleLowerCase()
-          delete this.requestInfo.header['Content-Type']
-        }
-      },
-      dealRequestMock: function () {
-        // 使用mockRequest里面保存的数据
-        var apiInfo = {}
-        try {
-          apiInfo = JSON.parse(this.info.mockRequest)
-        } catch (e) {
-          apiInfo = Object.assign({}, this.info)
-          apiInfo.request = {}
-        } finally {
-        }
-        apiInfo = apiInfo || {}
-        apiInfo.request = apiInfo.request || {}
-        apiInfo.request.body = apiInfo.request.body || jsonToMock(this.info.request.body)
-        try {
-          this.requestBodyCopy = JSON.stringify(apiInfo.request.body, null, 4)
-        } catch (e) {
-          this.requestBodyCopy == ''
-        }
-        apiInfo.request.path = apiInfo.request.path || jsonToMock(this.info.request.path)
-        apiInfo.request.query = apiInfo.request.query || jsonToMock(this.info.request.query)
-        apiInfo.path = apiInfo.path || this.info.path
-        apiInfo.header = apiInfo.header || {}
-        apiInfo.domain = apiInfo.domain || ''
-        if (this.info.projectId) {
-          this.loadProject(this.info.projectId)
-        }
-        if ((/\/:\w+/gi).test(apiInfo.path)) {
-          var arr = apiInfo.path.match(/(:\w+)/gi)
-          arr.forEach((value) => {
-            var key = value.replace(':', '')
-            if (!apiInfo.request.path[key]) {
-              apiInfo.request.path[key] = ''
-            }
-          })
-          this.showPath = true
-        }
-        this.requestInfo = Object.assign(this.requestInfo, apiInfo)
-      },
-      /**
-       * 加载项目信息
-       */
-      loadProject: function (id) {
-        Server({
-          url: 'project/projectinfo',
-          method: 'get',
-          params: {id: id}
-        }).then((response) => {
-          this.projectInfo = response.data.data
-        })
-      },
-      requestHeaderChange: function (data) {
-        this.requestInfo.header = data
-      },
-      requestPathChange: function (data) {
-        this.requestInfo.request.path = data
-      },
-      requestQueryChange: function (data) {
-        this.requestInfo.request.query = data
-      },
-      requestFormDataBodyChange: function (data) {
-        this.requestInfo.formDataBody = data
-      },
-      requestUrlEncodedBodyChange: function (data) {
-        this.requestInfo.urlencodedBody = data
-      },
-      requestTabClick: function () {
-      },
+  .path {
+    display: flex;
 
-      responseBodyViewTypeSelect: function (command) {
-        this.responseBodyType = command
-      },
-      sendTypeSelect: function (command) {
-        if (command == 'saveandsend') {
-          this.send()
-          this.save()
-        } else if (command == 'batchSend') {
-          this.batchSend()
-        }
-      },
-      dealResponse: function (data) {
-        this.responseInfo.headers = data.headers
-        this.responseInfo.status = data.status
-        this.responseInfo.statusText = data.statusText
-        this.responseInfo.responseType = data.request.responseType
-        this.responseInfo.responseText = data.request.responseText
-        if (this.responseBodyType == 'json') {
-          try {
-            this.responseInfo.responseText = JSON.stringify(JSON.parse(data.request.responseText), null, 4)
-          } catch (e) {
-          }
-        }
-        // deal data to url by blob
-        var blob = new window.Blob([data.request.responseText], {type: 'text/html'})
-        var url = window.URL.createObjectURL(blob)
-        this.responseBlobUrl = url
+    .input {
+      -webkit-flex: 1;
+      display: flex;
 
-        // deal cookies
-        var me = this
-        me.responseCookies = []
-        var setcookie = data.headers['set-cookie']
-        if (setcookie) {
-          setcookie.forEach(
-            function (cookiestr) {
-              me.responseCookies.push(cookiestr)
-            }
-          )
-        }
-      },
-      responseTabClick: function () {
-      },
-      binaryChange: function (e) {
-        var me = this
-        var file = e.target.files[0]
-        var reader = new window.FileReader()
-        // 将文件以二进制形式读取
-        reader.readAsArrayBuffer(file)
-        reader.onload = function (f) {
-          me.binaryBody = this.result
-        }
-      },
-      // 处理不同body 类型的参数
-      dealParams: function () {
-        var data = {}
-        if (this.showBody) {
-          if (this.requestBodyViewType == 'formdata') {
-            var fd = new window.FormData()
-            for (var key in this.requestInfo.formDataBody) {
-              fd.append(key, this.requestInfo.formDataBody[key])
-            }
-            data = fd
-          } else if (this.requestBodyViewType == 'xwwwformurlencoded') {
-            data = qs.stringify(this.requestInfo.urlencodedBody)
-          } else if (this.requestBodyViewType == 'binary') {
-            data = this.binaryBody
-          } else if (this.requestBodyViewType == 'raw') {
-            data = this.requestBodyCopy
-          } else {
-            data = this.requestInfo.request.query
-          }
-        }
-        return data
-      },
-      /* 发送消息内容 */
-      /**
-       * 保存mock数据
-       */
-      save: function () {
-        if (this.requestBodyType.toUpperCase() == 'JSON(APPLICATION/JSON)') {
-          this.requestInfo.request.body = JSON.parse(this.requestBodyCopy)
-        } else {
-          this.requestInfo.request.body = this.requestBodyCopy
-        }
-        Server({
-          url: 'mock/addMock',
-          data: {
-            apiId: this.info.id - 0,
-            type: this.info.type - 0,
-            mockRequest: JSON.stringify(this.requestInfo)
-          },
-          method: 'post'
-        }).then((response) => {
-          this.$message('保存成功')
-        })
-      },
-      getSendUrl: function () {
-        var domain = this.requestInfo.domain
-        var path = this.requestInfo.path
-        var pathObj = this.requestInfo.request.path
-        for (let key in pathObj) {
-          path = path.replace(':' + key, pathObj[key])
-        }
-        if (!domain) {
-          this.$message('请设置环境信息')
-        }
-        var url = domain + path
-        this.completionurl = url
-        return url
-      },
-      sendSuccess: function (response) {
-        console.log(response)
-        this.dealResponse(response)
-        this.requestLoading = false
-      },
-      sendError: function (response) {
-        if (response.code) {
-          this.responseInfo.message = response.message
-          this.responseInfo.error = true
-        }
-        if (response.response) {
-          this.dealResponse(response.response)
-        } else {
-          this.responseInfo.message = response.message
-          this.responseInfo.error = true
-        }
-        console.log(response.response)
-        this.requestLoading = false
-      },
-      batchSend: function () {
-        this.$prompt('输入并发次数', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          inputPattern: /[1-9][0-9]*/,
-          inputErrorMessage: '输入数字'
-        }).then(({value}) => {
-          for (var i = 0; i < value - 0; i++) {
-            this.send()
-          }
-        }).catch(() => {
-          this.$message({
-            type: 'info',
-            message: '取消输入'
-          })
-        })
-      },
-      /**
-       * 发送请求测试
-       */
-      send: function () {
-        this.requestLoading = true
-        this.responseInfo.error = false
-        var data = this.dealParams()
-        var params = this.requestInfo.request.query
-        if (this.requestInfo.method.toUpperCase() == 'GET' && this.requestBodyViewType == 'xwwwformurlencoded') {
-          params = this.requestInfo.urlencodedBody
-        }
-        var info = {
-          baseURL: '',
-          url: this.getSendUrl(),
-          data: data,
-          method: this.requestInfo.method,
-          params: params,
-          headers: this.requestInfo.header
-        }
-        if (document.body.getAttribute('data-interface-version') > '0') {
-          window.document.dispatchEvent(new window.CustomEvent('request', {detail: info}))
-        } else {
-          this.instance(info).then((response) => {
-            this.sendSuccess((response))
-          }).catch((response) => {
-            this.sendError(response)
-          })
+      .inline-input {
+        display: block;
+        width: auto;
+      }
+
+      .evn {
+        -webkit-flex: 1;
+        border-bottom: 1px solid #ddd;
+        min-width: 100px;
+      }
+
+      .division {
+        padding: 8px 0px;
+        font-size: 15px;
+        line-height: 20px;
+      }
+
+      .path {
+        margin-right: 10px;
+        -webkit-flex: 1;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .el-my-select {
+        width: 130px;
+      }
+    }
+
+    .send {
+      margin: 0 0 0 30px;
+    }
+  }
+
+  .pathParams {
+    margin: 10px 0;
+  }
+
+  .responseWarp {
+    .completionurl {
+      color: orange;
+    }
+
+    .errorWarp {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 5px;
+      overflow: scroll;
+      border: 1px solid #ddd;
+    }
+
+    .tabContent {
+      padding: 0 20px;
+    }
+
+    .elradios {
+      vertical-align: top;
+    }
+
+    .responeType {
+      position: relative;
+    }
+
+    .nav {
+      margin: 5px 0;
+
+      .tip {
+        float: right;
+        line-height: 30px;
+
+        > span {
+          color: orange;
+          margin: 0 3px;
         }
       }
     }
+
+    .body {
+      > div {
+        height: 400px;
+        border-radius: 5px;
+        overflow: scroll;
+        border: 1px solid #ddd;
+      }
+    }
+
+    .headers {
+      span {
+        margin: 5px 10px;
+      }
+
+      .hkey {
+        font-weight: bold;
+      }
+    }
   }
+
+  .requestWarp {
+    .tabContent {
+      padding: 0 20px;
+    }
+
+    .nav {
+      margin: 5px 0;
+    }
+
+    .bodyType {
+      margin: 0 20px;
+      color: orange;
+    }
+
+    .body {
+      .raw {
+        height: 200px;
+        border-radius: 5px;
+        overflow: scroll;
+        border: 1px solid #ddd;
+      }
+    }
+  }
+}
+</style>
+<script type="text/ecmascript-6">
+/*
+ * 模拟接口请求内容组件，负者对接口访问，获取返回数据，进行数据比对，得出一定的建议给到用户。
+ * */
+import BaseComponent from 'src/extend/BaseComponent'
+import ObjectEdit from './ObjectEdit.vue'
+import CodeViewer from 'src/components/CodeViewer.vue'
+import Server from 'src/extend/Server'
+import axios from 'axios'
+import qs from 'qs'
+import { mapState } from 'vuex'
+import { jsonToMock } from 'src/extend/Util'
+
+export default {
+  mixins: [BaseComponent],
+  name: 'RestfulTool_index',
+  components: { ObjectEdit, CodeViewer },
+  props: {
+    info: {
+      type: Object,
+      default: function () {
+        return {
+          path: '',
+          name: '',
+          method: '',
+          description: '',
+          request: {
+            path: [],
+            query: [],
+            body: []
+          },
+          resopnse: {}
+        }
+      }
+    }
+  },
+  data: function () {
+    return {
+      projectInfo: {},
+      requestBodyViewType: 'raw',
+      requestTabName: 'Authorization',
+      requestLoading: false,
+      requestBodyType: 'JSON(application/json)',
+      requestBodyType_view: 'json',
+      requestBodyCopy: '',
+      requestInfo: {
+        path: '',
+        formDataBody: {},
+        urlencodedBody: {},
+        binaryBody: undefined,
+        domain: 'good',
+        method: 'post',
+        header: {},
+        request: {
+          body: '',
+          path: {},
+          query: {},
+          header: {}
+        }
+      },
+      responseInfo: {
+        error: false,
+        message: '',
+        status: '',
+        responseText: '',
+        responseType: '',
+        headers: {}
+      },
+      responseBlobUrl: '',
+      responseBodyViewType: 'Pretty',
+      responseTabName: 'Body',
+      responseBodyType: 'json',
+      pathParamsVisable: false,
+      responseCookies: [],
+      completionurl: '',
+      showPath: false, // 显示path编辑区
+      showBody: true // 是否显示body区域
+    }
+  },
+  computed: mapState({
+    Metadata: state => state.Metadata
+  }),
+  watch: {
+    info: function (newVal) {
+      this.dealRequestMock()
+    },
+    'requestInfo.method': function (newVal) {
+      this.showBody = !['get', 'copy', 'head', 'purge', 'unlock'].includes(newVal)
+      if (!this.showBody && this.requestTabName == 'Body') {
+        this.requestTabName = 'Authorization'
+      }
+    }
+  },
+  mounted () {
+    this.instance = axios.create({
+      baseURL: '',
+      timeout: 40000,
+      headers: {}
+    })
+    this.dealRequestMock()
+    // 初始化默认body类型
+    this.requestBodyViewTypeSelect('JSON(application/json)')
+    window.document.addEventListener('result1.success', (response) => {
+      this.sendSuccess(response.detail)
+    })
+    window.document.addEventListener('result1.error', (response) => {
+      this.sendError(response.detail)
+    })
+  },
+  methods: {
+    queryEvnPath: function (queryString, cb) {
+      console.log(this.projectInfo.environment)
+      var restaurants = []
+      var list = []
+      if (this.projectInfo.environment) {
+        list = this.projectInfo.environment.split('\n')
+        list.forEach((value) => {
+          restaurants.push({
+            value: value.split(' ')[1],
+            desc: value.split(' ')[0]
+          })
+        })
+      }
+      var results = queryString ? restaurants.filter(this.createFilter(queryString)) : restaurants
+      // 调用 callback 返回建议列表的数据
+      cb(results)
+    },
+    createFilter (queryString) {
+      return (restaurant) => {
+        return (restaurant.value.indexOf(queryString.toLowerCase()) === 0)
+      }
+    },
+    requestBodyInfoChange: function (data) {
+      this.requestBodyCopy = data
+    },
+    requestBodyViewTypeSelect: function (command) {
+      this.requestBodyType = command
+      var header = command.match(/\(.*\)/gi)
+      if (header) {
+        header = header[0]
+        this.requestBodyType_view = command.replace(header, '').toLocaleLowerCase()
+        this.requestInfo.header['Content-Type'] = header.replace(/[(]|[)]/gi, '')
+      } else {
+        this.requestBodyType_view = command.toLocaleLowerCase()
+        delete this.requestInfo.header['Content-Type']
+      }
+    },
+    dealRequestMock: function () {
+      // 使用mockRequest里面保存的数据
+      var apiInfo = {}
+      try {
+        apiInfo = JSON.parse(this.info.mockRequest)
+      } catch (e) {
+        apiInfo = Object.assign({}, this.info)
+        apiInfo.request = {}
+      } finally {
+      }
+      apiInfo = apiInfo || {}
+      apiInfo.request = apiInfo.request || {}
+      apiInfo.request.body = apiInfo.request.body || jsonToMock(this.info.request.body)
+      try {
+        this.requestBodyCopy = JSON.stringify(apiInfo.request.body, null, 4)
+      } catch (e) {
+        this.requestBodyCopy == ''
+      }
+      apiInfo.request.path = apiInfo.request.path || jsonToMock(this.info.request.path)
+      apiInfo.request.query = apiInfo.request.query || jsonToMock(this.info.request.query)
+      apiInfo.path = apiInfo.path || this.info.path
+      apiInfo.header = apiInfo.header || {}
+      apiInfo.domain = apiInfo.domain || ''
+      if (this.info.projectId) {
+        this.loadProject(this.info.projectId)
+      }
+      if ((/\/:\w+/gi).test(apiInfo.path)) {
+        var arr = apiInfo.path.match(/(:\w+)/gi)
+        arr.forEach((value) => {
+          var key = value.replace(':', '')
+          if (!apiInfo.request.path[key]) {
+            apiInfo.request.path[key] = ''
+          }
+        })
+        this.showPath = true
+      }
+      this.requestInfo = Object.assign(this.requestInfo, apiInfo)
+    },
+    /**
+     * 加载项目信息
+     */
+    loadProject: function (id) {
+      Server({
+        url: 'project/projectinfo',
+        method: 'get',
+        params: { id: id }
+      }).then((response) => {
+        this.projectInfo = response.data.data
+      })
+    },
+    requestHeaderChange: function (data) {
+      this.requestInfo.header = data
+    },
+    requestPathChange: function (data) {
+      this.requestInfo.request.path = data
+    },
+    requestQueryChange: function (data) {
+      this.requestInfo.request.query = data
+    },
+    requestFormDataBodyChange: function (data) {
+      this.requestInfo.formDataBody = data
+    },
+    requestUrlEncodedBodyChange: function (data) {
+      this.requestInfo.urlencodedBody = data
+    },
+    requestTabClick: function () {
+    },
+
+    responseBodyViewTypeSelect: function (command) {
+      this.responseBodyType = command
+    },
+    sendTypeSelect: function (command) {
+      if (command == 'saveandsend') {
+        this.send()
+        this.save()
+      } else if (command == 'batchSend') {
+        this.batchSend()
+      }
+    },
+    dealResponse: function (data) {
+      this.responseInfo.headers = data.headers
+      this.responseInfo.status = data.status
+      this.responseInfo.statusText = data.statusText
+      this.responseInfo.responseType = data.request.responseType
+      this.responseInfo.responseText = data.request.responseText
+      if (this.responseBodyType == 'json') {
+        try {
+          this.responseInfo.responseText = JSON.stringify(JSON.parse(data.request.responseText), null, 4)
+        } catch (e) {
+        }
+      }
+      // deal data to url by blob
+      var blob = new window.Blob([data.request.responseText], { type: 'text/html' })
+      var url = window.URL.createObjectURL(blob)
+      this.responseBlobUrl = url
+
+      // deal cookies
+      var me = this
+      me.responseCookies = []
+      var setcookie = data.headers['set-cookie']
+      if (setcookie) {
+        setcookie.forEach(
+          function (cookiestr) {
+            me.responseCookies.push(cookiestr)
+          }
+        )
+      }
+    },
+    responseTabClick: function () {
+    },
+    binaryChange: function (e) {
+      var me = this
+      var file = e.target.files[0]
+      var reader = new window.FileReader()
+      // 将文件以二进制形式读取
+      reader.readAsArrayBuffer(file)
+      reader.onload = function (f) {
+        me.binaryBody = this.result
+      }
+    },
+    // 处理不同body 类型的参数
+    dealParams: function () {
+      var data = {}
+      if (this.showBody) {
+        if (this.requestBodyViewType == 'formdata') {
+          var fd = new window.FormData()
+          for (var key in this.requestInfo.formDataBody) {
+            fd.append(key, this.requestInfo.formDataBody[key])
+          }
+          data = fd
+        } else if (this.requestBodyViewType == 'xwwwformurlencoded') {
+          data = qs.stringify(this.requestInfo.urlencodedBody)
+        } else if (this.requestBodyViewType == 'binary') {
+          data = this.binaryBody
+        } else if (this.requestBodyViewType == 'raw') {
+          data = this.requestBodyCopy
+        } else {
+          data = this.requestInfo.request.query
+        }
+      }
+      return data
+    },
+    /* 发送消息内容 */
+    /**
+     * 保存mock数据
+     */
+    save: function () {
+      if (this.requestBodyType.toUpperCase() == 'JSON(APPLICATION/JSON)') {
+        this.requestInfo.request.body = JSON.parse(this.requestBodyCopy)
+      } else {
+        this.requestInfo.request.body = this.requestBodyCopy
+      }
+      Server({
+        url: 'mock/addMock',
+        data: {
+          apiId: this.info.id - 0,
+          type: this.info.type - 0,
+          mockRequest: JSON.stringify(this.requestInfo)
+        },
+        method: 'post'
+      }).then((response) => {
+        this.$message('保存成功')
+      })
+    },
+    getSendUrl: function () {
+      var domain = this.requestInfo.domain
+      var path = this.requestInfo.path
+      var pathObj = this.requestInfo.request.path
+      for (let key in pathObj) {
+        path = path.replace(':' + key, pathObj[key])
+      }
+      if (!domain) {
+        this.$message('请设置环境信息')
+      }
+      var url = domain + path
+      this.completionurl = url
+      return url
+    },
+    sendSuccess: function (response) {
+      console.log(response)
+      this.dealResponse(response)
+      this.requestLoading = false
+    },
+    sendError: function (response) {
+      if (response.code) {
+        this.responseInfo.message = response.message
+        this.responseInfo.error = true
+      }
+      if (response.response) {
+        this.dealResponse(response.response)
+      } else {
+        this.responseInfo.message = response.message
+        this.responseInfo.error = true
+      }
+      console.log(response.response)
+      this.requestLoading = false
+    },
+    batchSend: function () {
+      this.$prompt('输入并发次数', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /[1-9][0-9]*/,
+        inputErrorMessage: '输入数字'
+      }).then(({ value }) => {
+        for (var i = 0; i < value - 0; i++) {
+          this.send()
+        }
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '取消输入'
+        })
+      })
+    },
+    /**
+     * 发送请求测试
+     */
+    send: function () {
+      this.requestLoading = true
+      this.responseInfo.error = false
+      var data = this.dealParams()
+      var params = this.requestInfo.request.query
+      if (this.requestInfo.method.toUpperCase() == 'GET' && this.requestBodyViewType == 'xwwwformurlencoded') {
+        params = this.requestInfo.urlencodedBody
+      }
+      var info = {
+        baseURL: '',
+        url: this.getSendUrl(),
+        data: data,
+        method: this.requestInfo.method,
+        params: params,
+        headers: this.requestInfo.header
+      }
+      if (document.body.getAttribute('data-interface-version') > '0') {
+        window.document.dispatchEvent(new window.CustomEvent('request', { detail: info }))
+      } else {
+        this.instance(info).then((response) => {
+          this.sendSuccess((response))
+        }).catch((response) => {
+          this.sendError(response)
+        })
+      }
+    }
+  }
+}
 </script>
 

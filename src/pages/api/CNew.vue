@@ -179,6 +179,9 @@
       contents: function (newVal) {
         console.log(newVal)
         this.content = apiToJson(newVal)
+      },
+      'content.path': function (newValue, oldValue) {
+        this.content.path = newValue.replace(/^\//, '')
       }
     },
     computed: mapState({
