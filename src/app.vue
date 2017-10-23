@@ -27,7 +27,9 @@
   import CContent from 'src/components/Content'
   import CFooter from 'src/components/Footer'
   import CDialogs from 'src/components/Dialogs'
+  import Cookies from 'js-cookie'
   import Welcome from 'src/components/Welcome'
+  import Config from 'src/config'
   import {mapState} from 'vuex'
   export default {
     data: function () {
@@ -73,7 +75,10 @@
     methods: {
       logout: function () {
         window.sessionStorage.removeItem('session')
-        window.location.replace(`/login.html?url=${encodeURIComponent(window.location.href)}`)
+        // 删除指定的cookie信息
+        Cookies.set('ymmoa_passport', '', { domain: '.ymmoa.com' }) // removed!
+        Cookies.set('ymmoa_user', '', { domain: '.ymmoa.com' }) // removed!
+        window.location.replace(`${Config.ssologin}?url=${encodeURIComponent(window.location.href)}`)
       }
     }
   }

@@ -177,7 +177,7 @@
           // todo 服务端登陆接口访问
           Server({
             url: 'users/logout',
-            method: 'get'
+            method: 'post'
           }).then((response) => {
             this.ema.fire('logout')
           }).catch(() => {
