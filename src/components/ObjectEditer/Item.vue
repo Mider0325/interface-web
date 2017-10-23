@@ -36,7 +36,7 @@
         <li class="desc input">
           <template v-if="editable">
 
-            <el-input type="textarea" :minlength="1" :maxlength="50" resize="none" @focus="autoSelect" class="noborder" autosize v-model="item.description" placeholder="输入"></el-input>
+            <el-input type="textarea" :minlength="1" :maxlength="200" resize="none" @focus="autoSelect" class="noborder" autosize v-model="item.description" placeholder="输入"></el-input>
           </template>
           <template v-else>
             <span class="editWarp">{{item.description}}</span>

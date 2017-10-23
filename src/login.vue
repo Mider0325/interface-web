@@ -45,7 +45,7 @@
                     <h3>没有用户? 创建新用户</h3>
                   </div>
                   <div class="login-body">
-                    <el-form ref="registerForm" :model="registerForm" :rules="registerrule" label-width="120px">
+                    <el-form ref="registerForm" v-if="false" :model="registerForm" :rules="registerrule" label-width="120px">
                       <el-form-item label="邮 箱" prop="email">
                         <el-input placeholder="推荐使用公司邮箱" @blur="emailBlur" v-model="registerForm.email">
                         </el-input>
@@ -71,6 +71,7 @@
                         <el-button type="primary" :loading="loading" @click="registerSubmit">注 册</el-button>
                       </el-form-item>
                     </el-form>
+                    接入sso中。暂停注册功能。需要注册 发送邮件到 kunming.wangkm@ymm56.com 
                   </div>
                 </el-tab-pane>
               </el-tabs>
