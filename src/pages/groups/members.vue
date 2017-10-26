@@ -13,6 +13,7 @@
 
             <el-form-item label="账号">
               <el-select
+                  class="searchUser"
                   v-model="req.userId"
                   multiple
                   filterable
@@ -23,7 +24,7 @@
                 <el-option
                     v-for="item in searchUsers"
                     :key="item.id"
-                    :label="item.name"
+                    :label="item.name+item.email"
                     :value="item.id">
                 </el-option>
               </el-select>
@@ -66,7 +67,7 @@
                   {{item.role | groupRole}} <i class="el-icon-caret-bottom el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
-                  <el-dropdown-item :key="item.userId" v-for="e in Metadata.groupPower" trigger="click"
+                  <el-dropdown-item :key="e.value" v-for="e in Metadata.groupPower" trigger="click"
                                     :command="e.value + ',' + item.userId">{{e.label}}
                   </el-dropdown-item>
                 </el-dropdown-menu>
@@ -97,7 +98,8 @@
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
-
+  .searchUser
+    width 600px
 </style>
 
 <script type="text/ecmascript-6">

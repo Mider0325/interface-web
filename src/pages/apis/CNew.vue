@@ -236,6 +236,7 @@
               name: this.content.name,
               method: this.content.method,
               publishStatus: '1',
+              remark: value,
               path: this.content.path
             },
             method: 'put'

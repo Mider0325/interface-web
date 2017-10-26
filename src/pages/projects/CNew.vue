@@ -75,6 +75,31 @@
             </div>
           </el-form-item>
 
+          <el-form-item label="接入秘钥" v-if="id"
+                        prop="security"
+                        :rules="[
+                        { message: '输入1-35位秘钥', trigger: 'blur'},
+                        { min: 1, max: 35, message: '长度在 1 到 35 个字符', trigger: 'blur' }
+                        ]"
+          >
+            <el-input placeholder="接入秘钥"  :maxlength="35" v-model="form.security">
+              <el-button slot="append" @click="makeSecurity">随机生成</el-button>
+            </el-input>
+            <div class="desc">
+              <div>java对接项目的时候需要的必要的项目 id:{{id}} 秘钥：{{form.security}}</div>
+            </div>
+          </el-form-item>
+
+          <el-form-item label="钉钉webhook" v-if="id"
+                        prop="ddwebhook"
+                        :rules="[]"
+          >
+            <el-input placeholder="钉钉webhook地址"  :maxlength="260" v-model="form.ddwebhook">
+            </el-input>
+            <div class="desc">
+              <div>开发中：期待中； 获取钉钉的webhook 地址填写，方便钉钉收到信息</div>
+            </div>
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" :loading="loading" @click="onSubmit">提交</el-button>
           </el-form-item>
@@ -146,6 +171,8 @@ qa http://google.com/`,
           logo: '',
           name: '',
           groupId: '',
+          ddwebhook: '',
+          security: '',
           description: ''
         }
       }
@@ -157,6 +184,16 @@ qa http://google.com/`,
       this.getGrops()
     },
     methods: {
+      makeSecurity () {
+        var len = 32
+        var $chars = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678'
+        var maxPos = $chars.length
+        var pwd = ''
+        for (var i = 0; i < len; i++) {
+          pwd += $chars.charAt(Math.floor(Math.random() * maxPos))
+        }
+        this.form.security = pwd
+      },
       addGroup: function () {
         this.openDialog({
           name: 'DAddGroup',
@@ -186,6 +223,8 @@ qa http://google.com/`,
             name: data.projectName,
             groupId: data.groupId,
             description: data.description,
+            security: data.security,
+            ddwebhook: data.ddwebhook,
             environment: data.environment
           }
         })

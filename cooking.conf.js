@@ -24,12 +24,13 @@ cooking.set({
       filename: 'index.html', // 不指定默认使用键名
       template: './index.tpl',
       title: packageInfo.description
-    },
-    './login.tpl': {
-      filename: 'login.html', // 不指定默认使用键名
-      template: './login.tpl',
-      title: packageInfo.description
     }
+    // ,
+    // './login.tpl': {
+    //   filename: 'login.html', // 不指定默认使用键名
+    //   template: './login.tpl',
+    //   title: packageInfo.description
+    // }
   },
   env: {
     'process.env.CODE_ENV': "'" + process.env.CODE_ENV + "'"
