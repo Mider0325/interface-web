@@ -52,7 +52,7 @@
   export default{
     mixins: [ BasePage ],
     components: { Editor },
-    name: 'api_mock',
+    name: 'apis_mock',
     data () {
       return {
         docyaml: `definitions: &defaults

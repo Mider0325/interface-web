@@ -162,6 +162,7 @@
         Server({
           url: 'project/projectinfo',
           method: 'get',
+          needLoading: true,
           params: {
             id: this.$route.query.id
           }

@@ -179,7 +179,7 @@
   export default{
     mixins: [ BasePage ],
     components: { CodeViewer, DocViewer, CNew },
-    name: 'api_new',
+    name: 'apis_new',
     data () {
       return {
         dynamicTags: [],
@@ -338,7 +338,7 @@
           method: 'post'
         }).then((response) => {
           var data = response.data.data
-          this.$router.replace({ path: '/api/new', query: { id: data.id } })
+          this.$router.replace({ path: '/apis/new', query: { id: data.id } })
           this.addApi(data.id)
           this.$message('拷贝成功')
         }).catch((e) => {

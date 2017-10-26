@@ -162,7 +162,7 @@
   export default{
     mixins: [ BasePage ],
     components: { ObjectEditer },
-    name: 'api_cnew',
+    name: 'apis_cnew',
     props: { contents: {} },
     data () {
       return {

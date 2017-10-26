@@ -185,6 +185,7 @@
         Server({
           url: 'project/project',
           method: 'get',
+          needLoading: true,
           params: {
             count: 100,
             start: 0

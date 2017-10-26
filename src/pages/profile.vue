@@ -5,8 +5,8 @@
         <div class="nav-control scrolling-tabs-container">
           <el-tabs class="nav-links" v-model="activeName" @tab-click="tabHandleClick">
             <el-tab-pane label="基本信息" name="base"></el-tab-pane>
-            <el-tab-pane label="消息订阅" name="active"></el-tab-pane>
-            <el-tab-pane label="密码" name="password"></el-tab-pane>
+            <!-- <el-tab-pane label="消息订阅" name="active"></el-tab-pane>
+            <el-tab-pane label="密码" name="password"></el-tab-pane> -->
           </el-tabs>
         </div>
       </div>
@@ -39,11 +39,11 @@
                   </el-input>
                 </el-form-item>
                 <el-form-item label="姓 名" prop="name">
-                  <el-input placeholder="姓名" v-model="form.name">
+                  <el-input placeholder="姓名" :disabled="true" v-model="form.name">
                   </el-input>
                 </el-form-item>
                 <el-form-item label="手 机" prop="telephone">
-                  <el-input placeholder="手 机" v-model="form.telephone">
+                  <el-input placeholder="手 机" :disabled="true" v-model="form.telephone">
                   </el-input>
                 </el-form-item>
                 <el-form-item>

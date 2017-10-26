@@ -103,7 +103,7 @@ export default {
         method: 'post'
       }).then((response) => {
         var data = response.data.data
-        this.$router.push({ path: '/api/new', query: { id: data.id } })
+        this.$router.push({ path: '/apis/new', query: { id: data.id } })
         this.close()
       }).catch((e) => {
         console.log(e)

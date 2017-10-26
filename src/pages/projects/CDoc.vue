@@ -171,7 +171,7 @@
                   <div @click.stop="api_edit(scope.row)">编辑</div>
                 </el-dropdown-item>
                 <el-dropdown-item command="">
-                  <div @click="api_mock(scope.row)">查看MOCK数据</div>
+                  <div @click="api_mock(scope.row)">编辑查看MOCK数据</div>
                 </el-dropdown-item>
                 <el-dropdown-item command="">
                   <div @click="diff_ver(scope.row)">查看历史版本</div>
@@ -215,7 +215,7 @@
   import Config from 'src/config'
   import DocViewer from 'src/components/DocViewer'
   import Clipboard from 'clipboard'
-  import {apiToJson, jsonToMock} from 'src/extend/Util'
+  import {apiToJson} from 'src/extend/Util'
   var projectMd = require('src/assets/tip/help/project.md')
 
   export default{
@@ -260,7 +260,7 @@
       },
       api_edit: function (data) {
         this.$router.push({
-          path: '/api/new',
+          path: '/apis/new',
           query: {
             id: data.fixedId
           }
@@ -276,12 +276,11 @@
           method: 'get'
         }).then((response) => {
           var data = response.data.data
-          data = apiToJson(data)
           this.openDialog({
-            name: 'DShowJson',
+            name: 'DMock',
             data: {
-              title: 'mock数据显示',
-              info: JSON.stringify(jsonToMock(data.response), null, 4)
+              title: '查看或编辑mock数据显示',
+              info: data
             }
           })
         }).catch((e) => {
