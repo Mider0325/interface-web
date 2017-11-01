@@ -174,6 +174,9 @@
                   <div @click="api_mock(scope.row)">编辑查看MOCK数据</div>
                 </el-dropdown-item>
                 <el-dropdown-item command="">
+                  <div v-clipboard="mockBaseUrl+scope.row.path" @success="handleSuccess" @error="handleError">复制mock链接</div>
+                </el-dropdown-item>
+                <el-dropdown-item command="">
                   <div @click="diff_ver(scope.row)">查看历史版本</div>
                 </el-dropdown-item>
               </el-dropdown-menu>
@@ -216,7 +219,10 @@
   import DocViewer from 'src/components/DocViewer'
   import Clipboard from 'clipboard'
   import {apiToJson} from 'src/extend/Util'
+  import VueClipboards from 'vue-clipboards'
+  import Vue from 'vue'
   var projectMd = require('src/assets/tip/help/project.md')
+  Vue.use(VueClipboards)
 
   export default{
     mixins: [ BasePage ],
@@ -265,6 +271,12 @@
             id: data.fixedId
           }
         })
+      },
+      handleSuccess: function (data) {
+        this.$message('复制成功')
+      },
+      handleError: function (data) {
+        this.$message('复制失败')
       },
       api_mock: function (data) {
         Server({

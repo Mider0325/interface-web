@@ -34,6 +34,7 @@
     ctrl+d 复制行
     shift+enter 添加子行元素
     ctrl+i 当前行导入json子元素
+    ctrl+e 当前行导出json元素
     shift+up 向上移动光标
     shift+down 向下移动光标
     shift+left 向左移动光标
@@ -180,7 +181,6 @@ export default {
       })
     },
     exportdata: function () {
-      console.log(this.projectId)
       this.openDialog({
         name: 'DExportdata',
         data: {

@@ -30,7 +30,7 @@
       overflow auto
 
   .mockContent
-    height 500px
+    height 400px
     .item
       float: left
       width 200px

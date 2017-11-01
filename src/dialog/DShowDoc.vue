@@ -11,7 +11,7 @@
   .content
     overflow: auto
     margin auto
-    min-height 600px
+    min-height 400px
     max-width 1200px
 </style>
 <script type="text/ecmascript-6">

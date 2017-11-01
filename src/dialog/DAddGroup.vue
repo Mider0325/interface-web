@@ -18,7 +18,7 @@
         bottom -15px
         right 0
     .doc
-      max-height 500px
+      max-height 400px
       overflow: auto
 </style>
 <script type="text/ecmascript-6">

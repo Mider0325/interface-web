@@ -8,7 +8,7 @@
 </template>
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
   .mockContent
-    height 500px
+    height 400px
   .footer
     margin-top 10px
     text-align right

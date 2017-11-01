@@ -1,6 +1,6 @@
 <template>
   <div class="div-table">
-    <div class="div-table-line placeholder-request-args div-editing-line" @keydown.shift.enter.stop="addItem(item,key)" @keydown.ctrl.68.stop="parentAddItem(data,item)" @keydown.ctrl.delete.stop="removeItem(item)" @keydown.ctrl.187.stop="changeOpen(item)" @keydown.ctrl.73.stop="importJson(item)" :key="key" v-for="(item,key) in data">
+    <div class="div-table-line placeholder-request-args div-editing-line" @keydown.shift.enter.stop="addItem(item,key)" @keydown.ctrl.68.stop="parentAddItem(data,item)" @keydown.ctrl.delete.stop="removeItem(item)" @keydown.ctrl.187.stop="changeOpen(item)" @keydown.ctrl.73.stop="importJson(item)"  @keydown.ctrl.69.stop="exportJson(item)" :key="key" v-for="(item,key) in data">
       <ul class="cb" :class="[item._meta?item._meta.type:'']">
         <li class="name input">
           <template v-if="editable">
@@ -209,6 +209,9 @@ export default {
       this.data.splice(id, 1)
       console.log(id)
     },
+    /**
+     * 导入数据
+     */
     importJson: function (item) {
       if (!this.editable) {
         return
@@ -233,7 +236,20 @@ export default {
         }
       })
     },
-
+    exportJson: function (item) {
+      if (!this.editable) {
+        return
+      }
+      this.openDialog({
+        name: 'DExportdata',
+        data: {
+          title: '导出到基础数据',
+          projectId: this.projectId,
+          preData: [item]
+        },
+        methods: {}
+      })
+    },
     addItem: function (item) {
       if (!this.editable) {
         return

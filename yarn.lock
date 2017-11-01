@@ -312,6 +312,14 @@ clipboard@^1.5.16:
     select "^1.1.2"
     tiny-emitter "^1.0.0"
 
+clipboard@^1.7.1:
+  version "1.7.1"
+  resolved "http://192.168.199.131:4873/clipboard/-/clipboard-1.7.1.tgz#360d6d6946e99a7a1fef395e42ba92b5e9b5a16b"
+  dependencies:
+    good-listener "^1.2.2"
+    select "^1.1.2"
+    tiny-emitter "^2.0.0"
+
 clone-stats@^0.0.1, clone-stats@~0.0.1:
   version "0.0.1"
   resolved "http://registry.npm.taobao.org/clone-stats/download/clone-stats-0.0.1.tgz#b88f94a82cf38b8791d58046ea4029ad88ca99d1"
@@ -1207,7 +1215,7 @@ glogg@^1.0.0:
   dependencies:
     sparkles "^1.0.0"
 
-good-listener@^1.2.0:
+good-listener@^1.2.0, good-listener@^1.2.2:
   version "1.2.2"
   resolved "http://registry.npm.taobao.org/good-listener/download/good-listener-1.2.2.tgz#d53b30cdf9313dffb7dc9a0d477096aa6d145c50"
   dependencies:
@@ -3235,6 +3243,10 @@ tiny-emitter@^1.0.0:
   version "1.2.0"
   resolved "http://registry.npm.taobao.org/tiny-emitter/download/tiny-emitter-1.2.0.tgz#6dc845052cb08ebefc1874723b58f24a648c3b6f"
 
+tiny-emitter@^2.0.0:
+  version "2.0.2"
+  resolved "http://192.168.199.131:4873/tiny-emitter/-/tiny-emitter-2.0.2.tgz#82d27468aca5ade8e5fd1e6d22b57dd43ebdfb7c"
+
 title-notify@^1.0.13:
   version "1.0.13"
   resolved "http://192.168.199.131:4873/title-notify/-/title-notify-1.0.13.tgz#072dfd120aa88f0cde45696c92db389625694032"
@@ -3347,6 +3359,12 @@ vinyl@^0.5.0:
     clone "^1.0.0"
     clone-stats "^0.0.1"
     replace-ext "0.0.1"
+
+vue-clipboards@^1.1.0:
+  version "1.1.0"
+  resolved "http://192.168.199.131:4873/vue-clipboards/-/vue-clipboards-1.1.0.tgz#708d95b64e64f83e565f7fc464e7213fb6ef2d8a"
+  dependencies:
+    clipboard "^1.7.1"
 
 vue-hot-reload-api@^2.1.0:
   version "2.1.0"
