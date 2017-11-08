@@ -16,7 +16,7 @@
             欢迎加入 {{packageInfo.description}}
           </h2>
           <p class="blank-state-text">
-            API文档，测试，MOCK数据
+            API文档，文档历史，接口测试，MOCK数据,
           </p>
         </div>
         <div class="blank-state">

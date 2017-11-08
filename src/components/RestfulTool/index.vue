@@ -44,7 +44,54 @@
       <!-- tab切换标头-->
       <!--tab内容-->
       <div class="tabContent" v-if="requestTabName=='Authorization'">
-        暂未开放
+        <el-form :inline="true">
+          <el-form-item label="认证方式">
+            <el-select v-model="authorization.type" placeholder="请选择认证方式">
+              <el-option
+                  v-for="item in authorization.methods"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="环境">
+            <el-select v-model="authorization.env" placeholder="请选择环境">
+              <el-option
+                  v-for="item in authorization.envs"
+                  :key="item.value"
+                  :label="item.label"
+                  :value="item.value">
+              </el-option>
+            </el-select>
+          </el-form-item>
+        </el-form>
+        <!--sso认证-->
+        <el-form :inline="true" v-if="authorization.type=='sso'" ref="ssoFormData" :model="authorization.ssoForm">
+          <el-form-item label="工号：" prop="userName">
+            <el-input placeholder="请输入工号" v-model.trim="authorization.ssoForm.userName">
+            </el-input>
+          </el-form-item>
+          <el-form-item label="密码：" prop="password">
+            <el-input placeholder="请输入密码" v-model="authorization.ssoForm.password" type="password">
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="authorization_ssoLogin()">登 录</el-button>
+          </el-form-item>
+        </el-form>
+        <!--司机货主认证-->
+        <el-form v-if="authorization.type=='drivershipper'" :inline="true" ref="dsFormData"
+                 :model="authorization.dsForm">
+          <el-form-item label="手机号：" prop="userName">
+            <el-input placeholder="请输入手机" v-model.trim="authorization.dsForm.telephone">
+            </el-input>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="authorization_dsLogin()">登 录</el-button>
+          </el-form-item>
+        </el-form>
+
       </div>
       <div class="tabContent" v-if="requestTabName=='Header'">
         <object-edit key="header" :info="requestInfo.header" :on-change="requestHeaderChange"></object-edit>
@@ -330,6 +377,8 @@
   import CodeViewer from 'src/components/CodeViewer.vue'
   import Server from 'src/extend/Server'
   import axios from 'axios'
+  import MD5 from 'crypto-js/md5'
+  import Base64 from 'js-base64'
   import qs from 'qs'
   import { mapState } from 'vuex'
   import { jsonToMock } from 'src/extend/Util'
@@ -397,6 +446,30 @@
         pathParamsVisable: false,
         responseCookies: [],
         completionurl: '',
+        authorization: {
+          methods: [
+            {value: '', label: '不登录'},
+            {value: 'sso', label: 'sso登录的认证'},
+            {value: 'drivershipper', label: '司机货主端认证'}
+          ],
+          type: null,
+          envs: [
+            {value: 'dev', label: 'dev环境'},
+            {value: 'qa', label: 'beta环境'},
+            {value: '', label: '线上'}
+          ],
+          env: 'dev',
+          ssoForm: {
+            userName: '',
+            telephone: '',
+            captcha: '',
+            password: ''
+          },
+          dsForm: {
+            telephone: ''
+          }
+        },
+        isChrome: true,
         showPath: false, // 显示path编辑区
         showBody: true // 是否显示body区域
       }
@@ -416,6 +489,7 @@
       }
     },
     mounted () {
+      this.isChrome = window.navigator.userAgent.indexOf('Chrome') !== -1
       this.instance = axios.create({
         baseURL: '',
         timeout: 40000,
@@ -740,6 +814,10 @@
        * 发送请求测试
        */
       send: function () {
+        if (!this.isChrome) {
+          this.$alert('接口访问模块需要你使用 chrome浏览器，开启跨域支持 教程地址: http://bbs.ymmoa.com/mblog/view/25')
+          return
+        }
         this.requestLoading = true
         this.responseInfo.error = false
         var data = this.dealParams()
@@ -764,6 +842,84 @@
             this.sendError(response)
           })
         }
+      },
+      /* 认证相关内容 */
+      passportEncode: function (passport, uid) {
+        if (passport) {
+          var body = `u_${uid}:${passport}`
+          return 'Basic ' + Base64.Base64.encode(body)
+        }
+        return ''
+      },
+      authorization_driverShiperLogin: function () {
+
+      },
+      authorization_ssoLogin: function () {
+        const me = this
+        this.$refs['ssoFormData'].validate((valid) => {
+          var dev = this.authorization.env
+          if (dev) {
+            dev += '-'
+          }
+          if (valid) {
+            var data = me.authorization.ssoForm
+            while (data.userName.toString().length < 6) {
+              data.userName = '0' + data.userName
+            }
+            var url = `http://${dev}sso.ymmoa.com/sso/login`
+            axios.post(url, {
+              username: data.userName + '',
+              password: MD5(data.password) + '',
+              captcha: data.captcha,
+              telephone: data.telephone,
+              channel: 'web',
+              version: '1.1.0',
+              refer: 'sso'
+            }).then((response) => {
+              var data = response.data
+              if (data.error) {
+                this.$alert(data.error.message || '登录失败')
+              } else {
+                this.requestInfo.header.authorization = me.passportEncode(data.result.passport, data.result.user.id)
+                this.requestInfo.header.YSession = data.result.passport
+                this.$message('登录成功')
+              }
+            }).catch((error) => {
+              this.$alert(error.data.error.message || '登录失败')
+            })
+          }
+        })
+      },
+      authorization_dsLogin: function () {
+        const me = this
+        this.$refs['dsFormData'].validate((valid) => {
+          var dev = this.authorization.env
+          if (!dev) {
+            this.$message('司机货主不支持线上登录')
+            return
+          }
+          if (dev == 'qa') {
+            dev = 'beta'
+          }
+          if (valid) {
+            var data = me.authorization.dsForm
+            var url = `http://qa.ymmoa.com//wrench/ymm/GenerateAuthApi`
+            axios.post(url, {
+              telephone: data.telephone,
+              env: dev
+            }).then((response) => {
+              var data = response.data
+              if (!data.auth) {
+                this.$alert('登录失败')
+              } else {
+                this.requestInfo.header.authorization = data.auth
+                this.$message('登录成功')
+              }
+            }).catch((error) => {
+              this.$alert(error.data.error.message || '登录失败')
+            })
+          }
+        })
       }
     }
   }

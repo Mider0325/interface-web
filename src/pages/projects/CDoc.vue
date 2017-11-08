@@ -88,6 +88,9 @@
           sortable
           label="路径"
       >
+        <template scope="scope">
+          <router-link :to="{path:'/apis/detail',query:{id:scope.row.id}}">{{ scope.row.path }}</router-link>
+        </template>
       </el-table-column>
       <el-table-column
           prop="version"

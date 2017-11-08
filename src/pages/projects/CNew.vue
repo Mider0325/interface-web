@@ -50,11 +50,11 @@
           <el-form-item label="项目名称"
                         prop="name"
                         :rules="[
-                        { required: true,message: '输入1-10位项目名', trigger: 'blur'},
-                        { min: 1, max: 15, message: '长度在 1 到 15 个字符', trigger: 'blur' }
+                        { required: true,message: '输入1-35位项目名', trigger: 'blur'},
+                        { min: 1, max: 35, message: '长度在 1 到 35 个字符', trigger: 'blur' }
                         ]"
           >
-            <el-input placeholder="项目名称"  :maxlength="15" v-model="form.name">
+            <el-input placeholder="项目名称"  :maxlength="35" v-model="form.name">
             </el-input>
           </el-form-item>
           <el-form-item label="描述"
