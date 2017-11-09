@@ -108,7 +108,7 @@
 import BaseComponent from 'src/extend/BaseComponent'
 import { mapState } from 'vuex'
 import Vue from 'vue'
-
+import cloneDeep from 'lodash/cloneDeep'
 Vue.component('my-mock-item', {
   functional: true,
   render: function (h, ctx) {
@@ -272,7 +272,7 @@ export default {
       if (!this.editable) {
         return
       }
-      data.push(Object.assign({}, item))
+      data.push(cloneDeep(item))
     }
   }
 }
