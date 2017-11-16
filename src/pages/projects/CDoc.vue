@@ -76,6 +76,7 @@
           label="名称"
           width="180">
       </el-table-column>
+      
       <el-table-column
           label="类型"
           width="90">
@@ -161,6 +162,11 @@
                   close-transition>{{tag.name}}
           </el-tag>
         </template>
+      </el-table-column>
+      <el-table-column
+          prop="createUserName"
+          label="修改人"
+          >
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template scope="scope">
