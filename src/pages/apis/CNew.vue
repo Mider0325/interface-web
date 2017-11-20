@@ -94,7 +94,7 @@
 
       </el-form>
 
-      <div class="layout-nav bottom" v-if="content.status==1">
+      <div class="layout-nav bottom" v-if="content.status!=2">
         <div class="tip">
           提示：如果该接口所在项目你有管理员权限，你可以直接保存并发布接口，否则只能保存接口，需要发布的话，需要申请发布。申请后等管理员审核。
         </div>

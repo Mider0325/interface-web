@@ -1,44 +1,22 @@
 <template>
   <div class="content">
     <!--接口列表信息-->
-    <el-table
-        :data="apiList"
-        border
-        style="width: 100%">
-      <el-table-column
-          label="更新时间"
-          sortable
-          prop="time"
-          width="160">
+    <el-table :data="apiList" border style="width: 100%">
+      <el-table-column label="更新时间" sortable prop="time" width="160">
         <template scope="scope">
           <span style="margin-left: 10px">{{ scope.row.time|datetime }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="name"
-          label="名称"
-          width="180">
+      <el-table-column prop="name" label="名称" width="180">
       </el-table-column>
-      <el-table-column
-          label="类型"
-          width="90">
+      <el-table-column label="类型" width="90">
         <template scope="scope">
           <span :class="scope.row.method">{{ scope.row.method.toUpperCase() }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="path"
-          sortable
-          label="路径"
-      >
+      <el-table-column prop="path" sortable label="路径">
       </el-table-column>
-      <el-table-column
-          label="状态"
-          prop="status"
-          :filters="[{ text: '待发布', value: '1' }, { text: '审核中', value: '2' }]"
-          :filter-method="filterStatus"
-          width="100"
-      >
+      <el-table-column label="状态" prop="status" :filters="[{ text: '待发布', value: '1' }, { text: '审核中', value: '2' },{ text: '已发布', value: '3' }]" :filter-method="filterStatus" width="100">
         <template scope="scope">
           <el-tag v-if="scope.row.status==1">
             待发布
@@ -46,37 +24,24 @@
           <el-tag type="warning" v-if="scope.row.status==2">
             审核中
           </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="tag"
-          label="标签"
-          width="100"
-          :filters="tagTableFilters"
-          :filter-method="filterTag">
-        <template scope="scope">
-          <el-tag v-for="(tag, key) in scope.row.tags"
-                  :key="key"
-                  :type="'primary'"
-                  close-transition>{{tag.name}}
+          <el-tag type="success" v-if="scope.row.status==3">
+            已发布
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column v-if="role<4" label="操作" width="200">
+      <el-table-column prop="tag" label="标签" width="100" :filters="tagTableFilters" :filter-method="filterTag">
         <template scope="scope">
-          <el-button v-if="role<3&&scope.row.status==2"
-                     size="small"
-                     type="warning"
-                     @click="handleVerify(scope.$index, scope.row)">审核
+          <el-tag v-for="(tag, key) in scope.row.tags" :key="key" :type="'primary'" close-transition>{{tag.name}}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column v-if="role<4" label="操作" width="150">
+        <template scope="scope">
+          <el-button v-if="role<3&&scope.row.status==2" size="small" type="warning" @click="handleVerify(scope.$index, scope.row)">审核
           </el-button>
-          <el-button v-if="role<4&&scope.row.status==1"
-                     size="small"
-                     @click="handleEdit(scope.$index, scope.row)">编辑
+          <el-button v-if="role<4&&scope.row.status!=2" size="small" @click="handleEdit(scope.$index, scope.row)">编辑
           </el-button>
-          <el-button
-              size="small"
-              type="danger"
-              @click="handleDelete(scope.$index, scope.row)">删除
+          <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -86,7 +51,6 @@
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
-
 </style>
 
 <script type="text/ecmascript-6">
@@ -95,8 +59,8 @@
   /**
    * 项目接口
    */
-  export default{
-    mixins: [ BasePage ],
+  export default {
+    mixins: [BasePage],
     components: {},
     name: 'projects_cinterface',
     props: {
@@ -120,7 +84,7 @@
         Server({
           url: 'project/projectinfo',
           method: 'get',
-          params: { id: this.id }
+          params: {id: this.id}
         }).then((response) => {
           this.project = response.data.data
           this.role = this.project.role
@@ -204,6 +168,7 @@
         })
       },
       handleVerify: function (index, row) {
+        let me = this
         this.openDialog({
           name: 'DVerifie',
           data: {
@@ -212,7 +177,7 @@
           },
           methods: {
             callback: function (status) {
-              row.status = 1
+              me.loadDrafApis()
             }
           }
         })

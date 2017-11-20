@@ -76,21 +76,21 @@
           label="名称"
           width="180">
       </el-table-column>
-      
+      <el-table-column
+          prop="path"
+          sortable
+          label="路径"
+          width="200"
+      >
+        <template scope="scope">
+          <router-link :to="{path:'/apis/detail',query:{id:scope.row.id}}">{{ scope.row.path }}</router-link>
+        </template>
+      </el-table-column>
       <el-table-column
           label="类型"
           width="90">
         <template scope="scope">
           <span :class="scope.row.method">{{ scope.row.method.toUpperCase() }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column
-          prop="path"
-          sortable
-          label="路径"
-      >
-        <template scope="scope">
-          <router-link :to="{path:'/apis/detail',query:{id:scope.row.id}}">{{ scope.row.path }}</router-link>
         </template>
       </el-table-column>
       <el-table-column
@@ -168,7 +168,7 @@
           label="修改人"
           >
       </el-table-column>
-      <el-table-column label="操作" width="200">
+      <el-table-column label="操作" width="100">
         <template scope="scope">
           <div class="controls" @click.stop>
             <el-dropdown trigger="click">

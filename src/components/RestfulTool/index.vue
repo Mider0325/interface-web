@@ -7,12 +7,12 @@
           <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label"
                      :value="item.value"></el-option>
         </el-select>
-        <el-autocomplete class="noborder inline-input evn" @focus="pathParamsVisable=false" v-model="requestInfo.domain"
+        <el-autocomplete class="noborder inline-input evn" @focus="pathParamsVisable=false" v-model.trim="requestInfo.domain"
                          :fetch-suggestions="queryEvnPath" placeholder="环境">
         </el-autocomplete>
         <!--  <div class="inline-input division">/</div>
           -->
-        <el-input class="noborder inline-input path" placeholder="路径" v-model="requestInfo.path"></el-input>
+        <el-input class="noborder inline-input path" placeholder="路径" v-model.trim="requestInfo.path"></el-input>
         <el-button class="params" type="primary" @click="pathParamsVisable = !pathParamsVisable">参数</el-button>
       </div>
       <el-dropdown class="send" @click="send" v-if="responseBodyViewType=='Pretty'" split-button type="primary"
