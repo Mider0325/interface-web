@@ -31,7 +31,7 @@
           <el-popover ref="popover1" placement="top-start" title="常用快捷键" width="400" trigger="hover">
             <pre>
     ctrl+del 或 ctrl+backspace 删除行
-    ctrl+d 复制行
+    ctrl+b 复制行
     shift+enter 添加子行元素
     ctrl+i 当前行导入json子元素
     ctrl+e 当前行导出json元素

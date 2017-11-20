@@ -14,12 +14,12 @@
           <el-row type="flex" :gutter="0">
             <el-col :span="6">
               <el-form-item label="名称">
-                <el-input v-model="content.name"></el-input>
+                <el-input v-model.trim="content.name"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="10">
               <el-form-item label="路径">
-                <el-input v-model="content.path"></el-input>
+                <el-input v-model.trim="content.path"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">
@@ -32,7 +32,7 @@
             </el-col>
           </el-row>
           <el-form-item label="描述">
-            <el-input type="textarea" v-model="content.description"></el-input>
+            <el-input type="textarea" v-model.trim="content.description"></el-input>
           </el-form-item>
         </div>
         <div class="request">

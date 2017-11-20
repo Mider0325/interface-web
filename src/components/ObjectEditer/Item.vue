@@ -1,6 +1,13 @@
 <template>
   <div class="div-table">
-    <div class="div-table-line placeholder-request-args div-editing-line" @keydown.shift.enter.stop="addItem(item,key)" @keydown.ctrl.68.stop="parentAddItem(data,item)" @keydown.ctrl.delete.stop="removeItem(item)" @keydown.ctrl.187.stop="changeOpen(item)" @keydown.ctrl.73.stop="importJson(item)"  @keydown.ctrl.69.stop="exportJson(item)" :key="key" v-for="(item,key) in data">
+    <div class="div-table-line placeholder-request-args div-editing-line" 
+    @keydown.shift.enter.stop="addItem(item,key)" 
+    @keydown.ctrl.66.stop="parentAddItem(data,item)" 
+    @keydown.ctrl.delete.stop="removeItem(item)" 
+    @keydown.ctrl.187.stop="changeOpen(item)" 
+    @keydown.ctrl.73.stop="importJson(item)"  
+    @keydown.ctrl.69.stop="exportJson(item)" 
+    :key="key" v-for="(item,key) in data">
       <ul class="cb" :class="[item._meta?item._meta.type:'']">
         <li class="name input">
           <template v-if="editable">

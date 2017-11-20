@@ -1,22 +1,23 @@
 var path = require('path')
 var cooking = require('cooking')
 var packageInfo = require('./package.json')
+
 function getIPAdress () {
   var interfaces = require('os').networkInterfaces()
   for (var devName in interfaces) {
-    var iface = interfaces[ devName ]
+    var iface = interfaces[devName]
     for (var i = 0; i < iface.length; i++) {
-      var alias = iface[ i ]
+      var alias = iface[i]
       if (alias.family === 'IPv4' && alias.address !== '127.0.0.1' && !alias.internal) {
         return alias.address
       }
     }
   }
 }
-
+getIPAdress()
 cooking.set({
   entry: {
-    app: [ './src/main.js' ]
+    app: ['./src/main.js']
   },
   dist: './dist',
   template: {
@@ -60,16 +61,16 @@ cooking.set({
   alias: {
     'src': path.join(__dirname, 'src')
   },
-  extends: [ 'vue2', 'less', 'lint', 'autoprefixer' ]
+  extends: ['vue2', 'less', 'lint', 'autoprefixer']
 })
 
 cooking.add('loader.stylus', {
   test: /\.styl$/,
-  loaders: [ 'css-loader', 'stylus-loader' ]
+  loaders: ['css-loader', 'stylus-loader']
 })
 cooking.add('loader.markdown', {
   test: /\.md$/,
-  loaders: [ 'html-loader', 'markdown-loader' ]
+  loaders: ['html-loader', 'markdown-loader']
 })
 cooking.add('externals.ace', 'ace')
 cooking.add('externals.jQuery', 'jQuery')

@@ -7,7 +7,7 @@
           <el-row type="flex" :gutter="0">
             <el-col :span="24">
               <el-form-item label="名称">
-                <el-input :minlength="1" placeholder="例如:用户信息" :maxlength="15" v-model="form.name"></el-input>
+                <el-input :minlength="1" placeholder="例如:用户信息" :maxlength="15" v-model.trim="form.name"></el-input>
               </el-form-item>
             </el-col>
             </el-col>
@@ -15,7 +15,7 @@
           <el-row type="flex" :gutter="0">
             <el-col :span="17">
               <el-form-item label="路径">
-                <el-input :minlength="1" :maxlength="40" placeholder="例如：user/info" v-model="form.path"></el-input>
+                <el-input :minlength="1" :maxlength="40" placeholder="例如：user/info" v-model.trim="form.path"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7">
@@ -28,7 +28,7 @@
           </el-row>
 
           <el-form-item label="描述">
-            <el-input type="textarea" placeholder="该接口的简要描述1-50个字" :minlength="1" :maxlength="50" v-model="form.description"></el-input>
+            <el-input type="textarea" placeholder="该接口的简要描述1-50个字" :minlength="1" :maxlength="50" v-model.trim="form.description"></el-input>
           </el-form-item>
         </div>
       </el-form>
