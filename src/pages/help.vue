@@ -70,7 +70,7 @@
               path: 'help/mockjs.html'
             }
           }
-        } ]
+        }]
       }
     },
     name: 'help'

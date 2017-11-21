@@ -12,6 +12,9 @@
         <div class="project-home-desc">
           <p>{{project.description}}</p>
         </div>
+        <div class="project-home-environment" v-if="project.environment">
+          <pre>{{project.environment}}</pre>
+        </div>
         <div class="project-home-url">
           <el-input placeholder="请输入内容" :autofocus="true" :readonly="true" v-model="mockBaseUrl">
             <template slot="prepend">
@@ -20,13 +23,16 @@
                 <div slot="content">
                   通过基础地址+接口path可以获取到mock数据
                   <div>
-                    例如:{{mockBaseUrl}}<span style="color: red">users/info</span>
+                    例如:{{mockBaseUrl}}
+                    <span style="color: red">users/info</span>
                   </div>
                 </div>
                 <i class="header-icon el-icon-information"></i>
               </el-tooltip>
             </template>
-            <template class="copy" slot="append"><span class="copy">复制</span></template>
+            <template class="copy" slot="append">
+              <span class="copy">复制</span>
+            </template>
           </el-input>
         </div>
 
@@ -36,144 +42,81 @@
     <div v-if="!hasData">
       <div class="blank-state">
         <div class="blank-state-icon">
-          <i class="ifont icon-empty"></i> <span>暂无接口信息，请先添加接口,然后发布</span>
+          <i class="ifont icon-empty"></i>
+          <span>暂无接口信息，请先添加接口,然后发布</span>
         </div>
         <h3 class="blank-state-title">
           <el-button @click="newApi" type="primary">添加接口</el-button>
         </h3>
       </div>
-      <el-alert class="tipWarp"
-                title="项目介绍"
-                type="info">
+      <el-alert class="tipWarp" title="项目介绍" type="info">
         <div v-html="projectMd"></div>
       </el-alert>
     </div>
-    <el-table v-else
-              :data="apiList"
-              border
-              @row-click="selectOneRow"
-              highlight-current-row
-              style="width: 100%">
+    <el-table v-else :data="apiList" border highlight-current-row style="width: 100%">
       <!-- <el-table-column type="expand">
          <template scope="props">
            <doc-viewer v-if="props.row.apiInfo" :apiInfo="props.row.apiInfo"></doc-viewer>
          </template>
        </el-table-column>-->
-      <el-table-column
-          type="index">
+      <el-table-column width="60" type="index">
       </el-table-column>
-      <el-table-column
-          label="更新时间"
-          sortable
-          prop="time"
-          width="160">
+      <el-table-column label="更新时间" sortable prop="time" width="160">
         <template scope="scope">
           <span :id="'doctableexpanded_'+scope.row.id" style="margin-left: 10px">{{ scope.row.time|datetime }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="name"
-          label="名称"
-          width="180">
+      <el-table-column prop="name" label="名称" width="180">
       </el-table-column>
-      <el-table-column
-          prop="path"
-          sortable
-          label="路径"
-          width="200"
-      >
+      <el-table-column prop="path" sortable label="路径" width="200">
         <template scope="scope">
-          <router-link :to="{path:'/apis/detail',query:{id:scope.row.id}}">{{ scope.row.path }}</router-link>
+          <div class="pathWarp">
+            <router-link :to="{path:'/apis/detail',query:{id:scope.row.id}}">{{ scope.row.path }}</router-link>
+            <i class="ifont icon-openDialog" @click="selectOneRow(scope.row)"></i>
+          </div>
         </template>
       </el-table-column>
-      <el-table-column
-          label="类型"
-          width="90">
+      <el-table-column label="类型" width="90">
         <template scope="scope">
           <span :class="scope.row.method">{{ scope.row.method.toUpperCase() }}</span>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="version"
-          sortable
-          width="90"
-          label="版本"
-      >
+      <el-table-column prop="version" sortable width="90" label="版本">
         <template scope="scope">
           <el-tag type='success'>{{scope.row.version}}</el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-          sortable
-          prop="endStatus"
-          :width="100"
-          label="服务端"
-      >
+      <el-table-column sortable prop="endStatus" :width="100" label="服务端">
         <template scope="scope">
           <div @click.stop>
-            <el-switch
-                :key="1"
-                :width="80"
-                v-model.number="scope.row.endStatus"
-                on-text="可联调"
-                off-text="开发中"
-                :off-value="1"
-                :on-value="2"
-                @change="statusChange(scope.row,1)"
-                on-color="#13ce66"
-                off-color="#ff4949">
+            <el-switch :key="1" :width="80" v-model.number="scope.row.endStatus" on-text="可联调" off-text="开发中" :off-value="1" :on-value="2" @change="statusChange(scope.row,1)" on-color="#13ce66" off-color="#ff4949">
             </el-switch>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-          sortable
-          prop="frontStatus"
-          :width="100"
-          label="客户端"
-      >
+      <el-table-column sortable prop="frontStatus" :width="100" label="客户端">
         <template scope="scope">
           <div @click.stop>
-            <el-switch
-                :key="2"
-                :width="80"
-                v-model.number="scope.row.frontStatus"
-                on-text="已联调"
-                off-text="未联调"
-                :off-value="1"
-                :on-value="2"
-                @change="statusChange(scope.row,2)"
-                on-color="#13ce66"
-                off-color="#ff4949">
+            <el-switch :key="2" :width="80" v-model.number="scope.row.frontStatus" on-text="已联调" off-text="未联调" :off-value="1" :on-value="2" @change="statusChange(scope.row,2)" on-color="#13ce66" off-color="#ff4949">
             </el-switch>
           </div>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="tag"
-          label="标签"
-          :width="100"
-          :filters="tagTableFilters"
-          :filter-method="filterTag">
+      <el-table-column prop="tag" label="标签" :width="100" :filters="tagTableFilters" :filter-method="filterTag">
         <template scope="scope">
-          <el-tag v-for="(tag, key) in scope.row.tags"
-                  :key="key"
-                  :type="'primary'"
-                  close-transition>{{tag.name}}
+          <el-tag v-for="(tag, key) in scope.row.tags" :key="key" :type="'primary'" close-transition>{{tag.name}}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-          prop="createUserName"
-          label="修改人"
-          >
+      <el-table-column prop="createUserName" label="修改人">
       </el-table-column>
       <el-table-column label="操作" width="100">
         <template scope="scope">
           <div class="controls" @click.stop>
             <el-dropdown trigger="click">
               <el-button type="primary" size="mini">
-                更多<i class="el-icon-caret-bottom el-icon--right"></i>
+                更多
+                <i class="el-icon-caret-bottom el-icon--right"></i>
               </el-button>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item>
@@ -199,26 +142,45 @@
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
-  .project-home-panel
-    margin-bottom 30px
+  .project-home-panel {
+    margin-bottom: 30px;
+  }
 
-  .project-home-url
-    width 500px
-    margin auto
+  .project-home-environment {
+    width: 500px;
+    margin: auto;
+  }
 
-  .blank-state-icon
-    span
-      font-size 24px
+  .project-home-url {
+    width: 500px;
+    margin: auto;
+  }
 
-  .project-avatar
-    width 80px
-    height 80px
-    border-radius 50%
-    overflow hidden
-    margin 20px auto
-    img
-      width: 100%
-      height 100%
+  .blank-state-icon {
+    span {
+      font-size: 24px;
+    }
+  }
+  .pathWarp
+    position relative
+    i 
+      position absolute
+      bottom -6px
+      right -15px
+      color #20597e
+
+  .project-avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 20px auto;
+
+    img {
+      width: 100%;
+      height: 100%;
+    }
+  }
 </style>
 
 <script type="text/ecmascript-6">
@@ -233,9 +195,9 @@
   var projectMd = require('src/assets/tip/help/project.md')
   Vue.use(VueClipboards)
 
-  export default{
-    mixins: [ BasePage ],
-    components: { DocViewer },
+  export default {
+    mixins: [BasePage],
+    components: {DocViewer},
     name: 'projects_cdoc',
     props: {
       id: { // 项目id
@@ -314,7 +276,7 @@
           '1': 'endStatus',
           '2': 'frontStatus'
         }
-        var status = data[ keys[ type + '' ] ]
+        var status = data[keys[type + '']]
         Server({
           url: 'api/updateHistoryStatus',
           data: {
@@ -324,7 +286,7 @@
           },
           method: 'post'
         }).then((response) => {
-          data[ keys[ type + '' ] ] = status
+          data[keys[type + '']] = status
         }).catch((e) => {
 
         })
@@ -361,7 +323,7 @@
         Server({
           url: 'project/projectinfo',
           method: 'get',
-          params: { id: this.id }
+          params: {id: this.id}
         }).then((response) => {
           this.project = response.data.data
         })

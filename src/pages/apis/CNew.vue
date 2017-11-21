@@ -133,6 +133,8 @@
     height 100%
     margin auto
     padding 20px
+    .editStructure
+      margin-bottom 150px
     .tip
       float left
       font-size 10px
