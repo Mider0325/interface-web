@@ -11,7 +11,7 @@
       <ul class="cb" :class="[item._meta?item._meta.type:'']">
         <li class="name input">
           <template v-if="editable">
-            <el-input type="text" :minlength="1" :maxlength="25" placeholder="标准变量命名" @input="onNameChange(item)" :class="item._error" class="noborder" v-model="item.name"></el-input>
+            <el-input type="text" :minlength="1" :maxlength="45" placeholder="标准变量命名" @input="onNameChange(item)" :class="item._error" class="noborder" v-model="item.name"></el-input>
           </template>
           <template v-else>
             {{item.name}}

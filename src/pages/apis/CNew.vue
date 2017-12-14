@@ -3,10 +3,7 @@
 
     <div class="editStructure" v-if="content.id">
 
-      <el-alert v-if="content.status==2"
-                title="注意该接口处于审核中状态。修改不会被保存。"
-                :closable="false"
-                type="warning">
+      <el-alert v-if="content.status==2" title="注意该接口处于审核中状态。修改不会被保存。" :closable="false" type="warning">
       </el-alert>
       <el-form ref="form" :model="content" label-width="80px">
         <div class="base">
@@ -25,8 +22,7 @@
             <el-col :span="6">
               <el-form-item label="方法">
                 <el-select v-model="content.method" placeholder="选择类型">
-                  <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label"
-                             :value="item.value"></el-option>
+                  <el-option :key="key" v-for="(item, key) in Metadata.methods" :label="item.label" :value="item.value"></el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -44,14 +40,13 @@
                 <span slot="label">
                   请求(body)
                   <el-tooltip effect="light">
-                  <div slot="content">
-                    <div class="tipcontent" v-html="tips.body"></div>
-                  </div>
-                  <i class="header-icon el-icon-information"></i>
-                </el-tooltip>
+                    <div slot="content">
+                      <div class="tipcontent" v-html="tips.body"></div>
+                    </div>
+                    <i class="header-icon el-icon-information"></i>
+                  </el-tooltip>
                 </span>
-                <object-editer key="2" :required="true" :projectId="content.projectId"
-                               :infos.sync="content.request.body"></object-editer>
+                <object-editer key="2" :required="true" :projectId="content.projectId" :infos.sync="content.request.body"></object-editer>
               </el-tab-pane>
               <el-tab-pane name="query">
                 <span slot="label">
@@ -64,22 +59,19 @@
                   </el-tooltip>
                 </span>
 
-
-                <object-editer key="1" :required="true" :projectId="content.projectId"
-                               :infos.sync="content.request.query"></object-editer>
+                <object-editer key="1" :required="true" :projectId="content.projectId" :infos.sync="content.request.query"></object-editer>
               </el-tab-pane>
               <el-tab-pane name="path">
                 <span slot="label">
                   请求(path)
                   <el-tooltip effect="light">
-                  <div slot="content">
-                    <div class="tipcontent" v-html="tips.path"></div>
-                  </div>
-                  <i class="header-icon el-icon-information"></i>
-                </el-tooltip>
+                    <div slot="content">
+                      <div class="tipcontent" v-html="tips.path"></div>
+                    </div>
+                    <i class="header-icon el-icon-information"></i>
+                  </el-tooltip>
                 </span>
-                <object-editer key="3" :projectId="content.projectId"
-                               :infos.sync="content.request.path"></object-editer>
+                <object-editer key="3" :projectId="content.projectId" :infos.sync="content.request.path"></object-editer>
               </el-tab-pane>
             </el-tabs>
           </div>
@@ -87,8 +79,7 @@
         <div class="response">
           <h4>响应数据</h4>
           <div class="contentWarp">
-            <object-editer class="objectEditer" key="4" :projectId="content.projectId"
-                           :infos.sync="content.response"></object-editer>
+            <object-editer class="objectEditer" key="4" :projectId="content.projectId" :infos.sync="content.response"></object-editer>
           </div>
         </div>
 
@@ -100,26 +91,27 @@
         </div>
         <el-button v-if="content.role>2" @click="applyPublish" type="warning" size="small">
           <el-tooltip content="发布后会通知管理者，管理者统一后该api的修改能同步导项目中">
-            <span>申请发布 <i class="ifont icon-menu"></i></span>
+            <span>申请发布
+              <i class="ifont icon-menu"></i>
+            </span>
           </el-tooltip>
         </el-button>
 
-        <el-dropdown v-if="content.role>2" split-button size="small" type="primary" @command="handleCommand"
-                     @click="upDateApi">
+        <el-dropdown v-if="content.role>2" split-button size="small" type="primary" @command="handleCommand" @click="upDateApi">
           保存
           <el-dropdown-menu slot="dropdown">
-            <el-dropdown-item :disabled="true" command="publish">保存并发布 <span>(需要管理员权限)</span></el-dropdown-item>
+            <el-dropdown-item :disabled="true" command="publish">保存并发布
+              <span>(需要管理员权限)</span>
+            </el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
 
-        <el-dropdown v-if="content.role<=2" split-button size="small" type="primary" @command="handleCommand"
-                     @click="publish">
+        <el-dropdown v-if="content.role<=2" split-button size="small" type="primary" @command="handleCommand" @click="publish">
           保存并发布
           <el-dropdown-menu slot="dropdown">
             <el-dropdown-item command="upDateApi">保存</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
-
 
       </div>
 
@@ -128,28 +120,37 @@
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
-  .editWarp
-    max-width 1200px
-    height 100%
-    margin auto
-    padding 20px
-    .editStructure
-      margin-bottom 150px
-    .tip
-      float left
-      font-size 10px
-      margin-left 220px
-      width 400px
-    .bottom
-      width 100%
-      position: fixed
-      bottom 0px
-      left 0
-      padding 10px
-      text-align right
-      border-top 1px solid #ddd
-    .response
-      margin-bottom 50px
+  .editWarp {
+    max-width: 1200px;
+    height: 100%;
+    margin: auto;
+    padding: 20px;
+
+    .editStructure {
+      margin-bottom: 150px;
+    }
+
+    .tip {
+      float: left;
+      font-size: 10px;
+      margin-left: 220px;
+      width: 400px;
+    }
+
+    .bottom {
+      width: 100%;
+      position: fixed;
+      bottom: 0px;
+      left: 0;
+      padding: 10px;
+      text-align: right;
+      border-top: 1px solid #ddd;
+    }
+
+    .response {
+      margin-bottom: 50px;
+    }
+  }
 </style>
 
 <script type="text/ecmascript-6">
@@ -161,11 +162,11 @@
   var body = require('src/assets/tip/requestparams/body.md')
   var query = require('src/assets/tip/requestparams/query.md')
   var path = require('src/assets/tip/requestparams/path.md')
-  export default{
-    mixins: [ BasePage ],
-    components: { ObjectEditer },
+  export default {
+    mixins: [BasePage],
+    components: {ObjectEditer},
     name: 'apis_cnew',
-    props: { contents: {} },
+    props: {contents: {}},
     data () {
       return {
         activeRequestName: 'body',
@@ -227,7 +228,7 @@
         this.$prompt('输入备注', '申请发布', {
           inputPattern: /.{0,30}/,
           inputErrorMessage: '备注0到30个字'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           Server({
             url: 'api/update',
             data: {
@@ -265,7 +266,7 @@
         }).then((response) => {
           this.content.status = 2
           this.$message('申请成功')
-          this.$router.push({ path: '/project', query: { id: this.content.projectId }, hash: 'apis' })
+          this.$router.push({path: '/project', query: {id: this.content.projectId}, hash: 'apis'})
         }).catch(() => {
           this.$message('发布失败')
         })
@@ -277,7 +278,7 @@
         this.$prompt('输入备注', '发布', {
           inputPattern: /.{0,30}/,
           inputErrorMessage: '备注0到30个字'
-        }).then(({ value }) => {
+        }).then(({value}) => {
           Server({
             url: 'api/update',
             data: {
@@ -293,7 +294,7 @@
             method: 'put'
           }).then((response) => {
             this.$message('修改成功')
-            this.$router.push({ path: '/project', query: { id: this.content.projectId }, hash: 'doc' })
+            this.$router.push({path: '/project', query: {id: this.content.projectId}, hash: 'doc'})
           })
         }).catch(() => {
           this.$message({
