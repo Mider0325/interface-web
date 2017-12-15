@@ -36,7 +36,8 @@ exports.apiToJson = function (data) {
   function getJson (str, Types) {
     var obj
     try {
-      obj = JSON.parse(str || '')
+      console.log(Object.prototype.toString.call(str), Object.prototype.toString.call(new Types()), '*********')
+      obj = (Object.prototype.toString.call(str) === Object.prototype.toString.call(new Types())) ? str : (JSON.parse(str || ''))
     } catch (e) {
       obj = new Types()
     }

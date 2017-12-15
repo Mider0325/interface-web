@@ -54,6 +54,9 @@
           <div class="apis" v-if="activeName==='apis'">
             <c-interface :id="project.id"></c-interface>
           </div>
+          <div class="apis" v-if="activeName==='sync'">
+            <c-sync :id="project.id"></c-sync>
+          </div>
           <div v-if="activeName==='setting'">
             <div class="panel panel-default prepend-top-default">
               <div class="panel-heading">
@@ -130,10 +133,11 @@
   import CDoc from './projects/CDoc.vue'
   import CInterface from './projects/CInterface.vue'
   import CBaseObject from './projects/CBaseObject.vue'
+  import CSync from './projects/CSync.vue'
 
   export default{
     mixins: [ BasePage ],
-    components: { Member, CNew, CDoc, CInterface, CBaseObject },
+    components: {Member, CNew, CDoc, CInterface, CBaseObject, CSync},
     name: 'project',
     data: function () {
       return {
@@ -144,6 +148,7 @@
     },
     mounted: function () {
       if (!window.location.hash) {
+        window.location.hash = '#doc'
         this.activeName = 'doc'
       } else {
         var tab = window.location.hash.replace('#', '')

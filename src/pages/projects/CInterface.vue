@@ -1,5 +1,11 @@
 <template>
   <div class="content">
+    <el-row :gutter="8" class="header">
+      <el-tag>最近代码更新版本: </el-tag>
+      <el-tag  v-for="item in updateList" type="danger" @click="viewVersion(item)" class="gridUpdate">
+        {{item.createTime | datetime}} 查看
+      </el-tag>
+    </el-row>
     <!--接口列表信息-->
     <el-table :data="apiList" border style="width: 100%">
       <el-table-column label="更新时间" sortable prop="time" width="160">
@@ -51,6 +57,28 @@
 </template>
 
 <style lang="stylus" rel="stylesheet/stylus" scoped type="text/stylus">
+.header{
+  margin-bottom 20px;
+  .version {
+     min-width 192px
+  }
+  .text {
+  border-radius: 4px;
+  background: #993300;
+  color: #FFF;
+  float:left;
+  height 30px;
+  line-height 30px;
+  width 130px;
+}
+.gridUpdate{
+  margin-left 10px;
+  cursor pointer;  
+}
+.button {
+  height 30px;
+}
+}
 </style>
 
 <script type="text/ecmascript-6">
@@ -73,7 +101,8 @@
         tagTableFilters: [],
         role: 4, // 游客
         apiList: [],
-        project: {}
+        project: {},
+        updateList: []
       }
     },
     mounted: function () {
@@ -88,6 +117,7 @@
         }).then((response) => {
           this.project = response.data.data
           this.role = this.project.role
+          this.loadUpdateList()
           this.loadDrafApis()
         }).catch(() => {
           this.$message('刷新重试')
@@ -112,6 +142,20 @@
         })
         this.loadTags()
       },
+      loadUpdateList: function () {
+        Server({
+          url: 'api/searchApiByProjectId',
+          method: 'post',
+          data: {
+            projectId: this.id
+          }
+        }).then((response) => {
+          this.updateList = response.data.data
+          // this.loadDrafApis()
+        }).catch(() => {
+          this.$message('刷新重试')
+        })
+      },
       loadTags: function () {
         Server({
           url: 'api/getTags',
@@ -129,6 +173,17 @@
           })
         }).catch(() => {
 
+        })
+      },
+      viewVersion: function (item) {
+        this.$router.push({
+          path: '/project',
+          query: {
+            apiId: item.id,
+            createTime: item.createTime,
+            id: this.id
+          },
+          hash: 'sync'
         })
       },
       /**

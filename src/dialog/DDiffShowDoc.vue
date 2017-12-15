@@ -5,9 +5,9 @@
         <el-col :span="12">
           <div class="grid-content">
             <div class="head">
-              <el-select v-model="select1" placeholder="请选择版本">
+              <el-select v-model="select1" placeholder="请选择版本" :disabled="disabled">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in options1"
                     :key="item.id"
                     :label="item.version"
                     :value="item.id">
@@ -22,9 +22,9 @@
         <el-col :span="12">
           <div class="grid-content">
             <div class="head">
-              <el-select v-model="select2" placeholder="请选择版本">
+              <el-select v-model="select2" placeholder="请选择版本" :disabled="disabled">
                 <el-option
-                    v-for="item in options"
+                    v-for="item in options2"
                     :key="item.id"
                     :label="item.version"
                     :value="item.id">
@@ -70,13 +70,15 @@
       return {
         select1: '',
         select2: '',
-        options: [],
+        options1: [],
+        options2: [],
         apiInfos: {
           info1: null,
           info2: null,
           info_1: null,
           info_2: null
-        }
+        },
+        disabled: false
       }
     },
     computed: {
@@ -86,27 +88,47 @@
     },
     watch: {
       select1: function (newVal) {
-        this.changeInfo(newVal, 1)
+        if (this.info.diffType != 'sync') {
+          this.changeInfo(newVal, 1)
+        }
       },
       select2: function (newVal) {
-        this.changeInfo(newVal, 2)
+        if (this.info.diffType != 'sync') {
+          this.changeInfo(newVal, 2)
+        }
       }
     },
-    mounted: function () {
-      Server({
-        url: 'api/getHistoryList',
-        params: {
-          apiId: this.info.fixedId
-        },
-        method: 'get'
-      }).then((response) => {
-        var data = response.data.data
-        this.options = data
-        console.log('---------', data)
-      }).catch((e) => {
-        console.log(e)
-        this.$message('获取接口详情失败，重试')
-      })
+    created: function () {
+      if (this.info.diffType == 'sync') {
+        this.disabled = true
+        this.options1 = [{id: '-1', version: '待同步'}]
+        this.options2 = [{id: this.info.id || '-1', version: '草稿'}]
+        this.select1 = '-1'
+        this.select2 = this.info.id || '-1'
+        this.$set(this.apiInfos, 'info1', apiToJson(this.info))
+        this.$set(this.apiInfos, 'info_1', apiToJson(this.info))
+        if (this.info.id) {
+          this.changeInfo(this.info.id, 2, 2)
+        } else {
+          this.dealDiff()
+        }
+      } else {
+        Server({
+          url: 'api/getHistoryList',
+          params: {
+            apiId: this.info.fixedId
+          },
+          method: 'get'
+        }).then((response) => {
+          var data = response.data.data
+          this.options1 = data
+          this.options2 = data
+          console.log('---------', data)
+        }).catch((e) => {
+          console.log(e)
+          this.$message('获取接口详情失败，重试')
+        })
+      }
     },
     methods: {
       dealDiff: function () {
@@ -128,12 +150,12 @@
           this.apiInfos.info2.request.body = diffObject(JSON.parse(JSON.stringify(this.apiInfos.info_2.request.body)), this.apiInfos.info1.request.body, false)
         }
       },
-      changeInfo: function (id, key) {
+      changeInfo: function (id, key, type) {
         Server({
           url: 'api/getInterfaceInfo',
           params: {
             apiId: id,
-            type: 1
+            type: type || 1
           },
           method: 'get'
         }).then((response) => {
