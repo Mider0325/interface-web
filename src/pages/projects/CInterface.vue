@@ -2,7 +2,7 @@
   <div class="content">
     <el-row :gutter="8" class="header">
       <el-tag>最近代码更新版本: </el-tag>
-      <el-tag  v-for="item in updateList" type="danger" @click="viewVersion(item)" class="gridUpdate">
+      <el-tag  v-for="item in updateList" type="danger" @click.native="viewVersion(item)" class="gridUpdate">
         {{item.createTime | datetime}} 查看
       </el-tag>
     </el-row>
@@ -21,7 +21,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="path" sortable label="路径">
-      </el-table-column>
+      </el-table-column>viewVersion
       <el-table-column label="状态" prop="status" :filters="[{ text: '待发布', value: '1' }, { text: '审核中', value: '2' },{ text: '已发布', value: '3' }]" :filter-method="filterStatus" width="100">
         <template scope="scope">
           <el-tag v-if="scope.row.status==1">
