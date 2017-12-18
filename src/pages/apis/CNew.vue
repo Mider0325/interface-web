@@ -16,7 +16,7 @@
             </el-col>
             <el-col :span="10">
               <el-form-item label="路径">
-                <el-input v-model.trim="content.path"></el-input>
+                <el-input v-model.trim="content.path" :maxlength="70"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="6">

@@ -15,7 +15,7 @@
           <el-row type="flex" :gutter="0">
             <el-col :span="17">
               <el-form-item label="路径">
-                <el-input :minlength="1" :maxlength="40" placeholder="例如：user/info" v-model.trim="form.path"></el-input>
+                <el-input :minlength="1" :maxlength="70" placeholder="例如：user/info" v-model.trim="form.path"></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="7">
