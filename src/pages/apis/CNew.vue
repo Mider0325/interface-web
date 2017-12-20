@@ -286,6 +286,7 @@
               request: JSON.stringify(this.content.request),
               response: JSON.stringify(this.content.response),
               remark: value,
+              description: this.content.description,
               name: this.content.name,
               method: this.content.method,
               publishStatus: '3',
